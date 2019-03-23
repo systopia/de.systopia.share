@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <extension key="de.systopia.share" type="module">
   <file>share</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>CiviShare</name>
+  <description>Share CiviCRM data and updates between instances</description>
   <license>AGPL-3.0</license>
   <maintainer>
-    <author>B. Endres</author>
+    <author>SYSTOPIA</author>
     <email>endres@systopia.de</email>
   </maintainer>
   <urls>
@@ -14,13 +14,13 @@
     <url desc="Support">http://FIXME</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2019-03-23</releaseDate>
-  <version>1.0</version>
-  <develStage>alpha</develStage>
+  <releaseDate></releaseDate>
+  <version>0.1-dev</version>
+  <develStage>dev</develStage>
   <compatibility>
     <ver>5.0</ver>
   </compatibility>
-  <comments>This is a new, undeveloped module</comments>
+  <comments></comments>
   <civix>
     <namespace>CRM/Share</namespace>
   </civix>

@@ -1,44 +1,18 @@
-# de.systopia.share
+# CiviShare
 
-![Screenshot](/images/screenshot.png)
+CiviShare will enable you to share CiviCRM data between different CiviCRM instances.
 
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+## Setup
 
-The extension is licensed under [AGPL-3.0](LICENSE.txt).
+TODO
 
-## Requirements
 
-* PHP v5.4+
-* CiviCRM (*FIXME: Version number*)
+## Configuration
 
-## Installation (Web UI)
+TODO
 
-This extension has not yet been published for installation via the web UI.
 
-## Installation (CLI, Zip)
+## Peering
 
-Sysadmins and developers may download the `.zip` file for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
+TODO
 
-```bash
-cd <extension-dir>
-cv dl de.systopia.share@https://github.com/FIXME/de.systopia.share/archive/master.zip
-```
-
-## Installation (CLI, Git)
-
-Sysadmins and developers may clone the [Git](https://en.wikipedia.org/wiki/Git) repo for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
-
-```bash
-git clone https://github.com/FIXME/de.systopia.share.git
-cv en share
-```
-
-## Usage
-
-(* FIXME: Where would a new user navigate to get started? What changes would they see? *)
-
-## Known Issues
-
-(* FIXME *)
