@@ -26,6 +26,10 @@ class CRM_Share_Upgrader extends CRM_Share_Upgrader_Base {
   public function install() {
     // create SQL data structures
     $this->executeSqlFile('sql/install.sql');
+
+    require_once 'CRM/Share/CustomData.php';
+    $customData = new CRM_Share_CustomData('de.systopia.share');
+    $customData->syncCustomGroup(__DIR__ . '/../../resources/custom_group_share_link.json');
   }
 
   /**
