@@ -14,53 +14,59 @@
 +-------------------------------------------------------*/
 
 /**
- * This is the base class of all CiviShare handers
+ * This class handles the detection of changes by hook
  */
-abstract class CRM_Share_Handler {
+class CRM_Share_ChangeDetectionByHook {
 
-  protected $id;
-  protected $name;
-  protected $configuration;
 
+  protected static $change_stack = [];
+  protected static $enabled = TRUE;
 
   /**
-   * Generic CRM_Share_Handler constructor.
-   * @param $id
-   * @param $name
-   * @param $configuration
+   * Disable change detection
    */
-  public function __construct($id, $name, $configuration) {
-    $this->id = $id;
-    $this->name = $name;
-    $this->configuration = $configuration;
+  public static function disable() {
+    self::$enabled = FALSE;
   }
 
+  /**
+   * Disable change detection
+   */
+  public static function enable() {
+    self::$enabled = TRUE;
+  }
 
   /**
-   * If this handler can process pre-hook related change, it can return a record here that
-   * will then be passed into createPostHookChange()
-   *
+   * Process CiviCRM pre hook
    * @param $op          string operator
    * @param $objectName  string object name
    * @param $id          int    object ID
    * @param $params      array  change parameters
-   *
-   * @return array before_record
    */
-  public function createPreHookRecord($op, $objectName, $id, $params) {
-    return NULL;
+  public static function processPre($op, $objectName, $id, $params) {
+    if (self::$enabled) {
+      $handlers = CRM_Share_Controller::singleton()->getHandlers();
+      foreach ($handlers as $handler) {
+        $record = $handler->createPreHookRecord($op, $objectName, $id, $params);
+        array_push(self::$change_stack, $record);
+      }
+    }
   }
 
   /**
-   * Generate a change record, if a change is detected
-   *
-   * @param $pre_record  array  previously recorded change
+   * Process CiviCRM post hook
    * @param $op          string operator
    * @param $objectName  string object name
    * @param $id          int    object ID
    * @param $objectRef   mixed  depends on the hook (afaik)
    */
-  public function createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef) {
-    return;
+  public static function processPost($op, $objectName, $id, $objectRef) {
+    if (self::$enabled) {
+      $handlers = CRM_Share_Controller::singleton()->getHandlers();
+      foreach ($handlers as $handler) {
+        $pre_record = array_pop(self::$change_stack);
+        $handler->createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef);
+      }
+    }
   }
 }

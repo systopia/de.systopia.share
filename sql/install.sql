@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
 CREATE TABLE IF NOT EXISTS `civicrm_share_change`(
     `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'ID',
     `change_id`            varchar(128)        COMMENT 'network wide unique change ID',
+    `change_group_id`      varchar(128)        COMMENT 'changes can be batched into groups, that are to be processed in one go',
     `change_hash`          varchar(64)         COMMENT 'SHA1 hash of the change to detect duplicates',
     `handler_class`        varchar(128)        COMMENT 'name of the handler class tha produced this change',
     `source_node_id`       int unsigned        COMMENT 'FK to node ID to civicrm_share_node where the change came from',
@@ -44,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_change`(
     `data_after`           text                COMMENT 'the data after the change',
     PRIMARY KEY ( `id` ),
     UNIQUE INDEX `change_id` (change_id),
+    INDEX `change_group_id` (change_group_id),
     INDEX `change_hash` (change_hash),
     INDEX `change_date` (change_date),
     CONSTRAINT FK_civicrm_source_node_id FOREIGN KEY (`source_node_id`) REFERENCES `civicrm_share_node`(`id`) ON DELETE SET NULL

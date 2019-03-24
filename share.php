@@ -17,6 +17,31 @@ require_once 'share.civix.php';
 use CRM_Share_ExtensionUtil as E;
 
 /**
+ * Pre hook: use for change detection
+ */
+function share_civicrm_pre($op, $objectName, $id, &$params) {
+  if ($op == 'create') {
+    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
+      CRM_Share_ChangeDetectionByHook::processPre($op, $objectName, $id, $params);
+    }
+  }
+}
+
+
+/**
+ * Post hook: use for change detection
+ */
+function share_civicrm_post($op, $objectName, $objectId, &$objectRef) {
+  if ($op == 'create') {
+    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
+      CRM_Share_ChangeDetectionByHook::processPost($op, $objectName, $objectId, $objectRef);
+    }
+  }
+}
+
+
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
