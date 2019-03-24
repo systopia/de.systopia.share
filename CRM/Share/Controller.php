@@ -95,8 +95,9 @@ class CRM_Share_Controller {
    */
   public function generateChangeID() {
     // TODO: Lock needed?
-    $last_id = (int) CRM_Core_DAO::singleValueQuery("SELECT MAX(id) FROM civicrm_share_change");
+    $dsn = DB::parseDSN(CIVICRM_DSN);
+    $last_id = (int) CRM_Core_DAO::singleValueQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{$dsn['database']}'  AND TABLE_NAME = 'civicrm_share_change'");
     $host_id = $this->HostID();
-    return "{$host_id}##" . ($last_id + 1);
+    return "{$host_id}##{$last_id}";
   }
 }
