@@ -16,7 +16,8 @@
 /**
  * This is the base class of all CiviShare handers
  */
-abstract class CRM_Share_Handler {
+abstract class CRM_Share_Handler
+{
 
   protected $id;
   protected $name;
@@ -29,9 +30,10 @@ abstract class CRM_Share_Handler {
    * @param $name
    * @param $configuration
    */
-  public function __construct($id, $name, $configuration) {
-    $this->id = $id;
-    $this->name = $name;
+  public function __construct($id, $name, $configuration)
+  {
+    $this->id            = $id;
+    $this->name          = $name;
     $this->configuration = $configuration;
   }
 
@@ -47,7 +49,8 @@ abstract class CRM_Share_Handler {
    *
    * @return array before_record
    */
-  public function createPreHookRecord($op, $objectName, $id, $params) {
+  public function createPreHookRecord($op, $objectName, $id, $params)
+  {
     return NULL;
   }
 
@@ -60,7 +63,53 @@ abstract class CRM_Share_Handler {
    * @param $id          int    object ID
    * @param $objectRef   mixed  depends on the hook (afaik)
    */
-  public function createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef) {
+  public function createPostHookChange($pre_record, $op, $objectName, $id, $objectRef)
+  {
     return;
   }
+
+  /**
+   * Create a diff array comparing the two fields
+   *
+   * @param $data1  array data to compare
+   * @param $data2  array data to compare
+   * @param $params array extra parameters
+   *
+   * @return array all entries that differed, e.g. ['field1' => ['value1','value2'], ...]
+   */
+  public function dataDiff($data1, $data2, $params = []) {
+    $diff = [];
+    $keys = array_merge(array_keys($data1) + array_keys($data2));
+    foreach ($keys as $key) {
+      // TODO: options, e.g. case insensitive, ...
+      $value1 = CRM_Utils_Array::value($key, $data1, NULL);
+      $value2 = CRM_Utils_Array::value($key, $data2, NULL);
+      if ($value1 != $value2) {
+        $diff[$key] = [$value1, $value2];
+      }
+    }
+    return $diff;
+  }
+
+  /**
+   * Create a new change event
+   *
+   * @param array $data_before   before data
+   * @param array $data_after    after data
+   * @param string $timestamp    datetime of the change
+   *
+   * @return CRM_Share_Change the newly created change
+   */
+  public function createLocalChangeRecord($data_before, $data_after, $timestamp = 'now') {
+    // pass on to CRM_Share_Change:
+    $change = CRM_Share_Change::createNewChangeRecord(
+        CRM_Share_Controller::singleton()->generateChangeID(),
+        get_class($this),
+        CRM_Share_Configuration::getLocalNodeID(),
+        $data_before,
+        $data_after,
+        $timestamp);
+    return $change;
+  }
+
 }

@@ -79,4 +79,24 @@ class CRM_Share_Controller {
     }
     return $this->handlers;
   }
+
+  /**
+   * Get a unique host ID
+   */
+  public function HostID() {
+    // TODO: there has to be a better way than using the BASE URL
+    $host_id = substr(CIVICRM_UF_BASEURL, 5);
+    $host_id = trim($host_id, ' /:?&');
+    return $host_id;
+  }
+
+  /**
+   * Generate a new change ID for this system
+   */
+  public function generateChangeID() {
+    // TODO: Lock needed?
+    $last_id = (int) CRM_Core_DAO::singleValueQuery("SELECT MAX(id) FROM civicrm_share_change");
+    $host_id = $this->HostID();
+    return "{$host_id}##" . ($last_id + 1);
+  }
 }

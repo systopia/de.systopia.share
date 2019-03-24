@@ -27,4 +27,12 @@ class CRM_Share_Configuration {
   }
 
 
+  /**
+   * Get the (local) ID of the local CiviShare node
+   */
+  public static function getLocalNodeID() {
+    // TODO: don't hard-code
+    return 1;
+  }
+
 }

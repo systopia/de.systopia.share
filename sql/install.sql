@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
     UNIQUE INDEX `short_name` (short_name)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+-- insert local node, TODO: REMOVE, make this configurable
+INSERT IGNORE INTO civicrm_share_node (id, name, short_name, description)
+       VALUES (1, 'Local Environment', 'LOCAL', 'This very environment');
 
 -- CiviShare.Handler: handlers implement the data processing
 CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
@@ -29,6 +32,10 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
     INDEX `weight` (weight)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+
+-- insert test hander, TODO: REMOVE, make this configurable
+INSERT IGNORE INTO civicrm_share_handler (1, name,class,weight,is_enabled,configuration)
+           VALUES (1, "Test", "CRM_Share_Handler_ContactBase", "1", "1", "{}");
 
 -- CiviShare.Change: data structure to record changes
 CREATE TABLE IF NOT EXISTS `civicrm_share_change`(

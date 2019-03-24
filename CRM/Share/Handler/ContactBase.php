@@ -30,11 +30,14 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @return array before_record
    */
   public function createPreHookRecord($op, $objectName, $id, $params) {
-    if ($op == 'create') {
+    if ($op == 'create' || $op == 'edit') {
       if (empty($id)) {
         // a new contact is created => we don't want to detect this.
       } else {
-        
+        return civicrm_api3('Contact', 'getsingle', [
+            'id'     => $id,
+            'return' => 'id,' . $this->getFieldList(TRUE)
+        ]);
       }
     }
     return NULL;
@@ -50,10 +53,33 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @param $objectRef   mixed  depends on the hook (afaik)
    */
   public function createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef) {
-    if (empty($pre_record)) {
-
+    if (!empty($pre_record)) {
+      $current_data = civicrm_api3('Contact', 'getsingle', [
+          'id'     => $id,
+          'return' => 'id,' . $this->getFieldList(TRUE)
+      ]);
+      $diff = $this->dataDiff($pre_record, $current_data);
+      if (!empty($diff)) {
+        $this->createLocalChangeRecord($pre_record, $current_data, 'now');
+      }
     }
-    return;
+  }
+
+  /**
+   * Get the list of fields this handler needs
+   *
+   * @param bool $as_string  should the fields be returned as a cs string instead of an array
+   *
+   * @return string|array list of fields
+   */
+  protected function getFieldList($as_string = FALSE) {
+    // TODO: make configurable
+    $fields = ['first_name', 'last_name', 'formal_title', 'prefix_id', 'organization_name', 'birth_date'];
+    if ($as_string) {
+      return implode(',', $fields);
+    } else {
+      return $fields;
+    }
   }
 
 }
