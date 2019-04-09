@@ -38,8 +38,25 @@ function _civicrm_api3_civi_share_peer_spec(&$params) {
    *
    * This action allows you to propose contacts for peering to another node
    **/
-  function civicrm_api3_civi_share_peer(&$params) {
-    CRM_Share_
+  function civicrm_api3_civi_share_peer($params) {
+    $peering_results = [];
 
+    $remote_node = CRM_Share_Node::getNode($params['sender_key']);
+    if (empty($remote_node)) {
+      return civicrm_api3_create_error("Key not accepted. Maybe the nodes aren't peered yet?");
+    }
+
+    // get records
+    $records = $params['records'];
+    if (is_string($records)) {
+      $records = json_decode($records, TRUE);
+    }
+
+    $peering = new CRM_Share_Peering($remote_node);
+    foreach ($records as $contact_id => $contact_data) {
+      $peering_results[$contact_id] = $peering->peer($contact_id, $contact_data);
+    }
+
+    return civicrm_api3_create_success($peering_results);
   }
 }
