@@ -20,17 +20,19 @@
  * This action allows you to propose contacts for peering to another node
  **/
 function _civicrm_api3_civi_share_peer_spec(&$params) {
-  $params['record']     = array(
+  $params['records'] = array(
       'name'         => 'records',
       'api.required' => 1,
       'type'         => CRM_Utils_Type::T_LONGTEXT,
-      'title'        => 'JSON encoded contact records. Array [contact_id => ["first_name" => "Karl", ...]]',
+      'title'        => 'Records to peer',
+      'description'  => 'JSON encoded contact records. Array [contact_id => ["first_name" => "Karl", ...]]',
   );
   $params['sender_key'] = array(
       'name'         => 'sender_key',
       'api.required' => 1,
       'type'         => CRM_Utils_Type::T_STRING,
-      'title'        => 'Key identifying the sender'
+      'title'        => 'Key identifying the sender',
+      'description'  => 'This key is a shared secret between the calling node and this one',
   );
 }
 
@@ -57,7 +59,7 @@ function civicrm_api3_civi_share_peer($params) {
 
   $peering = new CRM_Share_Peering($remote_node);
   foreach ($records as $contact_id => $contact_data) {
-    $peering_results[$contact_id] = $peering->peer($contact_id, $contact_data);
+    $peering_results[$contact_id] = $peering->passivePeer($contact_id, $contact_data);
   }
 
   return civicrm_api3_create_success($peering_results);

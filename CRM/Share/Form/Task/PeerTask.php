@@ -14,6 +14,7 @@
 +-------------------------------------------------------*/
 
 use CRM_Share_ExtensionUtil as E;
+
 require_once 'CRM/Core/Form.php';
 
 /**
@@ -51,7 +52,20 @@ class CRM_Share_Form_Task_PeerTask extends CRM_Contact_Form_Task {
     $peering = new CRM_Share_Peering($remote_host);
     $result = $peering->activePeer($this->_contactIds);
 
-    // TODO:
-    CRM_Core_Session::setStatus(E::ts("TODO:"), E::ts("Peering Completed"), 'info');
+    // Compile result
+    $messages = [];
+    $messages[] = E::ts("%1 contact(s) were successfully peered with %2", [1 => $result['NEWLY_PEERED'], 2 => $remote_host->getShortName()]);
+    if (!empty($result['INSUFFICIENT_DATA']))
+      $messages[] = E::ts("%1 contact(s) did not provide enough data for peering", [1 => $result['INSUFFICIENT_DATA'], 2 => $remote_host->getShortName()]);
+    if (!empty($result['ALREADY_PEERED']))
+      $messages[] = E::ts("%1 contact(s) were already peered", [1 => $result['ALREADY_PEERED'], 2 => $remote_host->getShortName()]);
+    if (!empty($result['NOT_IDENTIFIED']))
+      $messages[] = E::ts("%1 contact(s) were not found on %2", [1 => $result['NOT_IDENTIFIED'], 2 => $remote_host->getShortName()]);
+    if (!empty($result['AMBIGUOUS']))
+      $messages[] = E::ts("%1 contact(s) could not be uniquely identified", [1 => $result['AMBIGUOUS'], 2 => $remote_host->getShortName()]);
+    if (!empty($result['ERROR']))
+      $messages[] = E::ts("%1 contact(s) produced an error", [1 => $result['ERROR'], 2 => $remote_host->getShortName()]);
+    $message = implode(', ', $messages) . '.';
+    CRM_Core_Session::setStatus($message, E::ts("Peering Completed"), 'info');
   }
 }

@@ -101,6 +101,10 @@ class CRM_Share_Node {
     return $this->node_id;
   }
 
+  public function getShortName() {
+    return $this->node_data['short_name'];
+  }
+
   /**
    * Issues API3 call remotely to that node
    * @param $entity string API entity
@@ -122,5 +126,12 @@ class CRM_Share_Node {
     } else {
       throw new CiviCRM_API3_Exception($result['error_msg'], '0723');
     }
+  }
+
+  /**
+   * Get the unified (CiviShare) contact ID for a contact from this node
+   */
+  public function getShareContactID($native_contact_id) {
+    return "{$this->node_data['short_name']}-{$native_contact_id}";
   }
 }

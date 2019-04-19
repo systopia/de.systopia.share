@@ -43,8 +43,18 @@ class CRM_Share_Peering {
    * @throws Exception if anything goes wrong
    */
   public function activePeer($contact_ids) {
+    $reply = [
+        'INSUFFICIENT_DATA' => 0,
+        'NOT_IDENTIFIED'    => 0,
+        'AMBIGUOUS'         => 0,
+        'ERROR'             => 0,
+        'NEWLY_PEERED'      => 0,
+        'ALREADY_PEERED'    => 0,
+    ];
+
     // 1) gather data on (yet unpeered contacts)
     $peered_ids = $this->getPeeredContactIDS($contact_ids);
+    $reply['ALREADY_PEERED'] = count($peered_ids);
     $unpeered_ids = array_diff($contact_ids, $peered_ids);
     $peer_request = [
         'sender_key' => $this->remote_node->getKey(),
@@ -52,10 +62,19 @@ class CRM_Share_Peering {
     ];
 
     // 2) send request
-    $reply = $this->remote_node->api3('CiviShare', 'peer', $peer_request);
+    $result = $this->remote_node->api3('CiviShare', 'peer', $peer_request);
 
     // 3 process results
-    // TODO
+    foreach ($result['values'] as $contact_id => $contact_result) {
+      if (is_int($contact_result)) {
+        // contact peer identified. Write record
+        $this->createLink($contact_id, $contact_result);
+        $reply['NEWLY_PEERED'] += 1;
+      } else {
+        $reply[$contact_result] += 1;
+      }
+    }
+
     return $reply;
   }
 
@@ -82,7 +101,7 @@ class CRM_Share_Peering {
     $result = $this->identifyContact($remote_contact_data);
     if (is_int($result)) {
       // contact peer identified. Write record
-      $this->createLink($result, $remote_contact_id);
+      $this->createLink($result, $native_contact_id);
     }
     return $result;
   }
@@ -90,6 +109,8 @@ class CRM_Share_Peering {
   /**
    * Will try to identify/match a contact uniquely based on
    * the data offered
+   *
+   * WARNING: this is a simple, POC implementation
    *
    * @param $data array contact data offered
    * @return string|int local contact ID if matched, or:
@@ -99,8 +120,10 @@ class CRM_Share_Peering {
    *                         'ERROR'             if some unforseen error has occured
    *
    * @todo make behaviour configurable
+   * @see getPeeringSignature call
    */
   public function identifyContact($data) {
+    // TODO: configurable
     $attributes = ['contact_type', 'first_name', 'last_name', 'birth_date'];
     // this is a quick-and-dirty implementation
     if (empty($data['contact_type'])) {
@@ -108,9 +131,12 @@ class CRM_Share_Peering {
     }
 
     // check if all attributes are there
+    $query = [];
     foreach ($attributes as $attribute) {
       if (empty($data[$attribute])) {
         return 'INSUFFICIENT_DATA';
+      } else {
+        $query[$attribute] = $data[$attribute];
       }
     }
 
@@ -118,7 +144,7 @@ class CRM_Share_Peering {
     $data['check_permissions'] = 0;
     $data['return'] = 'id';
     try {
-      $matches = civicrm_api3('Contact', 'get', $data);
+      $matches = civicrm_api3('Contact', 'get', $query);
       switch ($matches['count']) {
         case 0:
           return 'NOT_IDENTIFIED';
@@ -128,8 +154,7 @@ class CRM_Share_Peering {
           return 'AMBIGUOUS';
       }
     } catch(Exception $ex) {
-      $remote_contact_id = $this->remote_node->getRemoteContactID($native_contact_id);
-      CRM_Share_Controller::singleton()->log("Peering of [{$remote_contact_id}] failed: " . $ex->getMessage());
+      CRM_Share_Controller::singleton()->log("Peering failed, error while identifying contact: " . $ex->getMessage());
       return 'ERROR';
     }
   }
@@ -140,8 +165,8 @@ class CRM_Share_Peering {
    *
    * @param $remote_contact_id int|null local contact ID or
    */
-  public function getLocalPeer($remote_contact_id, $only_enabled = FALSE) {
-    $remote_contact_id = $this->remote_node->getRemoteContactID($native_contact_id);
+  public function getLocalPeer($remote_native_contact_id, $only_enabled = FALSE) {
+    $remote_contact_id = $this->remote_node->getShareContactID($remote_native_contact_id);
 
     $peer = CRM_Core_DAO::executeQuery("
     SELECT
@@ -165,17 +190,17 @@ class CRM_Share_Peering {
    * Create a new link entry
    *
    * @param $local_contact_id   int the local contact ID
-   * @param $native_contact_id  int the remote (native) contact ID
+   * @param $remote_contact_id  int the remote (native) contact ID
    * @throws CiviCRM_API3_Exception
    */
-  public function createLink($local_contact_id, $native_contact_id) {
+  public function createLink($local_contact_id, $remote_contact_id) {
     $record = [
-        'entity_id' => $local_contact_id,
+        'entity_id'    => $local_contact_id,
         'entity_table' => 'civicrm_contact'];
 
     $record_data = [
         'civishare_link.civishare_node'       => $this->remote_node->getID(),
-        'civishare_link.civishare_id'         => $this->reemote_node->getRemoteContactID($native_contact_id),
+        'civishare_link.civishare_id'         => $this->remote_node->getShareContactID($remote_contact_id),
         'civishare_link.civishare_timestamp'  => date('YmdHis'),
         'civishare_link.civishare_is_enabled' => 1];
     CRM_Share_CustomData::resolveCustomFields($record_data);
@@ -224,7 +249,7 @@ class CRM_Share_Peering {
     // TODO: configurable
     $result = civicrm_api3('Contact', 'get', [
         'id'           => ['IN' => $contact_ids],
-        'return'       => 'first_name,last_name,id',
+        'return'       => 'first_name,last_name,birth_date,id',
         'sequential'   => 0,
         'option.limit' => 0
     ]);
