@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_change`(
     `status`               varchar(8)          COMMENT 'status: LOCAL, PENDING, BUSY, FORWARD, DONE, ERROR',
     `hash`                 varchar(64)         COMMENT 'SHA1 hash of the change to detect duplicates',
     `handler_class`        varchar(128)        COMMENT 'name of the handler class tha produced this change',
+    `local_contact_id`     int unsigned        COMMENT 'FK to the local contact ID',
     `source_node_id`       int unsigned        COMMENT 'FK to node ID to civicrm_share_node where the change came from',
     `change_date`          datetime NOT NULL   COMMENT 'timestamp of the change',
     `received_date`        datetime NOT NULL   COMMENT 'timestamp of the reception of the change',
@@ -58,5 +59,6 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_change`(
     INDEX `change_group_id` (change_group_id),
     INDEX `change_hash` (hash),
     INDEX `change_date` (change_date),
+    CONSTRAINT FK_civicrm_local_contact_id FOREIGN KEY (`local_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE CASCADE,
     CONSTRAINT FK_civicrm_source_node_id FOREIGN KEY (`source_node_id`) REFERENCES `civicrm_share_node`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;

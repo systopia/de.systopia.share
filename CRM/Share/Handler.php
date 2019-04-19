@@ -94,13 +94,14 @@ abstract class CRM_Share_Handler
   /**
    * Create a new change event
    *
-   * @param array $data_before   before data
-   * @param array $data_after    after data
-   * @param string $timestamp    datetime of the change
+   * @param array $data_before       before data
+   * @param array $local_contact_id  local contact ID this change is related to
+   * @param array $data_after        after data
+   * @param string $timestamp        datetime of the change
    *
    * @return CRM_Share_Change the newly created change
    */
-  public function createLocalChangeRecord($data_before, $data_after, $timestamp = 'now') {
+  public function createLocalChangeRecord($local_contact_id, $data_before, $data_after, $timestamp = 'now') {
     // pass on to CRM_Share_Change:
     $change = CRM_Share_Change::createNewChangeRecord(
         CRM_Share_Controller::singleton()->generateChangeID(),
@@ -108,7 +109,9 @@ abstract class CRM_Share_Handler
         CRM_Share_Configuration::getLocalNodeID(),
         $data_before,
         $data_after,
-        $timestamp);
+        $timestamp,
+        $local_contact_id
+        );
     return $change;
   }
 

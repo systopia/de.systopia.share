@@ -15,19 +15,20 @@
 
 
 /**
- * Provide Metadata for CiviShare.peer
+ * Provide Metadata for CiviShare.store_changes
  *
  * This is a REMOTE CALL, i.e. it will be triggered by a connected node
  *
- * This action allows you to propose contacts for peering to another node
+ * This action will cause the system to store the changes submitted.
+ *  Remark: the changes will merely be stored, not processed - this will be done by CiviShare.store_changes
  **/
-function _civicrm_api3_civi_share_peer_spec(&$params) {
-  $params['records'] = array(
-      'name'         => 'records',
+function _civicrm_api3_civi_share_store_changes_spec(&$params) {
+  $params['changes'] = array(
+      'name'         => 'changes',
       'api.required' => 1,
       'type'         => CRM_Utils_Type::T_LONGTEXT,
-      'title'        => 'Records to peer',
-      'description'  => 'JSON encoded contact records. Array [contact_id => ["first_name" => "Karl", ...]]',
+      'title'        => 'Changes to store',
+      'description'  => 'JSON encoded contact records. Array of changes',
   );
   $params['sender_key'] = array(
       'name'         => 'sender_key',
@@ -39,30 +40,25 @@ function _civicrm_api3_civi_share_peer_spec(&$params) {
 }
 
 /**
- * Provide Metadata for CiviShare.peer
- *
- * This action allows you to propose contacts for peering to another node
- **/
-function civicrm_api3_civi_share_peer($params) {
-  CRM_Share_Controller::singleton()->log("CiviShare.peer request: " . json_encode($params), 'debug');
+ * CiviShare.store_changes will cause the system to store the changes submitted.
+ *  Remark: the changes will merely be stored, not processed - this will be done by CiviShare.store_changes
+**/
+function civicrm_api3_civi_share_store_changes($params) {
+  CRM_Share_Controller::singleton()->log("CiviShare.store_changes request: " . json_encode($params), 'debug');
 
-  $peering_results = [];
+  $changes = json_decode($params['changes'], TRUE);
+  foreach ($changes as $change) {
+    $lock = CRM_Share_Controller::singleton()->getChangesLock();
 
-  $remote_node = CRM_Share_Node::getNode($params['sender_key']);
-  if (empty($remote_node)) {
-    return civicrm_api3_create_error("Key not accepted. Maybe the nodes aren't peered yet?");
+    // 1. check if already in DB
+
+    // 2. resolve contact ID
+
+    // 3. write to DB
+
+    CRM_Share_Controller::singleton()->releaseLock($lock);
+
   }
 
-  // get records
-  $records = $params['records'];
-  if (is_string($records)) {
-    $records = json_decode($records, TRUE);
-  }
-
-  $peering = new CRM_Share_Peering($remote_node);
-  foreach ($records as $contact_id => $contact_data) {
-    $peering_results[$contact_id] = $peering->passivePeer($contact_id, $contact_data);
-  }
-
-  return civicrm_api3_create_success($peering_results);
+  return civicrm_api3_create_success();
 }

@@ -36,6 +36,29 @@ class CRM_Share_Controller {
   }
 
   /**
+   * Get a lock to prevent other tasks (on this system) to work on
+   *  the changes structure
+   *
+   * @param $timeout int timeout in seconds
+   * @return mixed lock
+   * @throws Exception should there be a timeout
+   */
+  public function getChangesLock($timeout = 30) {
+    // TODO: implement
+    return TRUE;
+  }
+
+  /**
+   * Release the previously acquired lock
+   *
+   * @param $lock mixed lock
+   */
+  public function releaseLock($lock) {
+    // TODO: implement
+  }
+
+
+  /**
    * Provides a (cached) lookup to see if the contact is linked,
    *  and the link is enabled
    *
@@ -58,6 +81,18 @@ class CRM_Share_Controller {
       }
     }
     return $this->contact_link_status[$contact_id];
+  }
+
+  /**
+   * Notification event: a new change has been created and stored in the DB
+   *
+   * This can be used to trigger immediate sending...
+   *
+   * @param $change_id
+   * @todo use Symfony events
+   */
+  public function newChangeStored($change_id) {
+    // TODO: anything?
   }
 
   /**

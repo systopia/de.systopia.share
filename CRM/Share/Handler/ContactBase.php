@@ -64,7 +64,7 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
       ]);
       $diff = $this->dataDiff($pre_record, $current_data);
       if (!empty($diff)) {
-        $this->createLocalChangeRecord($pre_record, $current_data, 'now');
+        $this->createLocalChangeRecord($id, $pre_record, $current_data, 'now');
       }
     }
   }
