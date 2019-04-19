@@ -112,4 +112,13 @@ abstract class CRM_Share_Handler
     return $change;
   }
 
+  /**
+   * Find out whether the given contact_id is linked and the link is enabled
+   *
+   * @param $contact_id int contact ID
+   * @return 1 if the contact is currently linked, 0 if not
+   */
+  public function isContactCurrentlyLinked($contact_id) {
+    return CRM_Share_Controller::singleton()->isContactCurrentlyLinked($contact_id);
+  }
 }

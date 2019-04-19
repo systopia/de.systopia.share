@@ -48,17 +48,19 @@ class CRM_Share_Change {
     $data_after_string  = json_encode($data_after);
     $change_hash        = sha1($data_before_string . $data_after_string);
     $change_date_string = date('YmdHis', strtotime($change_date));
+    $status             = $source_node_id == CRM_Share_Configuration::getLocalNodeID() ? 'LOCAL' : 'PENDING';
 
     CRM_Core_DAO::executeQuery("
-    INSERT INTO civicrm_share_change (change_id, change_hash, handler_class, source_node_id, data_before, data_after, change_date, received_date)
-                               VALUES(%1, %2, %3, %4, %5, %6, %7, NOW());", [
+    INSERT INTO civicrm_share_change (change_id, hash, handler_class, source_node_id, data_before, data_after, change_date, received_date, status)
+                               VALUES(%1, %2, %3, %4, %5, %6, %7, NOW(), %8);", [
                                    1 => [$change_id, 'String'],
                                    2 => [$change_hash, 'String'],
                                    3 => [$handler_class, 'String'],
                                    4 => [$source_node_id, 'Integer'],
                                    5 => [$data_before_string, 'String'],
                                    6 => [$data_after_string, 'String'],
-                                   7 => [$change_date_string, 'String']]);
+                                   7 => [$change_date_string, 'String'],
+                                   8 => [$status, 'String']]);
 
     $change_id = CRM_CORE_DAO::singleValueQuery('SELECT LAST_INSERT_ID()');
     return new CRM_Share_Change($change_id);

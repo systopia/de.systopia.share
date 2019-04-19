@@ -20,7 +20,8 @@ class CRM_Share_Controller {
 
   private static $singleton = NULL;
 
-  private $handlers = NULL;
+  protected $handlers = NULL;
+  protected $contact_link_status = [];
 
   /**
    * Get the CiviShare controller instance
@@ -32,6 +33,31 @@ class CRM_Share_Controller {
       self::$singleton = new CRM_Share_Controller();
     }
     return self::$singleton;
+  }
+
+  /**
+   * Provides a (cached) lookup to see if the contact is linked,
+   *  and the link is enabled
+   *
+   * @param $contact_id int contact ID
+   * @return 1 if the contact is currently linked, 0 if not
+   */
+  public function isContactCurrentlyLinked($contact_id) {
+    $contact_id = (int) $contact_id;
+    if (!isset($this->contact_link_status[$contact_id])) {
+      $is_peered = CRM_Core_DAO::singleValueQuery("
+        SELECT id 
+        FROM civicrm_value_share_link 
+        WHERE entity_id = {$contact_id}
+          AND is_enabled = 1
+        LIMIT 1");
+      if ($is_peered) {
+        $this->contact_link_status[$contact_id] = 1;
+      } else {
+        $this->contact_link_status[$contact_id] = 0;
+      }
+    }
+    return $this->contact_link_status[$contact_id];
   }
 
   /**
