@@ -15,6 +15,9 @@
 
 /**
  * Contains the peering algorithm with a given remote host
+ * This class covers both peering request directions:
+ *  - outgoing (active), i.e. initiated by us
+ *  - incoming (passive), i.e. initiated by remote node
  */
 class CRM_Share_Peering {
 
@@ -26,6 +29,34 @@ class CRM_Share_Peering {
    */
   public function __construct($remote_node) {
     $this->remote_node = $remote_node;
+  }
+
+
+  /**
+   * Initiate a peering process to the remote node:
+   *  1) gather identifying data on the given contact
+   *  2) send REST API request to the other node
+   *  3) process the results
+   *
+   * @param $contact_ids array list of local contact IDs to send
+   * @return array result
+   * @throws Exception if anything goes wrong
+   */
+  public function activePeer($contact_ids) {
+    // 1) gather data on (yet unpeered contacts)
+    $peered_ids = $this->getPeeredContactIDS($contact_ids);
+    $unpeered_ids = array_diff($contact_ids, $peered_ids);
+    $peer_request = [
+        'sender_key' => $this->remote_node->getKey(),
+        'records'    => json_encode($this->getPeeringSignatures($unpeered_ids))
+    ];
+
+    // 2) send request
+    $reply = $this->remote_node->api3('CiviShare', 'peer', $peer_request);
+
+    // 3 process results
+    // TODO
+    return $reply;
   }
 
   /**
@@ -40,7 +71,7 @@ class CRM_Share_Peering {
    *                         'AMBIGUOUS'         if multiple contacts were identified
    *                         'ERROR'             if some unforseen error has occured
    */
-  public function peer($native_contact_id, $remote_contact_data) {
+  public function passivePeer($native_contact_id, $remote_contact_data) {
     // first: see if this contact is already peered
     $local_contact_id = $this->getLocalPeer($native_contact_id);
     if ($local_contact_id) {
@@ -124,7 +155,7 @@ class CRM_Share_Peering {
       if ($peer->is_deleted) {
         // TODO: what to do with deleted, peered contacts?
       }
-      HERE
+      // TODO: implmeent
     } else {
       return NULL;
     }
@@ -155,5 +186,48 @@ class CRM_Share_Peering {
     }
 
     civicrm_api3('CustomValue', 'create', $record);
+  }
+
+  /**
+   * Filter the list of contact IDs to the ones that are currently peered with
+   *  this node
+   *
+   * @param $contact_ids array list of contact_ids
+   * @return  array list of contact_ids
+   */
+  public function getPeeredContactIDS($contact_ids) {
+    if (empty($contact_ids)) return [];
+    // run a query
+    $node_id = $this->remote_node->getID();
+    $peered_contact_ids = [];
+    $contact_ids_list = implode(',', $contact_ids);
+    $query = CRM_Core_DAO::executeQuery("
+        SELECT DISTINCT(entity_id) 
+        FROM civicrm_value_share_link 
+        WHERE entity_id IN ({$contact_ids_list})
+          AND civishare_node_id = {$node_id}");
+    while ($query->fetch()) {
+      $peered_contact_ids[] = $query->entity_id;
+    }
+    return $peered_contact_ids;
+  }
+
+  /**
+   * Get the data "signature" necessary for peering from the given contacts
+   *
+   * @todo configure this
+   *
+   * @param $contact_ids array contact IDs
+   * @return array data
+   */
+  public function getPeeringSignatures($contact_ids) {
+    // TODO: configurable
+    $result = civicrm_api3('Contact', 'get', [
+        'id'           => ['IN' => $contact_ids],
+        'return'       => 'first_name,last_name,id',
+        'sequential'   => 0,
+        'option.limit' => 0
+    ]);
+    return $result['values'];
   }
 }

@@ -16,6 +16,27 @@
 require_once 'share.civix.php';
 use CRM_Share_ExtensionUtil as E;
 
+
+/**
+ * Add an action for creating donation receipts after doing a search
+ *
+ * @param string $objectType specifies the component
+ * @param array $tasks the list of actions
+ *
+ * @access public
+ */
+function share_civicrm_searchTasks($objectType, &$tasks) {
+  // add PEER task to contribution list
+  if ($objectType == 'contact') {
+    if (CRM_Core_Permission::check('administer CiviCRM')) {
+      $tasks[] = array(
+          'title'  => E::ts('Peer Contacts (CiviShare)'),
+          'class'  => 'CRM_Share_Form_Task_PeerTask',
+          'result' => false);
+    }
+  }
+}
+
 /**
  * Pre hook: use for change detection
  */

@@ -100,4 +100,51 @@ class CRM_Share_Controller {
     $host_id = $this->HostID();
     return "{$host_id}##{$last_id}";
   }
+
+  /**
+   * Call an external system using the REST API
+   *
+   * @todo  alternative implementations
+   *
+   * @param $entity   string the entity
+   * @param $action   string the action
+   * @param $params   array  parameters
+   * @param $rest_url string the REST API endpoint
+   * @param $site_key string site key
+   * @param $api_key  string api key
+   *
+   * @return array result
+   */
+  public function restAPI3($entity, $action, $params, $rest_url, $site_key, $api_key) {
+    // TODO: this is a simple CURL based implementation. We might want some abstraction here
+
+    // extract site key
+    $params['key']        = $site_key;
+    $params['api_key']    = $api_key;
+    $params['json']       = 1;
+    $params['version']    = 3;
+    $params['entity']     = $entity;
+    $params['action']     = $action;
+
+    $curlSession = curl_init();
+    curl_setopt($curlSession, CURLOPT_POST,           1);
+    curl_setopt($curlSession, CURLOPT_POSTFIELDS,     $params);
+    curl_setopt($curlSession, CURLOPT_URL,            $rest_url);
+    curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
+    if (!empty($target_interface)) {
+      curl_setopt($curlSession, CURLOPT_INTERFACE, $target_interface);
+    }
+    // curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, 2);
+
+    $response = curl_exec($curlSession);
+
+    if (curl_error($curlSession)){
+      return [
+          'is_error'  => 1,
+          'error_msg' => curl_error($curlSession)];
+    } else {
+      return json_decode($response, true);
+    }
+  }
 }

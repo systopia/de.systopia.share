@@ -68,7 +68,7 @@ class CRM_Share_Upgrader extends CRM_Share_Upgrader_Base {
   /**
    * debugging upgrader
    */
-  public function upgrade_0001() {
+  public function upgrade_0002() {
     $this->ctx->log->info('DEV upgrade');
 
     // update the data structures

@@ -40,6 +40,8 @@ function _civicrm_api3_civi_share_peer_spec(&$params) {
  * This action allows you to propose contacts for peering to another node
  **/
 function civicrm_api3_civi_share_peer($params) {
+  CRM_Core_Error::debug_log_message("CiviShare.peer request: " . json_encode($params));
+
   $peering_results = [];
 
   $remote_node = CRM_Share_Node::getNode($params['sender_key']);
