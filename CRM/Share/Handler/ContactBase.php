@@ -30,14 +30,16 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @return array before_record
    */
   public function createPreHookRecord($op, $objectName, $id, $params) {
-    if ($op == 'create' || $op == 'edit') {
-      if (empty($id)) {
-        // a new contact is created => we don't want to detect this.
-      } else {
-        return civicrm_api3('Contact', 'getsingle', [
-            'id'     => $id,
-            'return' => 'id,' . $this->getFieldList(TRUE)
-        ]);
+    if ($objectName == 'Contact') {
+      if ($op == 'create' || $op == 'edit') {
+        if (empty($id)) {
+          // a new contact is created => we don't want to detect this.
+        } else {
+          return civicrm_api3('Contact', 'getsingle', [
+              'id'     => $id,
+              'return' => 'id,' . $this->getFieldList(TRUE)
+          ]);
+        }
       }
     }
     return NULL;

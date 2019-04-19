@@ -27,6 +27,7 @@ class CRM_Share_Upgrader extends CRM_Share_Upgrader_Base {
     // create SQL data structures
     $this->executeSqlFile('sql/install.sql');
 
+    // generate the data structures
     require_once 'CRM/Share/CustomData.php';
     $customData = new CRM_Share_CustomData('de.systopia.share');
     $customData->syncCustomGroup(__DIR__ . '/../../resources/custom_group_share_link.json');
@@ -52,10 +53,9 @@ class CRM_Share_Upgrader extends CRM_Share_Upgrader_Base {
 
 
   /**
-   * Example: Run a simple query when a module is enabled.
+   * Extension gets enabled
    *
   public function enable() {
-    CRM_Core_DAO::executeQuery('UPDATE foo SET is_active = 1 WHERE bar = "whiz"');
   }
 
   /**
@@ -66,17 +66,17 @@ class CRM_Share_Upgrader extends CRM_Share_Upgrader_Base {
   }
 
   /**
-   * Example: Run a couple simple queries.
-   *
-   * @return TRUE on success
-   * @throws Exception
-   *
-  public function upgrade_4200() {
-    $this->ctx->log->info('Applying update 4200');
-    CRM_Core_DAO::executeQuery('UPDATE foo SET bar = "whiz"');
-    CRM_Core_DAO::executeQuery('DELETE FROM bang WHERE willy = wonka(2)');
+   * debugging upgrader
+   */
+  public function upgrade_0001() {
+    $this->ctx->log->info('DEV upgrade');
+
+    // update the data structures
+    require_once 'CRM/Share/CustomData.php';
+    $customData = new CRM_Share_CustomData('de.systopia.share');
+    $customData->syncCustomGroup(__DIR__ . '/../../resources/custom_group_share_link.json');
     return TRUE;
-  } // */
+  }
 
 
   /**

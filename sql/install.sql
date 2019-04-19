@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
      `site_key`             varchar(64) NULL    COMMENT 'SITE_KEY of the node',
      `api_key`              varchar(64) NULL    COMMENT 'API_KEY of the node',
      `is_enabled`           tinyint             COMMENT 'is this node enabled?',
-     `node_key`             varchar(64)         COMMENT 'authorisation key',
+     `auth_key`             varchar(64)         COMMENT 'bi-directional authorisation key',
 --     `time_offset`          bigint              COMMENT 'time offset in seconds',
      `receive_profile`      text                COMMENT 'defines what data will be sent to this node',
      `send_profile`         text                COMMENT 'defines what data will be received from this node',
     PRIMARY KEY ( `id` ),
     UNIQUE INDEX `short_name` (short_name),
-    UNIQUE INDEX `node_key` (node_key)
+    UNIQUE INDEX `node_key` (auth_key)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 -- insert local node, TODO: REMOVE, make this configurable
