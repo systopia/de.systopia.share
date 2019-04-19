@@ -56,22 +56,24 @@ class CRM_Share_Peering {
     $peered_ids = $this->getPeeredContactIDS($contact_ids);
     $reply['ALREADY_PEERED'] = count($peered_ids);
     $unpeered_ids = array_diff($contact_ids, $peered_ids);
-    $peer_request = [
-        'sender_key' => $this->remote_node->getKey(),
-        'records'    => json_encode($this->getPeeringSignatures($unpeered_ids))
-    ];
+    if (!empty($unpeered_ids)) {
+      $peer_request = [
+          'sender_key' => $this->remote_node->getKey(),
+          'records'    => json_encode($this->getPeeringSignatures($unpeered_ids))
+      ];
 
-    // 2) send request
-    $result = $this->remote_node->api3('CiviShare', 'peer', $peer_request);
+      // 2) send request
+      $result = $this->remote_node->api3('CiviShare', 'peer', $peer_request);
 
-    // 3 process results
-    foreach ($result['values'] as $contact_id => $contact_result) {
-      if (is_int($contact_result)) {
-        // contact peer identified. Write record
-        $this->createLink($contact_id, $contact_result);
-        $reply['NEWLY_PEERED'] += 1;
-      } else {
-        $reply[$contact_result] += 1;
+      // 3 process results
+      foreach ($result['values'] as $contact_id => $contact_result) {
+        if (is_int($contact_result)) {
+          // contact peer identified. Write record
+          $this->createLink($contact_id, $contact_result);
+          $reply['NEWLY_PEERED'] += 1;
+        } else {
+          $reply[$contact_result] += 1;
+        }
       }
     }
 
