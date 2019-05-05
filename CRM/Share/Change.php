@@ -32,11 +32,111 @@ class CRM_Share_Change {
   }
 
   /**
-   * Get the oldest next change with the given status
+   * Get the value of a field
+   *
+   * @param $key string field name
+   * @return mixed value
+   */
+  public function get($key) {
+    if (isset($this->change_data->$key)) {
+      return $this->change_data->$key;
+    } else {
+      return NULL;
+    }
+  }
+
+  /**
+   * Get the list of local fields of the change 'entity'
+   */
+  public function getLocalFields() {
+    return ['id', 'status', 'received_date', 'processed_date', 'local_contact_id'];
+  }
+
+  /**
+   * Get the list of global fields of the change 'entity'
+   */
+  public function getGlobalFields() {
+    return ['change_id', 'change_group_id', 'hash', 'handler_class', 'source_node_id', 'change_date', 'data_before', 'data_after'];
+  }
+
+  /**
+   * Get the contact ID this change is related to
+   * @return int contact ID
+   */
+  public function getContactID() {
+    return $this->get('local_contact_id');
+  }
+
+  /**
+   * Set the status of this change to the given value
+   */
+  public function setStatus($status) {
+    // TODO: filter for valid statuses?
+    $this->change_data->status = $status;
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_share_change SET status = %1 WHERE id = %2", [
+        1 => [$status,          'String'],
+        2 => [$this->get('id'), 'Integer']]);
+  }
+
+  /**
+   * Serialise the change data
+   * @return array all global fields
+   */
+  public function toArray() {
+    $change_data = [
+        'contact_id' => $this->getContactID()
+    ];
+    foreach ($this->getGlobalFields() as $field) {
+      $change_data[$field] = $this->get($field);
+    }
+    return $change_data;
+  }
+
+  /**
+   * Get a list of all change objects that are in the same group as this one,
+   *  including this one
+   * @param $status array|string (list of) status to consider
+   * @return array list of CRM_Share_Change objects
+   */
+  public function getAllChangesOfThatGroup($status = NULL) {
+    $changes = [];
+    $change_group_id = $this->get('change_group_id');
+    if (empty($change_group_id)) {
+      // this change is not grouped
+      $changes[] = $this;
+
+    } else {
+      // this is, potentially, a grouped change
+      $status_clause = self::buildStatusClause($status);
+
+      // build query
+      $changes_query = CRM_Core_DAO::executeQuery("
+      SELECT id AS change_id
+      FROM civicrm_share_change
+      WHERE {$status_clause}
+        AND change_group_id = %1
+      ORDER BY received_date ASC", [1 => [$change_group_id, 'String']]);
+
+      // build change list
+      while ($changes_query->fetch()) {
+        $change_id = (int) $changes_query->change_id;
+        if ($change_id == $this->change_id) {
+          $changes[] = $this;
+        } else {
+          $changes[] = new CRM_Share_Change($change_id);
+        }
+      }
+    }
+    return $changes;
+  }
+
+  /**
+   * Get an SQL status filter clause based on the status list
    *
    * @param $status array|string (list of) status to consider
+   * @return string SQL clause
    */
-  public static function getNextChangeWithStatus($status) {
+  protected static function buildStatusClause($status) {
     if (is_string($status)) {
       $status = [$status];
     }
@@ -45,6 +145,17 @@ class CRM_Share_Change {
     } else {
       $status_clause = "status IN ('" . implode("','", $status) . "')";
     }
+    return$status_clause;
+  }
+
+  /**
+   * Get the oldest next change with the given status
+   *
+   * @param $status array|string (list of) status to consider
+   * @return CRM_Share_Change|null change object
+   */
+  public static function getNextChangeWithStatus($status) {
+    $status_clause = self::buildStatusClause($status);
 
     // build query
     $change_id = CRM_Core_DAO::singleValueQuery("

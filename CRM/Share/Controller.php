@@ -159,7 +159,7 @@ class CRM_Share_Controller {
     $dsn = DB::parseDSN(CIVICRM_DSN);
     $last_id = (int) CRM_Core_DAO::singleValueQuery("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{$dsn['database']}'  AND TABLE_NAME = 'civicrm_share_change'");
     $host_id = $this->HostID();
-    return "{$host_id}##{$last_id}";
+    return "{$host_id}::{$last_id}";
   }
 
   /**

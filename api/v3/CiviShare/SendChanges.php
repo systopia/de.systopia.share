@@ -61,7 +61,7 @@ function civicrm_api3_civi_share_send_changes($params) {
     }
 
     // 2. get all other changes connected to the group
-    $changes = $change->getAllChangesOfThatGroup();
+    $changes = $change->getAllChangesOfThatGroup(['LOCAL', 'FORWARD']);
 
     // 3. send those to all connected nodes
     $serialised_changes = [];
@@ -69,15 +69,15 @@ function civicrm_api3_civi_share_send_changes($params) {
       $serialised_changes[] = $change->toArray();
     }
 
-    $nodes = $change->getConnectedNodes();
+    $nodes = CRM_Share_Node::getNodesForContact($change->getContactID());
     $error = FALSE;
     foreach ($nodes as $node) {
       try {
         $node->api3('CiviShare', 'store_changes', [
-            'changes'    => json_encode($changes),
+            'changes'    => json_encode($serialised_changes),
             'sender_key' => $node->getKey(),
         ]);
-        CRM_Share_Controller::singleton()->log("Change '{$change->getID()}' sent to {$node->getShortName()}", 'debug');
+        CRM_Share_Controller::singleton()->log("Change '{$change->get('change_id')}' sent to {$node->getShortName()}", 'debug');
       } catch (Exception $ex) {
         $error = $ex->getMessage();
         CRM_Share_Controller::singleton()->log("ERROR while sending '{$change->getID()}' to {$node->getShortName()}: {$error}" , 'error');
