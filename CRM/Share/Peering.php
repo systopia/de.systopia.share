@@ -90,7 +90,7 @@ class CRM_Share_Peering {
    *                         'INSUFFICIENT_DATA' if there is not enough data submitted
    *                         'NOT_IDENTIFIED'    if no contact could be identified
    *                         'AMBIGUOUS'         if multiple contacts were identified
-   *                         'ERROR'             if some unforseen error has occured
+   *                         'ERROR'             if some unforeseen error has occurred
    */
   public function passivePeer($native_contact_id, $remote_contact_data) {
     // first: see if this contact is already peered
