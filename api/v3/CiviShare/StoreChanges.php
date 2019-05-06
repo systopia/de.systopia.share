@@ -46,19 +46,35 @@ function _civicrm_api3_civi_share_store_changes_spec(&$params) {
 function civicrm_api3_civi_share_store_changes($params) {
   CRM_Share_Controller::singleton()->log("CiviShare.store_changes request: " . json_encode($params), 'debug');
 
-  $changes = json_decode($params['changes'], TRUE);
-  foreach ($changes as $change) {
-    $lock = CRM_Share_Controller::singleton()->getChangesLock();
-
-    // 1. check if already in DB
-
-    // 2. resolve contact ID
-
-    // 3. write to DB
-
-    CRM_Share_Controller::singleton()->releaseLock($lock);
-
+  // get remote node
+  $remote_node = CRM_Share_Node::getNode($params['sender_key']);
+  if (empty($remote_node)) {
+    return civicrm_api3_create_error("Key not accepted. Maybe the nodes aren't peered yet?");
   }
 
-  return civicrm_api3_create_success();
+  // TODO: do we need the lock here?
+  // $lock = CRM_Share_Controller::singleton()->getChangesLock();
+
+  $error_count = 0;
+  $changes = json_decode($params['changes'], TRUE);
+  foreach ($changes as $change) {
+    // store change
+    try {
+      if (!CRM_Share_Change::storeChange($remote_node, $change)) {
+        $error_count += 1;
+      }
+    } catch(Exception $ex) {
+      $error_count += 1;
+    }
+  }
+
+  // TODO: do we need the lock here?
+  // CRM_Share_Controller::singleton()->releaseLock($lock);
+
+  if ($error_count) {
+    $count = count($changes);
+    return civicrm_api3_create_error("{$error_count} of {$count} changes were rejected. Check the logs.");
+  } else {
+    return civicrm_api3_create_success();
+  }
 }

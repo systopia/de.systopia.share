@@ -48,15 +48,15 @@ class CRM_Share_Change {
   /**
    * Get the list of local fields of the change 'entity'
    */
-  public function getLocalFields() {
-    return ['id', 'status', 'received_date', 'processed_date', 'local_contact_id'];
+  public static function getLocalFields() {
+    return ['id', 'status', 'received_date', 'processed_date', 'local_contact_id', 'source_node_id'];
   }
 
   /**
    * Get the list of global fields of the change 'entity'
    */
-  public function getGlobalFields() {
-    return ['change_id', 'change_group_id', 'hash', 'handler_class', 'source_node_id', 'change_date', 'data_before', 'data_after'];
+  public static function getGlobalFields() {
+    return ['change_id', 'change_group_id', 'hash', 'handler_class', 'change_date', 'data_before', 'data_after'];
   }
 
   /**
@@ -86,7 +86,7 @@ class CRM_Share_Change {
     $change_data = [
         'contact_id' => $this->getContactID()
     ];
-    foreach ($this->getGlobalFields() as $field) {
+    foreach (self::getGlobalFields() as $field) {
       $change_data[$field] = $this->get($field);
     }
     return $change_data;
@@ -210,5 +210,65 @@ class CRM_Share_Change {
     CRM_Share_Controller::singleton()->newChangeStored($change_id);
     CRM_Share_Controller::singleton()->releaseLock($lock);
     return new CRM_Share_Change($internal_change_id);
+  }
+
+  /**
+   * Verify and store a change record received from another node
+   *
+   * @param $remote_node        CRM_Share_Node sender node
+   * @param $serialised_change  array          serialised node
+   * @return boolean  TRUE iff the change was accepted and stored
+   */
+  public static function storeChange($remote_node, $serialised_change) {
+
+    // FIRST: verify that the change is valid
+    // 0. check if it has all the necessary attributes
+    foreach (self::getGlobalFields() as $field) {
+      if ($field !== 'change_group_id') { // change group is optional
+        if (empty($serialised_change[$field])) {
+          CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Field {$field} is not set.");
+          return false;
+        }
+      }
+    }
+
+    // 1. check if too old (longer than retention time)
+    $change_date        = strtotime($serialised_change['change_date']);
+    $change_date_cutoff = strtotime("now - " . CRM_Share_Configuration::getRetentionTime());
+    if ($change_date < $change_date_cutoff) {
+      CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Retention time exceeded.");
+      return FALSE;
+    }
+
+    // 2. check path
+    // TODO: implement paths (i.e. where did it come from)
+
+    // 3. change is not already in the DB
+    try {
+      new CRM_Share_Change($serialised_change['change_id']);
+      // if we get here, the change already exists:
+      CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Already exists in DB.");
+      return FALSE;
+    } catch (Exception $ex) {
+      // everything is fine, we expect this exception
+    }
+
+    // 4. check if active, peered contact exists
+    $peering = new CRM_Share_Peering($remote_node);
+    $contact_id = $peering->getLocalPeer($serialised_change['contact_id']);
+    if (!$contact_id) {
+      CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. No peered contact found.");
+      return FALSE;
+    }
+
+    // ALL GOOD -> store
+    self::createNewChangeRecord(
+        $serialised_change['change_id'],
+        $serialised_change['handler_class'],
+        $remote_node->getID(),
+        json_decode($remote_node['data_before'], TRUE),
+        json_decode($remote_node['data_after'], TRUE),
+        date('YmdHiS', $change_date),
+        $contact_id);
   }
 }

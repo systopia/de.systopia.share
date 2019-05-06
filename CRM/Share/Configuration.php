@@ -35,4 +35,21 @@ class CRM_Share_Configuration {
     return 1;
   }
 
+  /**
+   * Get the maximum time a change can be bouncing around the system
+   */
+  public static function getRetentionTime() {
+    // TODO: make configurable
+    return "5 days";
+  }
+
+  /**
+   * Should changes for contacts be processed even if they are deleted?
+   * @return bool
+   */
+  public static function processDeletedPeers() {
+    // TODO: make configurable
+    return FALSE;
+  }
+
 }
