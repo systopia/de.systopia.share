@@ -160,7 +160,7 @@ class CRM_Share_Node {
     if (empty($result['is_error'])) {
       return $result;
     } else {
-      throw new CiviCRM_API3_Exception($result['error_msg'], '0723');
+      throw new CiviCRM_API3_Exception($result['error_message'], '0723');
     }
   }
 

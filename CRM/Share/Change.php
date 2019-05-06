@@ -149,6 +149,21 @@ class CRM_Share_Change {
   }
 
   /**
+   * Get a change object by the globally valid change ID
+   *
+   * @param $change_id string change ID
+   * @return CRM_Share_Change|null change object, if it exists
+   */
+  public static function getByChangeID($change_id) {
+    $internal_change_id = CRM_Core_DAO::singleValueQuery("SELECT * FROM civicrm_share_change WHERE change_id = %1;", [1 => [$change_id, 'String']]);
+    if ($internal_change_id) {
+      return new CRM_Share_Change($internal_change_id);
+    } else {
+      return NULL;
+    }
+  }
+
+  /**
    * Get the oldest next change with the given status
    *
    * @param $status array|string (list of) status to consider
@@ -244,13 +259,10 @@ class CRM_Share_Change {
     // TODO: implement paths (i.e. where did it come from)
 
     // 3. change is not already in the DB
-    try {
-      new CRM_Share_Change($serialised_change['change_id']);
-      // if we get here, the change already exists:
+    $existing_change = CRM_Share_Change::getByChangeID($serialised_change['change_id']);
+    if ($existing_change) {
       CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Already exists in DB.");
       return FALSE;
-    } catch (Exception $ex) {
-      // everything is fine, we expect this exception
     }
 
     // 4. check if active, peered contact exists
@@ -266,8 +278,8 @@ class CRM_Share_Change {
         $serialised_change['change_id'],
         $serialised_change['handler_class'],
         $remote_node->getID(),
-        json_decode($remote_node['data_before'], TRUE),
-        json_decode($remote_node['data_after'], TRUE),
+        $serialised_change['data_before'],
+        $serialised_change['data_after'],
         date('YmdHiS', $change_date),
         $contact_id);
   }

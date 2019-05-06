@@ -71,7 +71,7 @@ function civicrm_api3_civi_share_send_changes($params) {
 
     $nodes = CRM_Share_Node::getNodesForContact($change->getContactID());
     $error = FALSE;
-    foreach ($nodes as $node) {
+    foreach ($nodes as $node) {  /** @var CRM_Share_Node $node */
       try {
         $node->api3('CiviShare', 'store_changes', [
             'changes'    => json_encode($serialised_changes),
@@ -80,7 +80,7 @@ function civicrm_api3_civi_share_send_changes($params) {
         CRM_Share_Controller::singleton()->log("Change '{$change->get('change_id')}' sent to {$node->getShortName()}", 'debug');
       } catch (Exception $ex) {
         $error = $ex->getMessage();
-        CRM_Share_Controller::singleton()->log("ERROR while sending '{$change->getID()}' to {$node->getShortName()}: {$error}" , 'error');
+        CRM_Share_Controller::singleton()->log("ERROR while sending '{$change->get('change_id')}' to {$node->getShortName()}: {$error}" , 'error');
       }
     }
 
