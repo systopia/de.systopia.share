@@ -48,15 +48,37 @@ function civicrm_api3_civi_share_process_changes($params) {
 
   while ($changes_processed < $params['limit']) {
     // 1. get next change
+    $change = CRM_Share_Change::getNextChangeWithStatus(['PENDING']);
+    if (!$change) {
+      break;
+    }
 
     // 2. get all other changes connected to the group
+    $changes = $change->getAllChangesOfThatGroup(['PENDING']);
 
+
+    // 3. lock the changes
     $lock = CRM_Share_Controller::singleton()->getChangesLock();
+    foreach ($changes as $change) {
+      $change->setStatus('BUSY');
+    }
 
-    // 3. process those changes
+    // 4. apply and mark as processed
+    foreach ($changes as $change) {
+      try {
+        CRM_Share_Controller::singleton()->suspendedChangeDetection();
+        $change->apply(); // <-- this is where the magic happens
+        $change->setStatus('FORWARD');
+        CRM_Share_Controller::singleton()->log("Change '{$change->get('change_id')}' applied.", 'debug');
+      } catch (Exception $ex) {
+        // there was an error
+        CRM_Share_Controller::singleton()->log("Error applying change '{$change->get('change_id')}': " . $ex->getMessage(), 'error');
+        $change->setStatus('ERROR');
+      }
+      CRM_Share_Controller::singleton()->resumeChangeDetection();
+    }
 
-    // 4. mark as processed
-
+    // release lock
     CRM_Share_Controller::singleton()->releaseLock($lock);
   }
 

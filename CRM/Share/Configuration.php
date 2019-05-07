@@ -23,7 +23,7 @@ class CRM_Share_Configuration {
    */
   public static function hook_change_detection_enabled() {
     // TODO: make configurable
-    return TRUE;
+    return !CRM_Share_Controller::$change_detection_suspended;
   }
 
 

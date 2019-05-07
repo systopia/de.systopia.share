@@ -46,6 +46,27 @@ class CRM_Share_Change {
   }
 
   /**
+   * Get the parsed JSON value of a field
+   *  - even if encoded twice
+   *
+   * @param $key string field name
+   * @return mixed value
+   */
+  public function getJSONData($key) {
+    $first_decoding = json_decode($this->get($key), TRUE);
+    if (is_array($first_decoding)) {
+      return $first_decoding;
+    } else {
+      $second_decoding = json_decode($first_decoding, TRUE);
+      if (isset($second_decoding)) {
+        return $second_decoding;
+      } else {
+        return $first_decoding;
+      }
+    }
+  }
+
+  /**
    * Get the list of local fields of the change 'entity'
    */
   public static function getLocalFields() {
@@ -65,6 +86,23 @@ class CRM_Share_Change {
    */
   public function getContactID() {
     return $this->get('local_contact_id');
+  }
+
+  /**
+   * Apply the change to the database
+   *
+   * @return boolean TRUE if anything was changed, FALSE if not
+   * @throws Exception should there be a problem
+   */
+  public function apply() {
+    // get the handler
+    $handler = CRM_Share_Controller::singleton()->getHandler($this);
+    if (!$handler) {
+      throw new Exception("Unknown handler: '{$this->get('handler_class')}'. Not applied!");
+    }
+
+    // apply the change
+    return $handler->apply($this);
   }
 
   /**
@@ -177,7 +215,7 @@ class CRM_Share_Change {
       SELECT id
       FROM civicrm_share_change
       WHERE {$status_clause}
-      ORDER BY received_date ASC
+      ORDER BY change_date ASC
       LIMIT 1");
     if ($change_id) {
       return new CRM_Share_Change($change_id);
@@ -241,7 +279,7 @@ class CRM_Share_Change {
     foreach (self::getGlobalFields() as $field) {
       if ($field !== 'change_group_id') { // change group is optional
         if (empty($serialised_change[$field])) {
-          CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Field {$field} is not set.");
+          CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Field {$field} is not set.", 'warn');
           return false;
         }
       }
@@ -251,7 +289,7 @@ class CRM_Share_Change {
     $change_date        = strtotime($serialised_change['change_date']);
     $change_date_cutoff = strtotime("now - " . CRM_Share_Configuration::getRetentionTime());
     if ($change_date < $change_date_cutoff) {
-      CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Retention time exceeded.");
+      CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Retention time exceeded.", 'warn');
       return FALSE;
     }
 
@@ -262,7 +300,7 @@ class CRM_Share_Change {
     $existing_change = CRM_Share_Change::getByChangeID($serialised_change['change_id']);
     if ($existing_change) {
       CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. Already exists in DB.");
-      return FALSE;
+      return TRUE; // don't treat as an error
     }
 
     // 4. check if active, peered contact exists
@@ -280,7 +318,11 @@ class CRM_Share_Change {
         $remote_node->getID(),
         $serialised_change['data_before'],
         $serialised_change['data_after'],
-        date('YmdHiS', $change_date),
+        date('YmdHis', $change_date),
         $contact_id);
+
+    // all is well
+    CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' received.");
+    return TRUE;
   }
 }

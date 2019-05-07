@@ -37,6 +37,15 @@ abstract class CRM_Share_Handler
     $this->configuration = $configuration;
   }
 
+  /**
+   * Apply the change to the database
+   *
+   * @param $change CRM_Share_Change the change object to be applied
+   *
+   * @return boolean TRUE if anything was changed, FALSE if not
+   * @throws Exception should there be a problem
+   */
+  abstract public function apply($change);
 
   /**
    * If this handler can process pre-hook related change, it can return a record here that
@@ -112,6 +121,7 @@ abstract class CRM_Share_Handler
         $timestamp,
         $local_contact_id
         );
+    $this->log("New change recorded.", $change);
     return $change;
   }
 
@@ -123,5 +133,21 @@ abstract class CRM_Share_Handler
    */
   public function isContactCurrentlyLinked($contact_id) {
     return CRM_Share_Controller::singleton()->isContactCurrentlyLinked($contact_id);
+  }
+
+  /**
+   * Handler logging
+   *
+   * @param $message string            the log message
+   * @param $change  CRM_Share_Change  the change object being processed
+   * @param $log_level string          log level
+   */
+  public function log($message, $change = NULL, $log_level = 'info') {
+    $class_name = (string) get_class($this);
+    if ($change) {
+      CRM_Share_Controller::singleton()->log("[{$change->get('change_id')}][{$class_name}]: {$message}", $log_level);
+    } else {
+      CRM_Share_Controller::singleton()->log("[{$class_name}]: {$message}", $log_level);
+    }
   }
 }

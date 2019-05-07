@@ -19,6 +19,99 @@
 class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
 
   /**
+   * Apply the change to the database
+   *
+   * @param $change CRM_Share_Change the change object to be applied
+   *
+   * @return boolean TRUE if anything was changed, FALSE if not
+   * @throws Exception should there be a problem
+   */
+  public function apply($change) {
+    // get data
+    $data_before = $change->getJSONData('data_before');
+    $data_after  = $change->getJSONData('data_after');
+    if (!isset($data_after) || !isset($data_before)) {
+      throw new Exception("No change data!");
+    }
+
+    // load contact
+    $fields = array_unique(array_merge(array_keys($data_before), array_keys($data_after)));
+    $contact_id = $change->getContactID();
+    if (empty($contact_id)) {
+      throw new Exception("No contact linked to the change!");
+    }
+    $data_current = civicrm_api3('Contact', 'getsingle', [
+        'id'     => $contact_id,
+        'return' => implode(',', $fields),
+    ]);
+
+    // compile update
+    // TODO: for now, only apply if the values haven't changed
+    $contact_update = [];
+    $allowed_fields = $this->getFieldList();
+    foreach ($data_after as $field => $new_value) {
+      if (in_array($field, $allowed_fields)) {
+        // check if we have a prior value
+        if (isset($data_before[$field]) && $this->hasFieldChanged($field, $data_current, $data_before)) {
+          $this->log("Won't apply '{$field}', value has changed.", $change, 'debug');
+          continue;
+        }
+
+        // all good?
+        $this->applyUpdate($field, $contact_update, $new_value, $data_current);
+      }
+    }
+
+    if (empty($contact_update)) {
+      $this->log("No applicable changes detected.", $change);
+      return FALSE;
+    } else {
+      $contact_update['id'] = $contact_id;
+      civicrm_api3('Contact', 'create', $contact_update);
+      return TRUE;
+    }
+  }
+
+  /**
+   * Check if the given field value is different in the two data sets.
+   *  This method should encapsulate all special cases in contact base data
+   *
+   * @param $field string field name
+   * @param $data1 array data
+   * @param $data2 array data
+   * @return boolean TRUE if changed
+   */
+  protected function hasFieldChanged($field, $data1, $data2) {
+    $value1 = $data1[$field];
+    $value2 = CRM_Utils_Array::value($field, $data2);
+    switch ($field) {
+      default:
+        return $value1 != $value2;
+    }
+  }
+
+
+  /**
+   * Add the right value to the contact update data
+   *  This method should encapsulate all special cases in contact base data
+   *
+   * @param $field           string field name
+   * @param $contact_update  array the Contact.create API3 data
+   * @param $new_value       mixed the new value submitted
+   * @param $contact_current array current contact data - if the data is identical, there's nothing to do
+   */
+  protected function applyUpdate($field, &$contact_update, $new_value, $contact_current) {
+    $current_value = CRM_Utils_Array::value($field, $contact_current);
+    switch ($field) {
+      default:
+        if ($current_value != $new_value) {
+          $contact_update[$field] = $new_value;
+        }
+        break;
+    }
+  }
+
+  /**
    * If this handler can process pre-hook related change, it can return a record here that
    * will then be passed into createPostHookChange()
    *

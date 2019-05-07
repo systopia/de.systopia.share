@@ -18,6 +18,7 @@
  */
 class CRM_Share_Controller {
 
+  public  static $change_detection_suspended = FALSE;
   private static $singleton = NULL;
 
   protected $handlers = NULL;
@@ -57,6 +58,19 @@ class CRM_Share_Controller {
     // TODO: implement
   }
 
+  /**
+   * Allows you to suspend change detection. Don't forget to switch back!
+   */
+  public function suspendedChangeDetection() {
+    self::$change_detection_suspended = TRUE;
+  }
+
+  /**
+   * Allows you to suspend change detection. Don't forget to switch back!
+   */
+  public function resumeChangeDetection() {
+    self::$change_detection_suspended = FALSE;
+  }
 
   /**
    * Provides a (cached) lookup to see if the contact is linked,
@@ -104,6 +118,24 @@ class CRM_Share_Controller {
   public function log($message, $level = 'info') {
     // TODO: implement log levels
     CRM_Core_Error::debug_log_message("CiviShare: " . $message);
+  }
+
+  /**
+   * Get the handler instance for the given change
+   *  This is usually based on a combination of handler_class and the node
+   *
+   * @param $change CRM_Share_Change the change
+   * @return CRM_Share_Handler|null the handler instance
+   */
+  public function getHandler($change) {
+    // TODO: create a more detailed implementation
+    $handlers = self::getHandlers();
+    foreach ($handlers as $handler) {
+      if (get_class($handler) == $change->get('handler_class')) {
+        return $handler;
+      }
+    }
+    return NULL;
   }
 
   /**
