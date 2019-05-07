@@ -44,7 +44,7 @@ function _civicrm_api3_civi_share_store_changes_spec(&$params) {
  *  Remark: the changes will merely be stored, not processed - this will be done by CiviShare.store_changes
 **/
 function civicrm_api3_civi_share_store_changes($params) {
-  CRM_Share_Controller::singleton()->log("CiviShare.store_changes request: " . json_encode($params), 'debug');
+  //CRM_Share_Controller::singleton()->log("CiviShare.store_changes request: " . json_encode($params), 'debug');
 
   // get remote node
   $remote_node = CRM_Share_Node::getNode($params['sender_key']);

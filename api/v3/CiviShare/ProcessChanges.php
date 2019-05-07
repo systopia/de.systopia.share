@@ -43,7 +43,7 @@ function _civicrm_api3_civi_share_process_changes_spec(&$params) {
  * This action will cause the system to process all pending changes
  **/
 function civicrm_api3_civi_share_process_changes($params) {
-  CRM_Share_Controller::singleton()->log("CiviShare.process_changes request: " . json_encode($params), 'debug');
+  //CRM_Share_Controller::singleton()->log("CiviShare.process_changes request: " . json_encode($params), 'debug');
   $changes_processed = 0;
 
   while ($changes_processed < $params['limit']) {

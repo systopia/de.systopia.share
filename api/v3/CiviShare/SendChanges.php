@@ -45,7 +45,7 @@ function _civicrm_api3_civi_share_send_changes_spec(&$params) {
  *   database to all connected nodes
  **/
 function civicrm_api3_civi_share_send_changes($params) {
-  CRM_Share_Controller::singleton()->log("CiviShare.send_changes request: " . json_encode($params), 'debug');
+  //CRM_Share_Controller::singleton()->log("CiviShare.send_changes request: " . json_encode($params), 'debug');
   $changes_processed = 0;
 
   // TODO: send only one request per node
