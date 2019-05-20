@@ -175,7 +175,7 @@ class CRM_Share_Peering {
     SELECT
         link.entity_id     AS contact_id,
         contact.is_deleted AS is_deleted,
-        link.is_enabled    AS is_enabled,
+        link.is_enabled    AS is_enabled
     FROM civicrm_value_share_link link
     LEFT JOIN civicrm_contact contact ON link.entity_id = contact.id
     WHERE link.civishare_id = %1
