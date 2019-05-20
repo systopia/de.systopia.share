@@ -116,7 +116,9 @@ class CRM_Share_Node {
         FROM civicrm_share_node
         WHERE is_enabled = 1");
     while ($node->fetch()) {
-      $node_list[$node->nid] = "[{$node->short_name}] {$node->name}";
+      if ($node->short_name != 'LOCAL') {
+        $node_list[$node->nid] = "[{$node->short_name}] {$node->name}";
+      }
     }
     return $node_list;
   }

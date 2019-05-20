@@ -170,6 +170,7 @@ class CRM_Share_Peering {
   public function getLocalPeer($remote_native_contact_id, $only_enabled = FALSE) {
     $remote_contact_id = $this->remote_node->getShareContactID($remote_native_contact_id);
 
+    CRM_Core_Error::debug_log_message("Looking for {$remote_contact_id} in " . $this->remote_node->getID());
     $peer = CRM_Core_DAO::executeQuery("
     SELECT
         link.entity_id     AS contact_id,
@@ -180,7 +181,7 @@ class CRM_Share_Peering {
     WHERE link.civishare_id = %1
       AND link.civishare_node_id = %2", [
           1 => [$remote_contact_id, 'String'],
-          2 => [$this->remote_node->getID(), 'String']]);
+          2 => [$this->remote_node->getID(), 'Integer']]);
     if ($peer->fetch()) {
       if ($peer->is_deleted && !CRM_Share_Configuration::processDeletedPeers()) {
         // contact is deleted
