@@ -33,6 +33,8 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
    * @throws Exception should there be a problem
    */
   public function apply($change) {
+    $this->log("Starting change application...", 'debug');
+
     // get data
     $data  = $change->getJSONData('data_after');
 

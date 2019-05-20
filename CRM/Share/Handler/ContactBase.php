@@ -27,6 +27,8 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @throws Exception should there be a problem
    */
   public function apply($change) {
+    $this->log("Starting change application...", 'debug');
+
     // get data
     $data_before = $change->getJSONData('data_before');
     $data_after  = $change->getJSONData('data_after');
