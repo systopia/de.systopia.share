@@ -174,10 +174,13 @@ class CRM_Share_Peering {
     SELECT
         link.entity_id     AS contact_id,
         contact.is_deleted AS is_deleted,
-        link.is_enabled    AS is_enabled
+        link.is_enabled    AS is_enabled,
     FROM civicrm_value_share_link link
     LEFT JOIN civicrm_contact contact ON link.entity_id = contact.id
-    WHERE link.civishare_id = %1", [1 => [$remote_contact_id, 'String']]);
+    WHERE link.civishare_id = %1
+      AND link.civishare_node_id = %2", [
+          1 => [$remote_contact_id, 'String'],
+          2 => [$this->remote_node->getID(), 'String']]);
     if ($peer->fetch()) {
       if ($peer->is_deleted && !CRM_Share_Configuration::processDeletedPeers()) {
         // contact is deleted
