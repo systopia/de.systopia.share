@@ -63,6 +63,7 @@ class CRM_Share_ChangeDetectionByHook {
   public static function processPost($op, $objectName, $id, $objectRef) {
     if (self::$enabled) {
       $handlers = CRM_Share_Controller::singleton()->getHandlers();
+      $handlers = array_reverse($handlers); // process is reverse order (this is a stack)
       foreach ($handlers as $handler) {
         $pre_record = array_pop(self::$change_stack);
         $handler->createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef);

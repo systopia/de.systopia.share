@@ -26,7 +26,7 @@ function _civicrm_api3_civi_share_process_changes_spec(&$params) {
       'name'         => 'limit',
       'api.default'  => 20,
       'type'         => CRM_Utils_Type::T_INT,
-      'title'        => 'Limit the amount of changes sent to this number.',
+      'title'        => 'Limit the amount of changes to be processed.',
   );
   $params['change_ids'] = array(
       'name'         => 'change_ids',
@@ -48,6 +48,7 @@ function civicrm_api3_civi_share_process_changes($params) {
 
   while ($changes_processed < $params['limit']) {
     // 1. get next change
+    $changes_processed += 1;
     $change = CRM_Share_Change::getNextChangeWithStatus(['PENDING']);
     if (!$change) {
       break;

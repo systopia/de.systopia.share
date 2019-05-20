@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
 
 -- insert test hander, TODO: REMOVE, make this configurable
 INSERT IGNORE INTO civicrm_share_handler (id,name,class,weight,is_enabled,configuration)
-           VALUES (1, "Test", "CRM_Share_Handler_ContactBase", 1, 1, "{}");
+   VALUES (1, "Test", "CRM_Share_Handler_ContactBase", 1, 1, "{}"),
+          (2, "Test2", "CRM_Share_Handler_ContactTag", 1, 1, "{}");
 
 -- CiviShare.Change: data structure to record changes
 CREATE TABLE IF NOT EXISTS `civicrm_share_change`(
