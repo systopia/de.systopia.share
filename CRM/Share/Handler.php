@@ -145,7 +145,8 @@ abstract class CRM_Share_Handler
   public function log($message, $change = NULL, $log_level = 'info') {
     $class_name = (string) get_class($this);
     if ($change) {
-      CRM_Share_Controller::singleton()->log("[{$change->get('change_id')}][{$class_name}]: {$message}", $log_level);
+      $change_id = $change->get('change_id');
+      CRM_Share_Controller::singleton()->log("[{$change_id}][{$class_name}]: {$message}", $log_level);
     } else {
       CRM_Share_Controller::singleton()->log("[{$class_name}]: {$message}", $log_level);
     }
