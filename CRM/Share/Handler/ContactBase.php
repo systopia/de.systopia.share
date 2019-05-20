@@ -66,6 +66,7 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
       $this->log("No applicable changes detected.", $change);
       return FALSE;
     } else {
+      $this->log("Will update contact [{$contact_id}]: " . json_encode($contact_update), 'debug');
       $contact_update['id'] = $contact_id;
       civicrm_api3('Contact', 'create', $contact_update);
       return TRUE;

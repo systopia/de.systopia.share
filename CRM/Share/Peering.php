@@ -170,7 +170,6 @@ class CRM_Share_Peering {
   public function getLocalPeer($remote_native_contact_id, $only_enabled = FALSE) {
     $remote_contact_id = $this->remote_node->getShareContactID($remote_native_contact_id);
 
-    CRM_Core_Error::debug_log_message("Looking for {$remote_contact_id} in " . $this->remote_node->getID());
     $peer = CRM_Core_DAO::executeQuery("
     SELECT
         link.entity_id     AS contact_id,
