@@ -53,17 +53,7 @@ class CRM_Share_Change {
    * @return mixed value
    */
   public function getJSONData($key) {
-    $first_decoding = json_decode($this->get($key), TRUE);
-    if (is_array($first_decoding)) {
-      return $first_decoding;
-    } else {
-      $second_decoding = json_decode($first_decoding, TRUE);
-      if (isset($second_decoding)) {
-        return $second_decoding;
-      } else {
-        return $first_decoding;
-      }
-    }
+    return json_decode($this->get($key), TRUE);
   }
 
   /**
@@ -309,6 +299,18 @@ class CRM_Share_Change {
     if (!$contact_id) {
       CRM_Share_Controller::singleton()->log("Change '{$serialised_change['change_id']}' rejected. No peered contact found.");
       return FALSE;
+    }
+
+    // 5. deserialise data fields
+    foreach (['data_before', 'data_after'] as $field) {
+      if (array_key_exists($field, $serialised_change)) {
+        $deserialised_data = json_decode($serialised_change[$field], TRUE);
+        if ($deserialised_data !== NULL) {
+          $serialised_change[$field] = $deserialised_data;
+        } else {
+          $serialised_change[$field] = '';
+        }
+      }
     }
 
     // ALL GOOD -> store
