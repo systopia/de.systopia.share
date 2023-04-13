@@ -18,7 +18,7 @@ use CRM_Share_ExtensionUtil as E;
 /**
  * Collection of upgrade steps.
  */
-class CRM_Share_Upgrader extends CRM_Share_Upgrader_Base {
+class CRM_Share_Upgrader extends CRM_Extension_Upgrader_Base {
 
   /**
    * Installation

@@ -14,14 +14,23 @@
     <url desc="Support">http://FIXME</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate></releaseDate>
+  <releaseDate/>
   <version>0.1-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.0</ver>
+    <ver>5.38</ver>
   </compatibility>
-  <comments></comments>
+  <comments/>
   <civix>
     <namespace>CRM/Share</namespace>
+    <format>23.02.1</format>
   </civix>
+  <classloader>
+    <psr0 prefix="CRM_" path="."/>
+    <psr4 prefix="Civi\" path="Civi"/>
+  </classloader>
+  <upgrader>CRM_Share_Upgrader</upgrader>
+  <mixins>
+    <mixin>smarty-v2@1.0.1</mixin>
+  </mixins>
 </extension>
