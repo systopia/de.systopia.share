@@ -5,13 +5,13 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
      `short_name`           varchar(16)         COMMENT 'Short name identifier',
      `description`          varchar(255)        COMMENT 'Description to clarify what/where that node is',
      `rest_url`             varchar(255)        COMMENT 'URL of the REST API of the node',
-     `site_key`             varchar(64) NULL    COMMENT 'SITE_KEY of the node',
+--      `site_key`             varchar(64) NULL    COMMENT 'SITE_KEY of the node',
      `api_key`              varchar(64) NULL    COMMENT 'API_KEY of the node',
      `is_enabled`           tinyint             COMMENT 'is this node enabled?',
      `auth_key`             varchar(64)         COMMENT 'bi-directional authorisation key',
 --     `time_offset`          bigint              COMMENT 'time offset in seconds',
-     `receive_profile`      text                COMMENT 'defines what data will be sent to this node',
-     `send_profile`         text                COMMENT 'defines what data will be received from this node',
+     `receive_identifiers`  text                COMMENT 'defines what data identifiers that will be received by this node',
+     `send_identifiers`     text                COMMENT 'defines what data identifiers that will be sent by this nodes',
     PRIMARY KEY ( `id` ),
     UNIQUE INDEX `short_name` (short_name),
     UNIQUE INDEX `node_key` (auth_key)
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
 
 -- insert local node, TODO: REMOVE, make this configurable
 INSERT IGNORE INTO civicrm_share_node (id, name, short_name, description, is_enabled)
-       VALUES (1, 'Local Environment', 'LOCAL', 'This very environment', 1);
+       VALUES (1, 'Local Environment', 'LOCAL', 'This very environment', '', 'no_key', '', '');
 
 -- CiviShare.Handler: handlers implement the data processing
 CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
