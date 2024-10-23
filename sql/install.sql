@@ -1,3 +1,5 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
 -- CiviShare.Node: the connection to another node in the network
 CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
      `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'ID',
@@ -8,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
 --      `site_key`             varchar(64) NULL    COMMENT 'SITE_KEY of the node',
      `api_key`              varchar(64) NULL    COMMENT 'API_KEY of the node',
      `is_enabled`           tinyint             COMMENT 'is this node enabled?',
-     `auth_key`             varchar(64)         COMMENT 'bi-directional authorisation key',
+     `auth_key`             varchar(64)         COMMENT 'bi-directional shared-secret authorisation key',
 --     `time_offset`          bigint              COMMENT 'time offset in seconds',
      `receive_identifiers`  text                COMMENT 'defines what data identifiers that will be received by this node',
      `send_identifiers`     text                COMMENT 'defines what data identifiers that will be sent by this nodes',
@@ -35,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 
--- insert test hander, TODO: REMOVE, make this configurable
+-- insert test handler, TODO: REMOVE, make this configurable
 INSERT IGNORE INTO civicrm_share_handler (id,name,class,weight,is_enabled,configuration)
    VALUES (1, "Test", "CRM_Share_Handler_ContactBase", 1, 1, "{}"),
           (2, "Test2", "CRM_Share_Handler_ContactTag", 1, 1, "{}");
@@ -53,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_change`(
     `change_date`          datetime NOT NULL   COMMENT 'timestamp of the change',
     `received_date`        datetime NOT NULL   COMMENT 'timestamp of the reception of the change',
     `processed_date`       datetime            COMMENT 'timestamp of the processing of the change',
+    `triggerd_by`          text                COMMENT 'list of change_ids that triggered this change',
     `data_before`          text                COMMENT 'the data before the change',
     `data_after`           text                COMMENT 'the data after the change',
     PRIMARY KEY ( `id` ),

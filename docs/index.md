@@ -60,7 +60,7 @@ a different way, it can safely be ignored.
 ## Example
 
 Consider two systems, ``CIVI1``, ``CIVI2``. If you want to simply pass
-selected contact changes and newly created contacts from ``CIVI1` to ``CIVI2``
+selected contact changes and newly created contacts from ``CIVI1`` to ``CIVI2``
 you'd:
 1. link the two instances with a common secret.
 2. set up a contact base change detector on ``CIVI1``
@@ -73,9 +73,58 @@ If you would also detect and send changes from ``CIVI2`` to ``CIVI1`` the
 loop detection outlined above should kick in, so there would't be an eternal
 change back-and-forth.
 
-## Change notification structure
+## Change message structure example
 
-TBD, but most likely a JSON format.
+```json
+{
+  "id": "some-unique-id",
+  "payload_signature": "/HbL/n2GaZWex15bmNquRUYWUriGEPpncqcIUQkqgwoltCzQU+x2IjMZZNgSFJ2oMJBk24AzHn/WZw8eOn5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZBjmwdmtlJ4e/f5SNWRi2kNQ=",
+  "payload": {
+    "sender": "https://node4.mydistributed.org",
+    "sent": "2024-10-23 20:10:00 CEST"
+    "changes": [
+      {
+        "type": "civishare.change.contact.base",
+        "timestamp": "2024-10-23 20:08:48 CEST",
+        "entity": "Contact",
+        "entity_reference": "312",
+        "attribute_changes": [
+          {
+            "name": "first_name",
+            "from": "Karl",
+            "to": "Carl"
+          },
+          {
+            "name": "birth_date",
+            "from": "",
+            "to": "2000-01-01"
+          }
+        ]
+        "loop_detection": ["5R+hJjo8pEpgTQvp0WMmV8DZNEVZB"]
+      },
+      {
+        "type": "civishare.change.contact.base",
+        "timestamp": "2024-10-23 20:08:48 CEST",
+        "entity": "Contact",
+        "entity_reference": "2312",
+        "attribute_changes": [
+          {
+            "name": "first_name",
+            "from": "Karlotta",
+            "to": "Escarlata"
+          },
+          {
+            "name": "last_name",
+            "from": "",
+            "to": "La Pirata"
+          }
+        ],
+        "loop_detection": ["5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB","5RPX2frgjtPtR1FO2asdwqwewqe+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB"]
+      }
+    ]
+  }
+}
+```
 
 
 ## Detecting Changes
