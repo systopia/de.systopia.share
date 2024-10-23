@@ -40,10 +40,6 @@ The list of data types (i.e. identifiers) that can be sent or received will be
 defined as the ones that the sender is willing to share and the
 receiver is willing to process.
 
-## Example
-
-Consider three systems, CIVI1
-
 
 ## Loop detection/prevention
 
@@ -60,6 +56,22 @@ all signatures it has already processed (for a sensible time frame).
 Then, if a change is received that had already been processed in
 a different way, it can safely be ignored.
 
+
+## Example
+
+Consider two systems, ``CIVI1``, ``CIVI2``. If you want to simply pass
+selected contact changes and newly created contacts from ``CIVI1` to ``CIVI2``
+you'd:
+1. link the two instances with a common secret.
+2. set up a contact base change detector on ``CIVI1``
+3. set up a contact base change processor on ``CIVI2``
+
+You should be able to see detected changes from ``CIVI1`` sent to ``CIVI2``
+and applied there.
+
+If you would also detect and send changes from ``CIVI2`` to ``CIVI1`` the
+loop detection outlined above should kick in, so there would't be an eternal
+change back-and-forth.
 
 ## Change notification structure
 
