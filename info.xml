@@ -29,6 +29,9 @@
     <psr0 prefix="CRM_" path="."/>
     <psr4 prefix="Civi\" path="Civi"/>
   </classloader>
+  <requires>
+    <ext>de.systopia.identitytracker</ext>
+  </requires>
   <upgrader>CRM_Share_Upgrader</upgrader>
   <mixins>
     <mixin>smarty-v2@1.0.1</mixin>
