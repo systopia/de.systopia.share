@@ -27,6 +27,19 @@ Once the system, i.e. the local node, is peered with at least one other node, yo
 If that's the case a link is established between those contacts.
 In order to facilitate this peering process, there is a search task that allows you to try and peer any set of local contacts with a peered node.
 
+## Change types
+
+A change is always defined by a certain type, which in
+turn defines the data fields to be expected.
+
+Here is the list of the existing* change types:
+
+| Identifier                           | Entity       | Attributes                                    | Description                 |
+|--------------------------------------|--------------|-----------------------------------------------|-----------------------------|
+| ``civishare.change.contact.base``    | Contact      | ``first_name``, ``last_name``, ``birth_date`` | Used for basic contact data |
+| ``civishare.change.contact.address`` | Contact      | TDB, but civicrm_address attributes           |                             |
+| ``civishare.change.contact.tag``     | Contact, Tag | TDB, but will sychronise tags                 |                             |
+|                                      |              |                                               |                             |
 
 ##  [NEEDS UPDATE] Services (API)
 
@@ -37,7 +50,7 @@ The system provides two types of services:
 #### CiviShare.peer
 This service allows you to facilitate contact peering, see above. You send a bunch of identifying criteria of the contacts you want to peer, and you will receive a status for each contact.
 That status is one of:
-- ``NEWLY_PEERED``: contact was identified is is now peered (usually expressed by a contact ID)
+- ``NEWLY_PEERED``: contact was identified is now peered (usually expressed by a contact ID)
 - ``INSUFFICIENT_DATA``: there is not enough data submitted to identify the contact
 - ``NOT_IDENTIFIED'``: no contact could be identified
 - ``AMBIGUOUS``: multiple contacts were identified
