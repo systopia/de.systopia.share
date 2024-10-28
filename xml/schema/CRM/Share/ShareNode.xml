@@ -4,7 +4,7 @@
   <base>CRM/Share</base>
   <class>ShareNode</class>
   <name>civicrm_share_node</name>
-  <comment>FIXME</comment>
+  <comment>Represents a node in the CiviShare network</comment>
   <log>true</log>
 
   <field>
