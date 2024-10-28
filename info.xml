@@ -18,7 +18,7 @@
   <version>0.1-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.38</ver>
+    <ver>5.45</ver>
   </compatibility>
   <comments/>
   <civix>
@@ -35,5 +35,6 @@
   <upgrader>CRM_Share_Upgrader</upgrader>
   <mixins>
     <mixin>smarty-v2@1.0.1</mixin>
+    <mixin>entity-types-php@1.0.0</mixin>
   </mixins>
 </extension>

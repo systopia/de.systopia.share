@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Share</base>
+  <class>ShareNode</class>
+  <name>civicrm_share_node</name>
+  <comment>FIXME</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique ShareNode ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+    <name>name</name>
+    <type>varchar</type>
+    <length>128</length>
+    <comment>Name</comment>
+  </field>
+  <field>
+    <name>short_name</name>
+    <type>varchar</type>
+    <comment>Short Name</comment>
+  </field>
+  <field>
+    <name>is_local</name>
+    <type>boolean</type>
+    <comment>Is this a local node</comment>
+  </field>
+  <field>
+    <name>is_local</name>
+    <type>boolean</type>
+    <comment>Is this a local node</comment>
+  </field>
+  <field>
+    <name>is_enabled</name>
+    <type>int unsigned</type>
+    <comment>Is this node active</comment>
+  </field>
+  <field>
+    <name>description</name>
+    <type>varchar</type>
+    <length>512</length>
+    <comment>Node description</comment>
+  </field>
+  <field>
+    <name>rest_url</name>
+    <type>varchar</type>
+    <length>256</length>
+    <comment>REST URL</comment>
+  </field>
+  <field>
+    <name>api_key</name>
+    <type>varchar</type>
+    <comment>API Key</comment>
+  </field>
+  <field>
+    <name>processes_identifiers</name>
+    <type>longtext</type>
+    <comment>Padded list of content types to be processed</comment>
+  </field>
+  <field>
+    <name>processes_identifiers</name>
+    <type>longtext</type>
+    <comment>Padded list of content types to be processed</comment>
+  </field>
+  <field>
+    <name>sends_identifiers</name>
+    <type>longtext</type>
+    <comment>Padded list of content types to be produced and sent</comment>
+  </field>
+</table>
