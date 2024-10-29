@@ -59,7 +59,7 @@
       "is_active": "1",
       "is_view": "1",
       "text_length": "255",
-      "date_format": "yyyy-mm-dd",
+      "date_format": "yy-mm-dd",
       "time_format": "2",
       "column_name": "datetime",
       "in_selector": "1"
