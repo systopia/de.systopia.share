@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_share_node`(
 
 -- insert local node, TODO: REMOVE, make this configurable
 INSERT IGNORE INTO civicrm_share_node (id, name, short_name, description, is_enabled)
-       VALUES (1, 'Local Environment', 'LOCAL', 'This very environment', '', 'no_key', '', '');
+       VALUES (1, 'Local Environment', 'LOCAL', 'This very environment', 1);
 
 -- CiviShare.Handler: handlers implement the data processing
 CREATE TABLE IF NOT EXISTS `civicrm_share_handler`(
