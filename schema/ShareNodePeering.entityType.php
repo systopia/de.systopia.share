@@ -23,14 +23,24 @@ return [
     'local_node' => [
       'title' => E::ts('Local node'),
       'sql_type' => 'int',
-      'input_type' => 'Number',
+      'input_type' => 'Select',
       'description' => E::ts('local node ID - reference to civicrm_share_node'),
+      'pseudoconstant' => [
+        'table' => 'civicrm_share_node',
+        'key_column' => 'id',
+        'label_column' => 'short_name',
+      ],
     ],
     'remote_node' => [
       'title' => E::ts('Remote node'),
       'sql_type' => 'int',
-      'input_type' => 'Number',
+      'input_type' => 'Select',
       'description' => E::ts('Remote node ID - reference to civicrm_share_node'),
+      'pseudoconstant' => [
+        'table' => 'civicrm_share_node',
+        'key_column' => 'id',
+        'label_column' => 'short_name',
+      ],
     ],
     'is_enabled' => [
       'title' => E::ts('Is enabled?'),
@@ -59,5 +69,10 @@ return [
       'unique' => TRUE,
     ],
   ],
-  'getPaths' => fn() => [],
+  'getPaths' => fn() => [
+    'add' => 'civicrm/share/node/peering/add?reset=1&action=add',
+    'update' => 'civicrm/share/node/peering/add?reset=1&action=update&id=[id]',
+    'delete' => 'civicrm/share/node/peering/add?reset=1&action=delete&id=[id]',
+    'browse' => 'civicrm/share/node/peering',
+  ],
 ];

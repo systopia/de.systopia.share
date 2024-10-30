@@ -4,6 +4,12 @@
     <path>civicrm/share/node/add</path>
     <page_callback>CRM_Share_Form_ShareNode</page_callback>
     <title>ShareNode</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/share/node-peering/add</path>
+    <page_callback>CRM_Share_Form_ShareNodePeering</page_callback>
+    <title>ShareNode</title>
+    <access_arguments>administer CiviCRM</access_arguments>
   </item>
 </menu>
