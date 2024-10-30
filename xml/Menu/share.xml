@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/share/node/peering/add</path>
+    <page_callback>CRM_Share_Form_ShareNodePeering</page_callback>
+    <title>ShareNodePeering</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
