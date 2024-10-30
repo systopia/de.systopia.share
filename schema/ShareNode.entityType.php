@@ -34,7 +34,7 @@ return [
     ],
     'is_local' => [
       'title' => E::ts('Is local?'),
-      'sql_type' => 'tinyint(1)',
+      'sql_type' => 'boolean',
       'input_type' => 'CheckBox',
       'description' => E::ts('Is this node representing this system or a remote one?'),
     ],
@@ -58,7 +58,7 @@ return [
     ],
     'is_enabled' => [
       'title' => E::ts('Is enabled?'),
-      'sql_type' => 'tinyint(1)',
+      'sql_type' => 'boolean',
       'input_type' => 'CheckBox',
       'description' => E::ts('Is this node enabled?'),
     ],
@@ -96,11 +96,9 @@ return [
     ],
   ],
   'getPaths' => fn() => [
-    'add' => 'civicrm/share/node/add?reset=1',
-    'view' => 'civicrm/share/node/search?reset=1&action=view&id=[id]',
-    'update' => 'civicrm/share/node/edit?reset=1&action=update&id=[id]',
-    'delete' => 'civicrm/share/node/edit?reset=1&action=delete&id=[id]',
+    'add' => 'civicrm/share/node/add?reset=1&action=add',
+    'update' => 'civicrm/share/node/add?reset=1&action=update&id=[id]',
+    'delete' => 'civicrm/share/node/add?reset=1&action=delete&id=[id]',
     'browse' => 'civicrm/share/node',
-
   ],
 ];
