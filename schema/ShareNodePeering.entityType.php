@@ -25,10 +25,10 @@ return [
       'sql_type' => 'int',
       'input_type' => 'Select',
       'description' => E::ts('local node ID - reference to civicrm_share_node'),
-      'pseudoconstant' => [
-        'table' => 'civicrm_share_node',
-        'key_column' => 'id',
-        'label_column' => 'short_name',
+      'entity_reference' => [
+        'entity' => 'ShareNode',
+        'key' => 'id',
+        'on_delete' => 'CASCADE',
       ],
     ],
     'remote_node' => [
@@ -36,10 +36,10 @@ return [
       'sql_type' => 'int',
       'input_type' => 'Select',
       'description' => E::ts('Remote node ID - reference to civicrm_share_node'),
-      'pseudoconstant' => [
-        'table' => 'civicrm_share_node',
-        'key_column' => 'id',
-        'label_column' => 'short_name',
+      'entity_reference' => [
+        'entity' => 'ShareNode',
+        'key' => 'id',
+        'on_delete' => 'CASCADE',
       ],
     ],
     'is_enabled' => [
