@@ -35,7 +35,7 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
    */
   public function setUpHeadless(): CiviEnvBuilder {
     return \Civi\Test::headless()
-      ->install(['moregreetings'])
+      ->install(['de.systopia.moregreetings'])
       ->installMe(__DIR__)
       ->apply();
   }

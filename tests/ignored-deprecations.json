@@ -1,0 +1,32 @@
+[
+    {
+        "location": "Civi\\Test\\CiviTestListenerPHPUnit7",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Test\\CiviTestListenerPHPUnit7",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Test\\CiviTestListener",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Test\\CiviTestListener",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "civi\\test\\civitestlistener",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "civi\\test\\civitestlistener",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
+        "count": 1
+    }
+]
