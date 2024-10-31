@@ -27,6 +27,7 @@ return [
       'description' => E::ts('local node ID - reference to civicrm_share_node'),
       'entity_reference' => [
         'entity' => 'ShareNode',
+        'is_local' => 1,
         'key' => 'id',
         'on_delete' => 'CASCADE',
       ],
@@ -39,6 +40,7 @@ return [
       'entity_reference' => [
         'entity' => 'ShareNode',
         'key' => 'id',
+        'is_local' => 0,
         'on_delete' => 'CASCADE',
       ],
     ],
