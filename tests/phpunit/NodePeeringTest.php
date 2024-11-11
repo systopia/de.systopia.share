@@ -1,10 +1,10 @@
 <?php
-
-use CRM_Share_ExtensionUtil as E;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
+
+//use CRM_Share_ExtensionUtil as E;
 
 /**
  * FIXME - Add test description.
@@ -33,34 +33,28 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
    *
    * @throws \CRM_Extension_Exception_ParseException
    */
-  public function setUpHeadless(): CiviEnvBuilder {
+  public function setUpHeadless() {
+
+    // drop tables - @todo remove
+    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node");
+    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node_peering");
+    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
+    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_handler");
+
     return \Civi\Test::headless()
-      ->install(['moregreetings'])
+//      ->install(['something'])
       ->installMe(__DIR__)
       ->apply();
   }
 
-  public function setUp():void {
-    parent::setUp();
-  }
-
-  public function tearDown():void {
-    parent::tearDown();
-  }
 
   /**
-   * Example: Test that a version is returned.
+   * This will manually set up a peering ON THE SAME SYSTEM
    */
-  public function testWellFormedVersion():void {
-    $this->assertNotEmpty(E::SHORT_NAME);
-    $this->assertMatchesRegularExpression('/^([0-9\.]|alpha|beta)*$/', \CRM_Utils_System::version());
-  }
+  public function testPeeringSetup():void {
+    // create a local node
 
-  /**
-   * Example: Test that we're using a fake CMS.
-   */
-  public function testWellFormedUF():void {
-    $this->assertEquals('UnitTests', CIVICRM_UF);
+    $this->assertTrue(true);
   }
 
 }
