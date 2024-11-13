@@ -22,33 +22,31 @@ return [
     ],
     'local_node' => [
       'title' => E::ts('Local node'),
-      'sql_type' => 'int',
+      'sql_type' => 'int unsigned',
       'input_type' => 'Select',
       'description' => E::ts('local node ID - reference to civicrm_share_node'),
       'entity_reference' => [
         'entity' => 'ShareNode',
         'is_local' => 1,
         'key' => 'id',
-        'on_delete' => 'CASCADE',
       ],
     ],
     'remote_node' => [
       'title' => E::ts('Remote node'),
-      'sql_type' => 'int',
+      'sql_type' => 'int unsigned',
       'input_type' => 'Select',
       'description' => E::ts('Remote node ID - reference to civicrm_share_node'),
       'entity_reference' => [
         'entity' => 'ShareNode',
         'key' => 'id',
         'is_local' => 0,
-        'on_delete' => 'CASCADE',
       ],
     ],
     'is_enabled' => [
       'title' => E::ts('Is enabled?'),
       'sql_type' => 'tinyint(1)',
       'input_type' => 'CheckBox',
-      'description' => E::ts('Шs this peering enabled?'),
+      'description' => E::ts('Is this peering enabled?'),
     ],
     'shared_secret' => [
       'title' => E::ts('Shared secret'),
