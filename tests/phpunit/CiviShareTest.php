@@ -50,7 +50,7 @@ class CiviShareTest extends \PHPUnit\Framework\TestCase implements HeadlessInter
 
   public function testMe()
   {
-    $this->assertTrue(true);
-    \civicrm_api3('Contact', 'get');
+    \CRM_Contribute_BAO_Contribution::fields();
+    $this->assertTrue(CRM_Share_DAO_ShareNode::fields());
   }
 }

@@ -15,7 +15,6 @@ $loader->add('api_', [__DIR__ . '/../..', __DIR__]);
 $loader->addPsr4('api\\', [__DIR__ . '/../../api', __DIR__ . '/api']);
 
 $loader->register();
-require_once "/var/www/civicrm/awo/sites/default/civicrm.settings.php";
 
 /**
  * Call the "cv" command.

@@ -44,27 +44,33 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
 //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node_peering");
 //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node");
 
-    return \Civi\Test::headless()
+    $result = \Civi\Test::headless()
       ->installMe(__DIR__)
       ->apply();
+    return $result;
   }
 
   public function setUp(): void
   {
     // clean tables
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_change");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_handler");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node_peering");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node");
+    parent::setUp();
+    // todo: remove?
+    require_once "/var/www/civicrm/awo/sites/default/civicrm.settings.php";
+    \CRM_Core_DAO_AllCoreTables::flush();
+
+//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_change");
+//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_handler");
+//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node_peering");
+//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node");
 
     parent::setUp();
   }
-
 
   /**
    * This will manually set up a peering ON THE SAME SYSTEM
    */
   public function testBasicSetup():void {
+    \CRM_Core_DAO_AllCoreTables::flush();
     // create a local node
     $local_node = \Civi\Api4\ShareNode::create(false)
       ->addValue('name', 'Local Node 1')

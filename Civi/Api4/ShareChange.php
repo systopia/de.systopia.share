@@ -10,4 +10,6 @@ namespace Civi\Api4;
  */
 class ShareChange extends Generic\DAOEntity {
 
+  public const STATUS_LOCAL = 'LOCAL';
+
 }
