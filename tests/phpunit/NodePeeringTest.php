@@ -58,11 +58,6 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
     require_once "/var/www/civicrm/awo/sites/default/civicrm.settings.php";
     \CRM_Core_DAO_AllCoreTables::flush();
 
-//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_change");
-//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_handler");
-//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node_peering");
-//    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node");
-
     parent::setUp();
   }
 
@@ -70,6 +65,7 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
    * This will manually set up a peering ON THE SAME SYSTEM
    */
   public function testBasicSetup():void {
+
     \CRM_Core_DAO_AllCoreTables::flush();
     // create a local node
     $local_node = \Civi\Api4\ShareNode::create(false)
@@ -95,7 +91,7 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
       ->execute()
       ->first();
 
-    // create a peering (cheekily
+    // create a peering (cheekily)
     $shared_key = base64_encode(random_bytes(64));
     $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
       ->addValue('local_node', $local_node['id'])
@@ -103,6 +99,15 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
       ->addValue('is_enabled', true)
       ->addValue('shared_secret', $shared_key)
       ->execute();
+
+    // create a change
+    $node_peering = \Civi\Api4\ShareChange::create(TRUE)
+      ->addValue('local_node', $local_node['id'])
+      ->addValue('remote_node', $remote_node['id'])
+      ->addValue('is_enabled', true)
+      ->addValue('shared_secret', $shared_key)
+      ->execute();
+
 
 
     $this->assertTrue(true);

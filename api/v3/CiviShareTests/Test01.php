@@ -77,17 +77,14 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->addValue('data_before', '') // empty as this is a test
     ->addValue('data_after', '')  // empty as this is a test
     ->execute();
+  $change_id = $change->first()['id'];
 
   // create a change message
-  $change_id = $change->first()['id'];
   $change_message = new Message();
   $change_message->addChangeId($change_id);
 
   // send
   $change_message->send();
-
-
-
 
 
   return civicrm_api3_create_success($peering_results);
