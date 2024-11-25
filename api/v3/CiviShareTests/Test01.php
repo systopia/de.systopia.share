@@ -26,6 +26,8 @@ use \Civi\Share\Message;
  * @todo migrate to unit tests (once running)
  **/
 function civicrm_api3_civi_share_tests_test01(&$params) {
+  define('CIVISHARE_ALLOW_LOCAL_LOOP', 1); // allow local loops
+
   // create a local node
   CRM_Share_TestTools::clearCiviShareConfig();
 
@@ -81,11 +83,10 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
 
   // create a change message
   $change_message = new Message();
-  $change_message->addChangeId($change_id);
+  $change_message->addChangeById($change_id);
 
   // send
   $change_message->send();
-
 
   return civicrm_api3_create_success($peering_results);
 }

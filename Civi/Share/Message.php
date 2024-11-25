@@ -41,7 +41,7 @@ class Message {
    *
    * @return void
    */
-  public function addChangeId(int $change_id)
+  public function addChangeById(int $change_id)
   {
     $this->change_ids[] = $change_id;
   }
@@ -103,7 +103,18 @@ class Message {
       foreach ($peerings as $peered_node) {
         // send message to every peered node
         if ($peered_node) {
-          // todo: generate and queue message
+          // shortcut: local-to-local connection
+          if (empty($peered_node['remote_node.rest_url']) || empty($peered_node['remote_node.api_key'])) {
+            // this is not a proper node...but we might allow this anyway:
+            if (defined('CIVISHARE_ALLOW_LOCAL_LOOP')) {
+              $this->processOnNode($peered_node['remote_node.id']);
+            }
+          } else {
+            // TODO: implement SENDING
+            \Civi::log()->warning("todo: implement serialisation and sending (directly/queue/etc)");
+          }
+
+          // todo: mark as SENT
 
         }
       }
@@ -113,25 +124,38 @@ class Message {
       $this->markChanges('DROPPED');
    }
 
+    $lock->release();
+  }
 
+  /**
+   * Process the received and verified message on the given node
+   *
+   * @param int $local_node_id
+   *   the node where this will be processed on
+   *
+   * @return void
+   */
+  public function processOnNode($local_node_id)
+  {
+    $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
 
+    // load the changes
+    $changes = civicrm_api4('ShareChange', 'get', [
+      'where' => [
+        ['id', 'IN', $this->change_ids],
+      ],
+      'checkPermissions' => TRUE,
+    ]);
 
-
-
-
-
-
-    //
-
-
-
-
-    // then send all changes there
-
-    //
+    // process them
+    foreach ($changes as $change) {
+      $this->applyChange($change);
+    }
 
     $lock->release();
   }
+
+
 
   /**
    * Parse/reconstruct a message
@@ -146,7 +170,6 @@ class Message {
    */
   public static function extractSerialisedMessage($data, $node_peering_id) : ?Message
   {
-
+    // todo
   }
-
 }
