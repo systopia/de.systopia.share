@@ -5,14 +5,26 @@
 The CiviShare will allow you to link and connect multiple CiviCRM instances
 in order to share new or updated data on one instance with all linked instances.
 
+## Setup
+
+In order to set up a CiviShare connection between two (or more) CiviCRM's the following has
+to happen:
+1. CiviShare needs to be installed on both CiviCRM instances
+2. On both CiviCRM instances
+  * a "local node" representing the host system is created.
+  * a "remote node" representing the respective other system needs to be created along with
+3. On both CiviCRM instances a local node represents the host system, and the remote nodes represent the different remote nodes it is linked to.
+4. In order for two such nodes (a local and a remote one) to exchange data, these nodes then need to be peered, see section below.
+
+
 ## Modules and data types
 
-The system will require you to link a number of modules to a connector
+The system will require you to link a number of change types to a peering
 to define what kind of data will be exchanged. A module could either be
 * a **change detector** (will detect and record changes), or
-* a **change applier** (will apply recorded changes to CiviCRM)
+* a **change processor** (will apply transmitted changes to the local CiviCRM)
 
-Both modules will use identifier to define data content they will be able to
+Both modules will use identifiers to define data content they will be able to
 produce or process. Such an identifier could be ``civishare.change.contact.base`` to
 mark contact base data.
 

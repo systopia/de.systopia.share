@@ -30,13 +30,13 @@ return [
       'title' => E::ts('Change group ID'),
       'sql_type' => 'varchar(128)',
       'input_type' => 'Text',
-      'description' => E::ts('Changes can be batched into groups, that are to be processed in one go'),
+      'description' => E::ts('Changes can be batched into groups, so that they are to be processed in one go'),
     ],
     'status' => [
       'title' => E::ts('Status'),
       'sql_type' => 'varchar(8)',
       'input_type' => 'Text',
-      'description' => E::ts('Status: LOCAL, PENDING, BUSY, FORWARD, DONE, ERROR'),
+      'description' => E::ts('Status: LOCAL, PENDING, BUSY, FORWARD, DONE, DROPPED, ERROR'),
     ],
     'hash' => [
       'title' => E::ts('Name'),
@@ -48,7 +48,7 @@ return [
       'title' => E::ts('Handler class'),
       'sql_type' => 'varchar(128)',
       'input_type' => 'Text',
-      'description' => E::ts('Name of the handler class tha produced this change'),
+      'description' => E::ts('Name of the handler class that produced this change'),
     ],
     'local_contact_id' => [
       'title' => E::ts('Local contact ID'),

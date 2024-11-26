@@ -1,25 +1,32 @@
-# Configuration
+# Change Types
+
+CiviShare relies on change type indentifier match incoming changes
+to the appropriate modules.
+
+## List of known change types
+
+| Identifier                        | Description                       | Remarks                                                              |
+|-----------------------------------|-----------------------------------|----------------------------------------------------------------------|
+| ``civishare.change.contact.base`` | Contact base data                 | Simple attributes like ``first_name``, ``last_name``, ``birth_date`` |
+| ``civishare.change.contact.tag``  | Contact tag data                  | Allows the sharing/synching of tags                                  |
+| ``civishare.change.test``         | Test change for internal purposes | This is only used for testing                                        |
 
 
-## Setup
-
-TODO
-
-
-## Configuration
-
-TODO
 
 
 ## Peering
 
 Peering in CiviShare happens on two levels:
+5.
+6. In the configuration of such a peering, you can define which change types (see below) will be processed, and how (providing a processor implementation)
 
 ### Node Peering
 
 Before two CiviShare nodes (i.e. CiviCRM instances with the CiviShare extension) can exchange information, they need to be connected.
 For this to happen, they each have to have an entry in the ``civicrm_share_node`` table representing the other node respectively.
 Both entries have to also have a unique "common secret" i.e. an identical ``auth_key`` which both nodes use to identify and authorise the connection.
+
+5. In the configuration of such a peering, you can define which change types (see below) will be processed, and how (providing a processor implementation)
 
 ### Contact Peering
 
