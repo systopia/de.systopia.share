@@ -16,6 +16,10 @@
 /**
  * This is the command and control centre of CiviShare
  */
+
+/**
+ * @deprecated will be handled differently, so this is no longer needed
+ */
 class CRM_Share_Controller {
 
   public  static $change_detection_suspended = FALSE;
@@ -83,8 +87,8 @@ class CRM_Share_Controller {
     $contact_id = (int) $contact_id;
     if (!isset($this->contact_link_status[$contact_id])) {
       $is_peered = CRM_Core_DAO::singleValueQuery("
-        SELECT id 
-        FROM civicrm_value_share_link 
+        SELECT id
+        FROM civicrm_value_share_link
         WHERE entity_id = {$contact_id}
           AND is_enabled = 1
         LIMIT 1");
@@ -122,7 +126,7 @@ class CRM_Share_Controller {
 
   /**
    * Get the handler instance for the given change
-   *  This is usually based on a combination of handler_class and the node
+   *  This is usually based on a combination of change_type and the node
    *
    * @param $change CRM_Share_Change the change
    * @return CRM_Share_Handler|null the handler instance
@@ -131,7 +135,7 @@ class CRM_Share_Controller {
     // TODO: create a more detailed implementation
     $handlers = self::getHandlers();
     foreach ($handlers as $handler) {
-      if (get_class($handler) == $change->get('handler_class')) {
+      if (get_class($handler) == $change->get('change_type')) {
         return $handler;
       }
     }
@@ -149,10 +153,10 @@ class CRM_Share_Controller {
       $this->handlers = [];
       // run the query first
       $query = CRM_Core_DAO::executeQuery("
-        SELECT 
-          id            AS handler_id, 
-          name          AS handler_name, 
-          class         AS handler_class, 
+        SELECT
+          id            AS handler_id,
+          name          AS handler_name,
+          class         AS change_type,
           configuration AS handler_configuration
         FROM civicrm_share_handler
         WHERE is_enabled = 1

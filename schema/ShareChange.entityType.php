@@ -44,11 +44,11 @@ return [
       'input_type' => 'Text',
       'description' => E::ts('SHA1 hash of the change to detect duplicates and loops'),
     ],
-    'handler_class' => [
-      'title' => E::ts('Handler class'),
+    'change_type' => [
+      'title' => E::ts('Change Type Identifier'),
       'sql_type' => 'varchar(128)',
       'input_type' => 'Text',
-      'description' => E::ts('Name of the handler class that produced this change'),
+      'description' => E::ts('An identifier for the change type, see TODO'),
     ],
     'local_contact_id' => [
       'title' => E::ts('Local contact ID'),

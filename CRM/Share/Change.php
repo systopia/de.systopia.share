@@ -16,6 +16,8 @@
 /**
  * Change Record Interface
  *
+ * @deprecated will be handled differently, so this is no longer needed
+ *
  * @todo turn into CiviCRM entity
  */
 class CRM_Share_Change {
@@ -67,7 +69,7 @@ class CRM_Share_Change {
    * Get the list of global fields of the change 'entity'
    */
   public static function getGlobalFields() {
-    return ['change_id', 'change_group_id', 'hash', 'handler_class', 'change_date', 'data_before', 'data_after'];
+    return ['change_id', 'change_group_id', 'hash', 'change_type', 'change_date', 'data_before', 'data_after'];
   }
 
   /**
@@ -88,7 +90,7 @@ class CRM_Share_Change {
     // get the handler
     $handler = CRM_Share_Controller::singleton()->getHandler($this);
     if (!$handler) {
-      throw new Exception("Unknown handler: '{$this->get('handler_class')}'. Not applied!");
+      throw new Exception("Unknown handler: '{$this->get('change_type')}'. Not applied!");
     }
 
     // apply the change
@@ -218,7 +220,7 @@ class CRM_Share_Change {
    * Create/insert a new change entry
    *
    * @param $change_id        string unique change ID
-   * @param $handler_class    string handler class
+   * @param $change_type    string handler class
    * @param $source_node_id   int source node ID (in civicrm_share_node)
    * @param $data_before      array data/object
    * @param $data_after       array data/object
@@ -226,7 +228,7 @@ class CRM_Share_Change {
    *
    * @return CRM_Share_Change the newly created change
    */
-  public static function createNewChangeRecord($change_id, $handler_class, $source_node_id, $data_before, $data_after, $change_date, $local_contact_id) {
+  public static function createNewChangeRecord($change_id, $change_type, $source_node_id, $data_before, $data_after, $change_date, $local_contact_id) {
     $lock = CRM_Share_Controller::singleton()->getChangesLock();
 
     $data_before_string = json_encode($data_before);
@@ -236,11 +238,11 @@ class CRM_Share_Change {
     $status             = $source_node_id == CRM_Share_Configuration::getLocalNodeID() ? 'LOCAL' : 'PENDING';
 
     CRM_Core_DAO::executeQuery("
-    INSERT INTO civicrm_share_change (change_id, hash, handler_class, source_node_id, data_before, data_after, change_date, received_date, status, local_contact_id)
+    INSERT INTO civicrm_share_change (change_id, hash, change_type, source_node_id, data_before, data_after, change_date, received_date, status, local_contact_id)
                                VALUES(%1, %2, %3, %4, %5, %6, %7, NOW(), %8, %9);", [
                                    1 => [$change_id, 'String'],
                                    2 => [$change_hash, 'String'],
-                                   3 => [$handler_class, 'String'],
+                                   3 => [$change_type, 'String'],
                                    4 => [$source_node_id, 'Integer'],
                                    5 => [$data_before_string, 'String'],
                                    6 => [$data_after_string, 'String'],
@@ -316,7 +318,7 @@ class CRM_Share_Change {
     // ALL GOOD -> store
     self::createNewChangeRecord(
         $serialised_change['change_id'],
-        $serialised_change['handler_class'],
+        $serialised_change['change_type'],
         $remote_node->getID(),
         $serialised_change['data_before'],
         $serialised_change['data_after'],

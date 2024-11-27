@@ -1,4 +1,6 @@
 <?php
+* @deprecated will be handled differently, so this is no longer needed
+
 /*-------------------------------------------------------+
 | CiviShare                                              |
 | Copyright (C) 2019 SYSTOPIA                            |
@@ -240,8 +242,8 @@ class CRM_Share_Peering {
     $peered_contact_ids = [];
     $contact_ids_list = implode(',', $contact_ids);
     $query = CRM_Core_DAO::executeQuery("
-        SELECT DISTINCT(entity_id) 
-        FROM civicrm_value_share_link 
+        SELECT DISTINCT(entity_id)
+        FROM civicrm_value_share_link
         WHERE entity_id IN ({$contact_ids_list})
           AND civishare_node_id = {$node_id}");
     while ($query->fetch()) {
