@@ -21,7 +21,8 @@ use Civi\Api4\ShareNode;
  *
  * @package Civi\Api4
  */
-class Message {
+class Message
+{
 
   /** @var array list of change ids */
   protected array $change_ids = [];
@@ -122,7 +123,7 @@ class Message {
     } else {
       // no peered instances: mark changes as DROPPED
       $this->markChanges('DROPPED');
-   }
+    }
 
     $lock->release();
   }
@@ -148,13 +149,30 @@ class Message {
     ]);
 
     // process them
-    foreach ($changes as $change) {
-      $this->applyChange($change);
-    }
+    $change_processor = new ChangeProcessor($local_node_id);
+    $change_processor->addChanges($changes);
+    $change_processor->process();
 
     $lock->release();
   }
 
+
+  /**
+   * Apply the given change by extracting the relevant change handler
+   *
+   * @param array $change
+   *    change data
+   *
+   * @return void
+   */
+  public function applyChange(array $change)
+  {
+    // @todo rename handler_class to change_type
+    $change_type = $change['handler_class'];
+
+
+
+  }
 
 
   /**
