@@ -85,3 +85,7 @@ function share_civicrm_install() {
 function share_civicrm_enable() {
   _share_civix_civicrm_enable();
 }
+
+function share_civicrm_permission(array &$permissions): void {
+  $permissions += \Civi\Share\Permissions::getPermissions();
+}
