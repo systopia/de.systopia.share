@@ -15,6 +15,8 @@
 
 /**
  * This class handles the detection of changes by hook
+ *
+ * @deprecated will be handled differently, so this is no longer needed
  */
 class CRM_Share_ChangeDetectionByHook {
 

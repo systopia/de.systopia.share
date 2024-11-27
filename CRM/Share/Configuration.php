@@ -15,6 +15,8 @@
 
 /**
  * Generic CiviShare configuration
+ *
+ * @deprecated will be handled differently, so this is no longer needed
  */
 class CRM_Share_Configuration {
 

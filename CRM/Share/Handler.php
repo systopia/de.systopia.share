@@ -15,6 +15,8 @@
 
 /**
  * This is the base class of all CiviShare handers
+ *
+ * @deprecated will be handled differently, so this is no longer needed
  */
 abstract class CRM_Share_Handler
 {

@@ -15,6 +15,8 @@
 
 /**
  * This is the base class of all CiviShare handlers
+ *
+ * @deprecated will be handled differently, so this is no longer needed
  */
 class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
 
