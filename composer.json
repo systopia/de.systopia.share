@@ -7,6 +7,6 @@
     ],
     "require": {
         "ext-curl": "*",
-        "civimrf/cmrf_abstract_core": "^0.11"
+        "civimrf/cmrf_abstract_core": "^0.10.4"
     }
 }
