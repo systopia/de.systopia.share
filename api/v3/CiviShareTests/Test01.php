@@ -28,6 +28,12 @@ use \Civi\Share\Message;
 function civicrm_api3_civi_share_tests_test01(&$params) {
   define('CIVISHARE_ALLOW_LOCAL_LOOP', 1); // allow local loops
 
+  // add the test handler
+  Civi::dispatcher()->addListener(
+    'civishare.change.test',
+    'civicrm_civi_share_test_register_test_hander'
+  );
+
   // create a local node
   CRM_Share_TestTools::clearCiviShareConfig();
 
@@ -68,8 +74,9 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', null)
-    ->addValue('status', \Civi\Api4\ShareChange::STATUS_LOCAL)
+    ->addValue('status', \Civi\Api4\ShareChange::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.test')
+    ->addValue('', 'PENDING')
     //->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())
     ->addValue('source_node_id', $local_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
@@ -81,6 +88,8 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->execute();
   $change_id = $change->first()['id'];
 
+  // add a dummy listener to the 'civishare.change.test' change type
+
   // create a change message
   $change_message = new Message();
   $change_message->addChangeById($change_id);
@@ -89,5 +98,11 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   $change_message->send();
 
   return civicrm_api3_create_success($peering_results);
+}
+
+
+function civicrm_civi_share_test_register_test_hander()
+{
+  \Civi::log("YEAH!");
 }
 
