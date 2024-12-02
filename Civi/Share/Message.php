@@ -222,10 +222,11 @@ class Message
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
         ['id', 'IN', $this->change_ids],
-        ['status', 'IN', ['PENDING']],
+        ['status', 'IN', ShareChange::ACTIVE_STATUS],
       ],
       'checkPermissions' => TRUE,
     ]);
+    return $changes->count() == 0;
   }
 
   /**

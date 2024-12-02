@@ -70,7 +70,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->addValue('change_group_id', null)
     ->addValue('status', \Civi\Api4\ShareChange::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.test')
-    ->addValue('', 'PENDING')
+    ->addValue('status', 'PENDING')
     //->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())
     ->addValue('source_node_id', $local_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
@@ -91,18 +91,16 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   // create a change message
   $change_message = new Message();
   $change_message->addChangeById($change_id);
-  if (!$change_message->allChangesProcessed()) {
-    throw new Exception("Changes were ALREADY processed.");
-  }
+  $change_message->processChanges($local_node['id']);
 
   // send
   $change_message->send();
 
   // this should now be processed
   if (!$change_message->allChangesProcessed()) {
+    // todo: replace with ->assertTrue()
     throw new Exception("Changes were NOT processed.");
   }
-
 
   return civicrm_api3_create_success();
 }
