@@ -28,12 +28,6 @@ use \Civi\Share\Message;
 function civicrm_api3_civi_share_tests_test01(&$params) {
   define('CIVISHARE_ALLOW_LOCAL_LOOP', 1); // allow local loops
 
-  // add the test handler
-  Civi::dispatcher()->addListener(
-    'civishare.change.test',
-    'civicrm_civi_share_test_register_test_hander'
-  );
-
   // create a local node
   CRM_Share_TestTools::clearCiviShareConfig();
 
@@ -89,20 +83,47 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   $change_id = $change->first()['id'];
 
   // add a dummy listener to the 'civishare.change.test' change type
+  $result = \Civi::dispatcher()->addListener(
+    'de.systopia.change.process',
+    'civicrm_civi_share_test_register_test_hander'
+  );
 
   // create a change message
   $change_message = new Message();
   $change_message->addChangeById($change_id);
+  if (!$change_message->allChangesProcessed()) {
+    throw new Exception("Changes were ALREADY processed.");
+  }
 
   // send
   $change_message->send();
 
-  return civicrm_api3_create_success($peering_results);
+  // this should now be processed
+  if (!$change_message->allChangesProcessed()) {
+    throw new Exception("Changes were NOT processed.");
+  }
+
+
+  return civicrm_api3_create_success();
 }
 
 
-function civicrm_civi_share_test_register_test_hander()
+/**
+ * Process test events
+ *
+ * @param \Civi\Share\ChangeProcessingEvent $processing_event
+ * @param string $event_type
+ * @param $dispatcher
+ * @return void
+ */
+function civicrm_civi_share_test_register_test_hander($processing_event, $event_type, $dispatcher)
 {
-  \Civi::log("YEAH!");
+  // nothing to do here
+  if ($processing_event->isProcessed()) return;
+
+  // check if this is the one we're looking for
+  if ($processing_event->hasChangeType('civishare.change.test')) {
+    $processing_event->setProcessed();
+  }
 }
 

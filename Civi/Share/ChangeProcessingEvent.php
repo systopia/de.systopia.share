@@ -38,7 +38,7 @@ class ChangeProcessingEvent extends Event
   protected bool $is_processed = false;
 
   /** @var string the new status after the processing */
-  protected string $new_status = 'DONE';
+  protected string $new_change_status = 'DONE';
 
   /**
    * Create a new change processor for the given node. You can also add APIv4 data
@@ -63,7 +63,7 @@ class ChangeProcessingEvent extends Event
 
     // load node data if not given
     if (empty($this->change_data)) {
-      $change_data = \Civi\Api4\ShareChange::get(TRUE)
+      $this->change_data = \Civi\Api4\ShareChange::get(TRUE)
         ->addWhere('id', '=', $change_id)
         ->setLimit(1)
         ->execute()
@@ -105,9 +105,9 @@ class ChangeProcessingEvent extends Event
    *
    * @return string
    */
-  public function getNewStatus()
+  public function getNewChangeStatus()
   {
-    return $this->new_status;
+    return $this->$new_change_status;
   }
 
   /**
@@ -116,8 +116,29 @@ class ChangeProcessingEvent extends Event
    * @param string $status
    * @return void
    */
-  public function setNewStatus($status)
+  public function setNewChangeStatus($status)
   {
-    return $this->new_status;
+    $this->$new_change_status = $status;
+  }
+
+  /**
+   * Check if the change being processed is the given type
+   *
+   * @param $change_type
+   * @return void
+   */
+  public function hasChangeType($change_type)
+  {
+    return $this->change_data['change_type'] == $change_type;
+  }
+
+  /**
+   * Get the new status of the change as suggested by the change processor(s)
+   *
+   * @return string
+   */
+  public function getNewStatus() : string
+  {
+    return $this->new_change_status;
   }
 }

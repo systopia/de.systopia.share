@@ -1,5 +1,9 @@
 <?php
-* @deprecated will be handled differently, so this is no longer needed
+/**
+ * Represents a CiviShare node peering (most likely a remote one)
+ *
+ * @deprecated will be handled differently, so this is no longer needed
+ */
 
 /*-------------------------------------------------------+
 | CiviShare                                              |

@@ -106,9 +106,9 @@ class Message
       foreach ($peerings as $peered_node) {
         // send message to every peered node
         if ($peered_node) {
-          // shortcut: local-to-local connection
+          // SHORTCUT: local-to-local connection
           if (empty($peered_node['remote_node.rest_url']) || empty($peered_node['remote_node.api_key'])) {
-            // this is not a proper node...but we might allow this anyway:
+            // this is not a proper node...but we might allow this anyway, e.g. for testing
             if (defined('CIVISHARE_ALLOW_LOCAL_LOOP')) {
               $this->processChanges($peered_node['remote_node.id']);
             }
@@ -146,7 +146,7 @@ class Message
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
         ['id', 'IN', $this->change_ids],
-        ['status', 'IN', ['PENDING']],
+        ['status', 'IN', [ShareChange::STATUS_PENDING]],
       ],
       'checkPermissions' => TRUE,
     ]);
@@ -156,14 +156,15 @@ class Message
       $change_processor = new \Civi\Share\ChangeProcessingEvent($change['id'], $local_node_id, $change);
       try {
         \Civi::dispatcher()->dispatch('de.systopia.change.process', $change_processor);
-        if (!$change_processor->isProcessed()) {
-          $this->setChangeStatus($change_id, $change_processor->getNewStatus() ?? 'DONE');
+        if ($change_processor->isProcessed()) {
+          $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? ShareChange::STATUS_PROCESSED);
         } else {
-          $this->setChangeStatus($change_id, $change_processor->getNewStatus() ?? 'ERROR');
-          \Civi::log()->warning("Change [{$$change['id']}] could not be processed - no processor found.");
+          $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? ShareChange::STATUS_ERROR);
+          \Civi::log()->warning("Change [{$change['id']}] could not be processed - no processor found.");
         }
       } catch (\Exception $exception) {
-        \Civi::log()->warning("Change [{$$change['id']}] failed processing, exception was " . $exception->getMessage());
+        \Civi::log()->warning("Change [{$change['id']}] failed processing, exception was " . $exception->getMessage());
+        $this->setChangeStatus($change['id'], ShareChange::STATUS_ERROR);
         $change_processor->setFailed($exception->getMessage());
       }
     }
@@ -207,10 +208,25 @@ class Message
     // @todo rename handler_class to change_type
     $change_type = $change['handler_class'];
 
-
-
+    // @todo implement
   }
 
+  /**
+   * Check if all changes in the message have been processed
+   *
+   * @return boolean
+   */
+  public function allChangesProcessed()
+  {
+    // load the changes
+    $changes = civicrm_api4('ShareChange', 'get', [
+      'where' => [
+        ['id', 'IN', $this->change_ids],
+        ['status', 'IN', ['PENDING']],
+      ],
+      'checkPermissions' => TRUE,
+    ]);
+  }
 
   /**
    * Parse/reconstruct a message
