@@ -22,6 +22,28 @@ use Civi\Api4\ShareNode;
 class ChangeProcessingEvent extends Event
 {
 
+  /** ChangeProcessor priority PRIORITY: use if you definitely want the have a first go a this */
+  public const PRIORITY_PROCESSING = 1000;
+
+  /** ChangeProcessor priority is very high: use to override the default processing */
+  const EARLY_PROCESSING = 750;
+
+  /** ChangeProcessor priority is high: use to override the default processing */
+  const PREFERRED_PROCESSING = 500;
+
+  /** ChangeProcessor priority is default */
+  const DEFAULT_PROCESSING = 250;
+
+  /** ChangeProcessor priority is low */
+  const LATE_PROCESSING = 100;
+
+  /** ChangeProcessor priority: after the regular processing */
+  const POST_PROCESSING = 50;
+
+  /** ChangeProcessor priority REPORTING: at this point everything should've happened */
+  const REPORTING = 0;
+
+
   /** @var int node ID */
   protected int $node_id;
 
