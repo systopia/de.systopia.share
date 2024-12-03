@@ -1,5 +1,4 @@
 <?php
-* @deprecated will be handled differently, so this is no longer needed
 
 /*-------------------------------------------------------+
 | CiviShare                                              |
@@ -16,6 +15,8 @@
 +-------------------------------------------------------*/
 
 /**
+ * @deprecated will be handled differently, so this is no longer needed
+ *
  * Contains the peering algorithm with a given remote host
  * This class covers both peering request directions:
  *  - outgoing (active), i.e. initiated by us
