@@ -2,29 +2,33 @@
 
 namespace Civi\Share\CiviMRF;
 
-use Civi\Core\Service\AutoService;
+use Civi\Core\Service\AutoServiceInterface;
+use Civi\Core\Service\AutoServiceTrait;
 use CMRF\Core\Call;
 use CMRF\Exception\ApiCallFailedException;
 
 /**
- * @service civi.share.civimrf
+ * @service civi.share.civimrf_client
+ * @internal
  */
-class Client extends AutoService {
+class CiviMRFClient implements AutoServiceInterface {
 
-  private Core $cmrfCore;
+  use AutoServiceTrait;
 
-  private string $connectorId;
+  /**
+   * @var \Civi\Share\CiviMRF\CiviMRFCore
+   * @inject civi.share.civimrf_core
+   */
+  protected $civiMRFCore;
 
-  public function __construct() {
-    $this->cmrfCore = new Core();
-  }
+  protected ?string $connectorId;
 
-  public function init($connectorId) {
+  public function init(string $connectorId): self {
     $this->connectorId = $connectorId;
     return $this;
   }
 
-  public function getConnectorId() {
+  public function getConnectorId(): string {
     if (!isset($this->connectorId)) {
       throw new \RuntimeException('CiviShare CiviMRF Client not initialized.');
     }
@@ -32,9 +36,9 @@ class Client extends AutoService {
   }
 
   public function executeV3(string $entity, string $action, array $parameters = [], array $options = []): array {
-    $call = $this->cmrfCore->createCallV3($this->getConnectorId(), $entity, $action, $parameters, $options);
+    $call = $this->civiMRFCore->createCallV3($this->getConnectorId(), $entity, $action, $parameters, $options);
 
-    $result = $this->cmrfCore->executeCall($call);
+    $result = $this->civiMRFCore->executeCall($call);
     if (NULL === $result || Call::STATUS_FAILED === $call->getStatus()) {
       throw ApiCallFailedException::fromCall($call);
     }
@@ -43,9 +47,9 @@ class Client extends AutoService {
   }
 
   public function executeV4(string $entity, string $action, array $parameters = []): array {
-    $call = $this->cmrfCore->createCallV4($this->getConnectorId(), $entity, $action, $parameters);
+    $call = $this->civiMRFCore->createCallV4($this->getConnectorId(), $entity, $action, $parameters);
 
-    $result = $this->cmrfCore->executeCall($call);
+    $result = $this->civiMRFCore->executeCall($call);
     if (NULL === $result || Call::STATUS_FAILED === $call->getStatus()) {
       throw ApiCallFailedException::fromCall($call);
     }

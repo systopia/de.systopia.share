@@ -3,7 +3,7 @@ namespace Civi\Share;
 
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
-use Civi\Share\CiviMRF\Client;
+use Civi\Share\CiviMRF\CiviMRFClient;
 use Civi\Share\CiviMRF\ShareApi;
 
 /**
@@ -28,14 +28,11 @@ class Message {
   /** @var array list of change ids */
   protected array $change_ids = [];
 
-  protected Client $civiMRFClient;
-
   /**
-   * Create a new, empty message
+   * @var \Civi\Share\CiviMRF\CiviMRFClient
+   * @inject civi.share.civimrf_client
    */
-  public function __construct() {
-    $this->civiMRFClient = Civi::service('civi.share.civimrf');
-  }
+  protected $civiMRFClient;
 
   /**
    * Add a change ID to the message
@@ -117,7 +114,7 @@ class Message {
             \Civi::log()->warning("todo: implement serialisation and sending (directly/queue/etc)");
 
             $shareApi = ShareApi::create($this->civiMRFClient->init($peered_node['id']));
-            $shareApi->sendMessage($this->serialise());
+            $shareApi->sendMessage($this->serialize());
           }
 
           // todo: mark as SENT
@@ -183,7 +180,7 @@ class Message {
    * @return string
    *   JSON-formatted serialisation of the message.
    */
-  public function serialise(): string {
+  public function serialize(): string {
     // TODO.
   }
 

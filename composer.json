@@ -1,10 +1,4 @@
 {
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/CiviMRF/CMRF_Abstract_Core.git"
-        }
-    ],
     "require": {
         "ext-curl": "*",
         "civimrf/cmrf_abstract_core": "^0.10.4"

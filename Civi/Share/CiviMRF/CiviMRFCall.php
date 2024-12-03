@@ -4,12 +4,13 @@ namespace Civi\Share\CiviMRF;
 
 use CMRF\Core\AbstractCall;
 use CMRF\Core\Call as CallInterface;
+use CMRF\PersistenceLayer\CallFactory;
 
-class Call extends AbstractCall implements CallInterface {
+class CiviMRFCall extends AbstractCall {
 
-  protected string $request_entity;
+  protected string $requestEntity;
 
-  protected string $request_action;
+  protected string $requestAction;
 
   protected array $request;
 
@@ -19,7 +20,17 @@ class Call extends AbstractCall implements CallInterface {
 
   protected array $metadata = [];
 
-  public static function createNew($connector_id, $core, $entity, $action, $parameters, $options, $callbacks, $factory, string $api_version) {
+  public static function createNew(
+    string $connector_id,
+    CiviMRFCore $core,
+    string $entity,
+    string $action,
+    array $parameters,
+    ?array $options,
+    ?array $callbacks,
+    CallFactory $factory,
+    string $api_version
+  ): self {
     if (!is_array($callbacks)) {
       if (NULL === $callbacks) {
         $callbacks = [];
@@ -29,20 +40,28 @@ class Call extends AbstractCall implements CallInterface {
       }
     }
 
-    return static::create($connector_id, $core, $api_version, $entity, $action, $parameters, $options ?? [], $callbacks,
+    return static::create(
+      $connector_id,
+      $core,
+      $api_version,
+      $entity,
+      $action,
+      $parameters,
+        $options ?? [],
+      $callbacks,
       $factory
     );
   }
 
   protected static function create(
     string $connector_id,
-    Core $core,
+    CiviMRFCore $core,
     string $api_version,
     string $entity,
     string $action,
     array $parameters,
-    array $options,
-    array $callbacks,
+    ?array $options,
+    ?array $callbacks,
     CallFactory $factory
   ): self {
     $call = new self($core, $connector_id, $factory);
@@ -56,8 +75,8 @@ class Call extends AbstractCall implements CallInterface {
     elseif ('4' === $api_version) {
       $call->request = $parameters;
     }
-    $call->request_entity = $entity;
-    $call->request_action = $action;
+    $call->requestEntity = $entity;
+    $call->requestAction = $action;
     $call->request['version'] = $api_version;
     $call->status = CallInterface::STATUS_INIT;
     $call->metadata['callbacks'] = $callbacks;
@@ -71,30 +90,37 @@ class Call extends AbstractCall implements CallInterface {
     return NULL;
   }
 
-  public function getEntity() {
-    return $this->request_entity;
+  public function getEntity(): string {
+    return $this->requestEntity;
   }
 
-  public function getAction() {
-    return $this->request_action;
+  public function getAction(): string {
+    return $this->requestAction;
   }
 
-  public function getParameters() {
+  public function getParameters(): array {
     return $this->extractParameters($this->request);
   }
 
-  public function getRequest() {
+  public function getRequest(): array {
     return $this->request;
   }
 
-  public function getOptions() {
+  public function getOptions(): array {
     return $this->extractOptions($this->request);
   }
 
-  public function getStatus() {
+  public function getStatus(): string {
     return $this->status;
   }
 
+  /**
+   * @param string $status
+   * @param string $error_message
+   * @param ?string $error_code
+   *
+   * @return void
+   */
   public function setStatus($status, $error_message, $error_code = NULL) {
     $error = [
       'is_error' => '1',
@@ -119,14 +145,20 @@ class Call extends AbstractCall implements CallInterface {
     return NULL;
   }
 
-  public function getMetadata() {
+  public function getMetadata(): array {
     return $this->metadata;
   }
 
-  public function getReply() {
+  public function getReply(): ?array {
     return $this->reply;
   }
 
+  /**
+   * @param array $data
+   * @param string $newstatus
+   *
+   * @return void
+   */
   public function setReply($data, $newstatus) {
     $this->reply = $data;
     $this->reply_date = new \DateTime();

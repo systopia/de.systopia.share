@@ -2,20 +2,26 @@
 
 namespace Civi\Share\CiviMRF;
 
-class ShareApi {
+use Civi\Core\Service\AutoServiceInterface;
+use Civi\Core\Service\AutoServiceTrait;
 
-  protected Client $client;
+/**
+ * @service civi.share.api
+ */
+class ShareApi implements AutoServiceInterface {
 
-  public function __construct(Client $client) {
-    $this->client = $client;
-  }
+  use AutoServiceTrait;
 
-  public static function create(Client $client) {
-    return new self($client);
-  }
+  /**
+   * @var \Civi\Share\CiviMRF\CiviMRFClient
+   * @inject civi.share.civimrf_client
+   */
+  protected $civiMRFClient;
 
-  public function sendMessage(string $message) {
-    $result = $this->client->executeV4('ShareMessage', 'receive', [
+  public function sendMessage(string $shareNodePeeringId, string $message) {
+    $result = $this->civiMRFClient
+      ->init($shareNodePeeringId)
+      ->executeV4('ShareChangeMessage', 'receive', [
       'message' => $message,
     ]);
   }
