@@ -12,6 +12,7 @@ use CMRF\PersistenceLayer\CallFactory;
 
 /**
  * @service civi.share.civimrf_core
+ * @internal
  */
 class CiviMRFCore extends \CMRF\Core\Core implements AutoServiceInterface {
 
