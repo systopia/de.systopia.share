@@ -17,6 +17,12 @@ require_once 'share.civix.php';
 use CRM_Share_ExtensionUtil as E;
 
 
+function _share_composer_autoload(): void {
+  if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+  }
+}
+
 /**
  * Add an action for creating donation receipts after doing a search
  *
@@ -65,7 +71,17 @@ function share_civicrm_post($op, $objectName, $objectId, &$objectRef) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
 function share_civicrm_config(&$config) {
+  _share_composer_autoload();
   _share_civix_civicrm_config($config);
+}
+
+/**
+ * Implements hook_civicrm_container()
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_container/
+ */
+function share_civicrm_container(ContainerBuilder $container) {
+  _share_composer_autoload();
 }
 
 /**
