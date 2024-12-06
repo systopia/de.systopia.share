@@ -18,7 +18,7 @@
   <version>0.1-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.45</ver>
+    <ver>5.55</ver>
   </compatibility>
   <comments/>
   <civix>
@@ -34,6 +34,7 @@
   </requires>
   <upgrader>CiviMix\Schema\Share\AutomaticUpgrader</upgrader>
   <mixins>
+    <mixin>scan-classes@1.0.0</mixin>
     <mixin>smarty-v2@1.0.3</mixin>
     <mixin>entity-types-php@2.0.0</mixin>
     <mixin>menu-xml@1.0.0</mixin>
