@@ -68,8 +68,9 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', null)
-    ->addValue('status', \Civi\Api4\ShareChange::STATUS_LOCAL)
+    ->addValue('status', \Civi\Api4\ShareChange::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.test')
+    ->addValue('status', 'PENDING')
     //->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())
     ->addValue('source_node_id', $local_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
@@ -81,13 +82,46 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->execute();
   $change_id = $change->first()['id'];
 
+  // add a dummy listener to the 'civishare.change.test' change type
+  $result = \Civi::dispatcher()->addListener(
+    'de.systopia.change.process',
+    'civicrm_civi_share_test_register_test_hander'
+  );
+
   // create a change message
   $change_message = new Message();
   $change_message->addChangeById($change_id);
+  $change_message->processChanges($local_node['id']);
 
   // send
   $change_message->send();
 
-  return civicrm_api3_create_success($peering_results);
+  // this should now be processed
+  if (!$change_message->allChangesProcessed()) {
+    // todo: replace with ->assertTrue()
+    throw new Exception("Changes were NOT processed.");
+  }
+
+  return civicrm_api3_create_success();
+}
+
+
+/**
+ * Process test events
+ *
+ * @param \Civi\Share\ChangeProcessingEvent $processing_event
+ * @param string $event_type
+ * @param $dispatcher
+ * @return void
+ */
+function civicrm_civi_share_test_register_test_hander($processing_event, $event_type, $dispatcher)
+{
+  // nothing to do here
+  if ($processing_event->isProcessed()) return;
+
+  // check if this is the one we're looking for
+  if ($processing_event->hasChangeType('civishare.change.test')) {
+    $processing_event->setProcessed();
+  }
 }
 
