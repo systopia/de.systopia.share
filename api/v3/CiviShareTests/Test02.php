@@ -82,17 +82,15 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   // create a peering
   $peering->peer($remote_contact['id'], $local_contact['id'], $remote_node['id'], $local_node['id']);
 
-
-
   // create test change
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', null)
     ->addValue('status', \Civi\Api4\ShareChange::STATUS_PENDING)
-    ->addValue('change_type', 'civishare.change.test')
+    ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('status', 'PENDING')
-    //->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())
-    ->addValue('source_node_id', $local_node['id'])
+    ->addValue('remote_contact_id', $remote_contact
+//    ->addValue('source_node_id', $local_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
     ->addValue('received_date', date('Y-m-d H:i:s')) // since this is a local change
     // no processed_date yet
@@ -101,8 +99,6 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
     ->addValue('data_after', '')  // empty as this is a test
     ->execute();
   $change_id = $change->first()['id'];
-
-
 
   // add a dummy listener to the 'civishare.change.test' change type
   $result = \Civi::dispatcher()->addListener(
