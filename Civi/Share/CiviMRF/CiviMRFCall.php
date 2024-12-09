@@ -118,10 +118,8 @@ class CiviMRFCall extends AbstractCall {
    * @param string $status
    * @param string $error_message
    * @param ?string $error_code
-   *
-   * @return void
    */
-  public function setStatus($status, $error_message, $error_code = NULL) {
+  public function setStatus($status, $error_message, $error_code = NULL): void {
     $error = [
       'is_error' => '1',
       'error_message' => $error_message,
@@ -133,6 +131,7 @@ class CiviMRFCall extends AbstractCall {
     $this->reply_date = new \DateTime();
 
     $this->factory->update($this);
+    // TODO: Revisit after POC phase.
     //    $this->checkAndTriggerFailure();
     //    $this->checkAndTriggerDone();
   }
@@ -156,14 +155,13 @@ class CiviMRFCall extends AbstractCall {
   /**
    * @param array $data
    * @param string $newstatus
-   *
-   * @return void
    */
-  public function setReply($data, $newstatus) {
+  public function setReply($data, $newstatus): void {
     $this->reply = $data;
     $this->reply_date = new \DateTime();
     $this->status = $newstatus;
     $this->factory->update($this);
+    // TODO: Revisit after POC phase.
     //    $this->checkAndTriggerFailure();
     //    $this->checkAndTriggerDone();
   }
