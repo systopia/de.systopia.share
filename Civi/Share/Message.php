@@ -3,6 +3,8 @@ namespace Civi\Share;
 
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
+use Civi\Share\CiviMRF\CiviMRFClient;
+use Civi\Share\CiviMRF\ShareApi;
 
 /**
  * CiviShare Message object (transient)
@@ -27,12 +29,10 @@ class Message {
   protected array $change_ids = [];
 
   /**
-   * Create a new, empty message
+   * @var \Civi\Share\CiviMRF\CiviMRFClient
+   * @inject civi.share.civimrf_client
    */
-  public function __construct()
-  {
-
-  }
+  protected $civiMRFClient;
 
   /**
    * Add a change ID to the message
@@ -100,18 +100,21 @@ class Message {
       ->execute();
 
     if ($peerings->count()) {
-      foreach ($peerings as $peered_node) {
+      foreach ($peerings as $peering) {
         // send message to every peered node
-        if ($peered_node) {
+        if ($peering) {
           // shortcut: local-to-local connection
-          if (empty($peered_node['remote_node.rest_url']) || empty($peered_node['remote_node.api_key'])) {
+          if (empty($peering['remote_node.rest_url']) || empty($peering['remote_node.api_key'])) {
             // this is not a proper node...but we might allow this anyway:
             if (defined('CIVISHARE_ALLOW_LOCAL_LOOP')) {
-              $this->processOnNode($peered_node['remote_node.id']);
+              $this->processOnNode($peering['remote_node.id']);
             }
           } else {
             // TODO: implement SENDING
             \Civi::log()->warning("todo: implement serialisation and sending (directly/queue/etc)");
+
+            $shareApi = Civi::service('civi.share.api');
+            $shareApi->sendMessage($peering['id'], $this->serialize());
           }
 
           // todo: mark as SENT
@@ -172,4 +175,13 @@ class Message {
   {
     // todo
   }
+
+  /**
+   * @return string
+   *   JSON-formatted serialisation of the message.
+   */
+  public function serialize(): string {
+    // TODO.
+  }
+
 }
