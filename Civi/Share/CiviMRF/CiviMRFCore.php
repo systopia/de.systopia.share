@@ -43,7 +43,7 @@ class CiviMRFCore extends \CMRF\Core\Core implements AutoServiceInterface {
       ->indexBy('id') as $shareNodeId => $shareNode) {
       $profiles[$shareNodeId] = [
         'id' => $shareNode['id'],
-        'url' => $shareNode['rest_url'],
+        'urlV4' => $shareNode['rest_url'],
         'api_key' => $shareNode['api_key'],
         'site_key' => $shareNode['site_key'],
       ];

@@ -90,6 +90,10 @@ class CiviMRFCall extends AbstractCall {
     return NULL;
   }
 
+  public function getApiVersion(): string {
+    return '4';
+  }
+
   public function getEntity(): string {
     return $this->requestEntity;
   }
