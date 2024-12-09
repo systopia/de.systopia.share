@@ -68,7 +68,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', null)
-    ->addValue('status', \Civi\Api4\ShareChange::STATUS_LOCAL)
+    ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
     ->addValue('change_type', 'civishare.change.test')
     //->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())
     ->addValue('source_node_id', $local_node['id'])

@@ -23,27 +23,92 @@ use Civi\Api4\ShareNode;
  */
 class Message {
 
-  /** @var array list of change ids */
-  protected array $change_ids = [];
+  /**
+   * @phpstan-var list<\Civi\Share\Change>
+   */
+  protected array $changes = [];
 
   /**
    * Create a new, empty message
    */
-  public function __construct()
-  {
+  public function __construct() {
 
   }
 
+  public static function createFromSerializedMessage(array $serializedMessage, ?\DateTimeInterface $receivedDate = NULL) {
+    $message = new self();
+
+    try {
+      $sourceNodeId = ShareNode::get()
+        ->addSelect('id')
+        ->addWhere('short_name', '=', $serializedMessage['payload']['sender'])
+        ->execute()
+        ->single()['id'];
+    }
+    catch (\CRM_Core_Exception $e) {
+      throw new \RuntimeException(
+        sprintf(
+          'Could not identify source node %s for change message %s.',
+          $serializedMessage['payload']['sender'],
+          $serializedMessage['id']
+        ),
+        0,
+        $e
+      );
+    }
+
+    // TODO: Add metadata properties.
+
+    // Add changes.
+    if (!is_array($serializedMessage['payload']['changes'])) {
+      throw new \RuntimeException(
+        sprintf('Could not parse changes for change message %s.', $serializedMessage['id'])
+      );
+    }
+    try {
+      foreach ($serializedMessage['payload']['changes'] as $serializedChange) {
+        $message->addChange(Change::createFromSerialized($serializedChange, $sourceNodeId, $receivedDate));
+      }
+    }
+    catch (\RuntimeException $e) {
+      throw new \RuntimeException(
+        sprintf('Could not parse changes for change message %s.', $serializedMessage['id'])
+      );
+    }
+
+    return $message;
+  }
+
+  public function getChangeIds(): iterable {
+    foreach ($this->changes as $change) {
+      yield $change->getId();
+    }
+  }
+
+  public function getPersistedChangeIds(): iterable {
+    foreach ($this->changes as $change) {
+      if (!$change->isPersisted()) {
+        continue;
+      }
+      yield $change->getId();
+    }
+  }
+
   /**
-   * Add a change ID to the message
-   *
-   * @param int $change_id
-   *
-   * @return void
+   * Add a change to the message by its ID.
    */
-  public function addChangeById(int $change_id)
-  {
-    $this->change_ids[] = $change_id;
+  public function addChangeById(int $change_id): void {
+    $this->changes[] = Change::createFromExisting($change_id);
+  }
+
+  public function addChange(Change $change): void {
+    $this->changes[] = $change;
+  }
+
+  public function persistChanges(): void {
+    foreach ($this->changes as $change) {
+      $change->persist();
+    }
   }
 
   /**
@@ -53,15 +118,11 @@ class Message {
    *  one of LOCAL, PENDING, BUSY, FORWARD, DONE, DROPPED, ERROR
    * @return void
    */
-  public function markChanges($status)
-  {
-    foreach ($this->change_ids as $change_id) {
-      // TODO: can we do this in one call?
-      $results = \Civi\Api4\ShareChange::update(TRUE)
-        ->addValue('status', $status)
-        ->addWhere('id', '=', $change_id)
-        ->execute();
-    }
+  public function markChanges(string $status): void {
+    ShareChange::update(TRUE)
+      ->addValue('status', $status)
+      ->addWhere('id', 'IN', $this->getPersistedChangeIds())
+      ->execute();
   }
 
   /**
@@ -142,7 +203,7 @@ class Message {
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN', $this->change_ids],
+        ['id', 'IN', $this->getPersistedChangeIds()],
       ],
       'checkPermissions' => TRUE,
     ]);
@@ -155,21 +216,4 @@ class Message {
     $lock->release();
   }
 
-
-
-  /**
-   * Parse/reconstruct a message
-   *
-   * @param string $data
-   *   a raw data packed (encrypted and serialised)
-   *
-   * @param int node_peering ID
-   *   the ID of an active peering object
-   *
-   * @return ?Message
-   */
-  public static function extractSerialisedMessage($data, $node_peering_id) : ?Message
-  {
-    // todo
-  }
 }
