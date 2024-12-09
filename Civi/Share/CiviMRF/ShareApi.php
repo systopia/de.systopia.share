@@ -18,8 +18,8 @@ class ShareApi implements AutoServiceInterface {
    */
   protected $civiMRFClient;
 
-  public function sendMessage(string $shareNodePeeringId, array $message) {
-    $result = $this->civiMRFClient
+  public function sendMessage(string $shareNodePeeringId, array $message): array {
+    return $this->civiMRFClient
       ->init($shareNodePeeringId)
       ->executeV4('ShareChangeMessage', 'receive', [
       'message' => $message,
