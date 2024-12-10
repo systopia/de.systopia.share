@@ -144,8 +144,8 @@ class Change {
       $shareChange['local_contact_id'],
       $shareChange['source_node_id'],
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
-      $shareChange['change_date'],
-      $shareChange['received_date'],
+      \DateTime::createFromFormat(Utils::DATE_FORMAT, $shareChange['change_date']),
+      \DateTime::createFromFormat(Utils::DATE_FORMAT, $shareChange['received_date']),
       $id
     );
   }
