@@ -41,7 +41,7 @@ abstract class ChangeProcessorBase
     try {
       $this->process_change($processing_event, $event_type, $dispatcher);
     } catch (\Exception $ex) {
-      $processing_event->setNewChangeStatus(ShareChange::STATUS_ERROR);
+      $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
     }
   }
 

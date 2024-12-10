@@ -99,7 +99,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', null)
-    ->addValue('status', \Civi\Api4\ShareChange::STATUS_PENDING)
+    ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('status', 'PENDING')
     ->addValue('data_before', json_encode($change_data_before, true))

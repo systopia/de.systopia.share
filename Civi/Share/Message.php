@@ -128,17 +128,6 @@ class Message
       ->addWhere('id', 'IN', $this->getPersistedChangeIds())
       ->execute();
   }
-  
-  public function markAllChanges($status)
-  {
-    foreach ($this->change_ids as $change_id) {
-      // TODO: can we do this in one call?
-      $results = \Civi\Api4\ShareChange::update(TRUE)
-        ->addValue('status', $status)
-        ->addWhere('id', '=', $change_id)
-        ->execute();
-    }
-  }
 
   /**
    * Send out a compiled message
@@ -150,8 +139,7 @@ class Message
    *
    * @throws \CRM_Core_Exception
    */
-  public function send($local_node_id = null)
-  {
+  public function send($local_node_id = NULL) {
     // select the changes for the payload
     $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
 
@@ -197,10 +185,10 @@ class Message
 
         }
       }
-
-    } else {
+    }
+    else {
       // no peered instances: mark changes as DROPPED
-      $this->markAllChanges('DROPPED');
+      $this->markChanges('DROPPED');
     }
 
     $lock->release();
@@ -232,14 +220,14 @@ class Message
       try {
         \Civi::dispatcher()->dispatch('de.systopia.change.process', $change_processor);
         if ($change_processor->isProcessed()) {
-          $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? ShareChange::STATUS_PROCESSED);
+          $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? Change::STATUS_PROCESSED);
         } else {
-          $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? ShareChange::STATUS_ERROR);
+          $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? Change::STATUS_ERROR);
           \Civi::log()->warning("Change [{$change['id']}] could not be processed - no processor found.");
         }
       } catch (\Exception $exception) {
         \Civi::log()->warning("Change [{$change['id']}] failed processing, exception was " . $exception->getMessage());
-        $this->setChangeStatus($change['id'], ShareChange::STATUS_ERROR);
+        $this->setChangeStatus($change['id'], Change::STATUS_ERROR);
         $change_processor->setFailed($exception->getMessage());
       }
     }
@@ -297,7 +285,7 @@ class Message
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
         ['id', 'IN', $this->change_ids],
-        ['status', 'IN', ShareChange::ACTIVE_STATUS],
+        ['status', 'IN', Change::ACTIVE_STATUS],
       ],
       'checkPermissions' => TRUE,
     ]);
