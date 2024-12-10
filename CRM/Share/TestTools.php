@@ -18,6 +18,7 @@ class CRM_Share_TestTools
 {
   public static function clearCiviShareConfig()
   {
+    // todo: remove listeners?
     CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_handler");
     CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_change");
     CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node_peering");
