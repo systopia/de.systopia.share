@@ -1,5 +1,5 @@
 <?php
-namespace Civi\Share;
+namespace Civi\Share\ChangeProcessor;
 
 use Civi\Core\Event\GenericHookEvent as Event;
 use Civi\Api4\ShareChange;
