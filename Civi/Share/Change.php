@@ -135,7 +135,7 @@ class Change {
 
   public static function createFromExisting(int $id): self {
     $shareChange = ShareChange::get()
-      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'data_before', 'data_after')
+      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'received_date', 'data_before', 'data_after')
       ->addWhere('id', '=', $id)
       ->execute()
       ->single();
@@ -144,8 +144,8 @@ class Change {
       $shareChange['local_contact_id'],
       $shareChange['source_node_id'],
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
-      \DateTime::createFromFormat(Utils::DATE_FORMAT, $shareChange['change_date']),
-      \DateTime::createFromFormat(Utils::DATE_FORMAT, $shareChange['received_date']),
+      \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
+      \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']),
       $id
     );
   }
