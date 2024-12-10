@@ -23,7 +23,7 @@ interface ContactPeeringInterface
    *    the local contact ID
    *
    * @param int $remote_contact_node_id
-   *    the ID of the remote node
+   *     the ID of the node representing hosting the remote contact
    *
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node

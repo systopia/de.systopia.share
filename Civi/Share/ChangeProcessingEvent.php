@@ -163,4 +163,66 @@ class ChangeProcessingEvent extends Event
   {
     return $this->new_change_status;
   }
+
+  /**
+   * Helper to deserialise JSON data in the Change object
+   *
+   * @param string $serialised_data
+   * @return array
+   */
+  protected function getJsonData($serialised_data)
+  {
+    $data = json_decode($serialised_data, true);
+    // todo: error handling
+    return $data;
+  }
+
+  /**
+   * Get the data BEFORE the change
+   *
+   * @return array
+   */
+  public function getChangeDataBefore()
+  {
+    // todo: cache? might be tricky...
+    return $this->getJsonData($this->change_data['data_before']);
+  }
+
+  /**
+   * Get the data AFTER the change
+   *
+   * @return array
+   */
+  public function getChangeDataAfter()
+  {
+    // todo: cache? might be tricky...
+    return $this->getJsonData($this->change_data['data_after']);
+  }
+
+  /**
+   * Get the data AFTER the change
+   *
+   * @return ?int
+   */
+  public function getContactID()
+  {
+    $before_data_contact_id = $this->getChangeDataBefore()['contact_id'] ?? null;
+    $after_data_contact_id = $this->getChangeDataAfter()['contact_id'] ?? null;
+    if ($before_data_contact_id && $after_data_contact_id && $before_data_contact_id != $after_data_contact_id) {
+      // todo: log as contact_id conflict
+      return null; // there is a conflict
+    } else {
+      return $after_data_contact_id ?? $before_data_contact_id ?? null;
+    }
+  }
+
+  /**
+   * Get the attributes of the change entiti being processed right now
+   *
+   * @return array
+   */
+  public function getChange() : array
+  {
+    return $this->change_data;
+  }
 }

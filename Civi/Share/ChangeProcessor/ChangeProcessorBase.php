@@ -4,7 +4,6 @@ namespace Civi\Share;
 use Civi\Core\Event\GenericHookEvent as Event;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
-use Civi\Api4\ShareNode;
 
 /**
  * Abstract class providing infrastructure for change processors

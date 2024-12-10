@@ -42,7 +42,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
    *    the local contact ID
    *
    * @param int $remote_contact_node_id
-   *    the ID of the remote node
+   *    the ID of the node representing hosting the remote contact
    *
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
@@ -71,7 +71,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
    * This method gives you the local contact ID based on a remote contact ID and the associate node.
    *
    * @param int $remote_contact_id
-   *   the contact ID of the remote contact
+   *   the contact ID of the remote contact, i.e. the contact ID on the remote system
    *
    * @param int $remote_contact_node_id
    *    the ID of the remote node
@@ -92,7 +92,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
 
     // add store with contact
     $search_result = \civicrm_api3('Contact', 'findbyidentity', [
-      'contact_id' => $local_contact_id,
+      //'contact_id' => $local_contact_id,
       'identifier' => $remote_identifier,
       'identifier_type' => CIVISHARE_IDTRACKER_TYPE,
     ]);

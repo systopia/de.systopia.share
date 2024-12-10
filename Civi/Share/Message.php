@@ -242,6 +242,8 @@ class Message
    */
   public static function extractSerialisedMessage($data, $node_peering_id) : ?Message
   {
-    // todo
+    // todo: implement
+    throw new \Exception("not implemented");
+    return null;
   }
 }
