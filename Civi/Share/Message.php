@@ -83,19 +83,14 @@ class Message
     return $message;
   }
 
-  public function getChangeIds(): iterable {
-    foreach ($this->changes as $change) {
-      yield $change->getId();
-    }
+  public function getChangeIds(): array {
+    return array_map(function (Change $change) {
+      return $change->getId();
+    }, $this->changes);
   }
 
-  public function getPersistedChangeIds(): iterable {
-    foreach ($this->changes as $change) {
-      if (!$change->isPersisted()) {
-        continue;
-      }
-      yield $change->getId();
-    }
+  public function getPersistedChangeIds(): array {
+    return array_filter($this->getChangeIds());
   }
 
   /**
@@ -125,7 +120,7 @@ class Message
   public function markChanges(string $status): void {
     ShareChange::update(TRUE)
       ->addValue('status', $status)
-      ->addWhere('id', 'IN',  (array) $this->getPersistedChangeIds())
+      ->addWhere('id', 'IN',  $this->getPersistedChangeIds())
       ->execute();
   }
 
@@ -209,7 +204,7 @@ class Message
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN', (array) $this->getPersistedChangeIds()],
+        ['id', 'IN', $this->getPersistedChangeIds()],
       ],
       'checkPermissions' => TRUE,
     ]);
@@ -272,7 +267,7 @@ class Message
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN',  (array) $this->getPersistedChangeIds()],
+        ['id', 'IN',  $this->getPersistedChangeIds()],
       ],
       'checkPermissions' => TRUE,
     ]);
@@ -312,7 +307,7 @@ class Message
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN',  (array) $this->getPersistedChangeIds()],
+        ['id', 'IN',  $this->getPersistedChangeIds()],
         ['status', 'IN', Change::ACTIVE_STATUS],
       ],
       'checkPermissions' => TRUE,
