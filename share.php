@@ -15,7 +15,14 @@
 
 require_once 'share.civix.php';
 use CRM_Share_ExtensionUtil as E;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+
+function _share_composer_autoload(): void {
+  if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+  }
+}
 
 /**
  * Add an action for creating donation receipts after doing a search
@@ -65,7 +72,12 @@ function share_civicrm_post($op, $objectName, $objectId, &$objectRef) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
 function share_civicrm_config(&$config) {
+  _share_composer_autoload();
   _share_civix_civicrm_config($config);
+}
+
+function share_civicrm_container(ContainerBuilder $container): void {
+  _share_composer_autoload();
 }
 
 /**
