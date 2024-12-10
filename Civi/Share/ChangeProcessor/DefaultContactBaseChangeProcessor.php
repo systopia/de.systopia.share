@@ -8,6 +8,7 @@ use Civi\Api4\ShareNode;
 class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
 {
   /**
+   * Process the given change if you can/should/want and don't forget to mark processed when done
    *
    * @param $processing_event
    * @param $event_type

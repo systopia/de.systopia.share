@@ -62,6 +62,9 @@ class ChangeProcessingEvent extends Event
   /** @var string the new status after the processing */
   protected string $new_change_status = 'DONE';
 
+    /** @var boolean change_handlers_registered */
+    protected static bool $configured_change_handlers_registered = false;
+
   /**
    * Create a new change processor for the given node. You can also add APIv4 data
    *   of the node if you have it.
@@ -99,6 +102,25 @@ class ChangeProcessingEvent extends Event
         ->setLimit(1)
         ->execute()
         ->first();
+    }
+
+    // register change handlers as defined in the database (ONCE)
+    if (!self::$configured_change_handlers_registered) {
+        $shareHandlers = \Civi\Api4\ShareHandler::get(true)
+            ->addSelect('id', 'name', 'class', 'weight', 'configuration')
+            ->addWhere('is_enabled', '=', 1)
+            ->addOrderBy('weight', 'ASC')
+            ->execute();
+        foreach ($shareHandlers as $shareHandler) {
+            // todo: make sure you can't inject code here
+            $handler = new $shareHandler['class']();
+            \Civi::dispatcher()->addListener(
+                'de.systopia.change.process',
+                [$handler, 'process_change'],
+                $shareHandler['weight']
+            );
+        }
+        self::$configured_change_handlers_registered = true;
     }
   }
 
