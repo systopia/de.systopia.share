@@ -141,16 +141,16 @@ class Change {
 
   public static function createFromExisting(int $id): self {
     $shareChange = ShareChange::get()
-      ->addSelect('id', 'type', 'entity', 'entity_reference', 'source_node_id', 'date', 'data_before', 'data_after')
+      ->addSelect('id', 'change_type', 'entity', 'entity_reference', 'source_node_id', 'date', 'data_before', 'data_after')
       ->addWhere('id', '=', $id)
       ->execute()
       ->single();
     return new self(
-      $shareChange['type'],
+      $shareChange['change_type'],
       $shareChange['entity'],
       $shareChange['entity_reference'],
       $shareChange['source_node_id'],
-      self::parseAttributeChanges($shareChange['data_before'], $shareChange['data_after']),
+      self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
       $shareChange['change_date'],
       $shareChange['received_date'],
       $id
@@ -183,7 +183,7 @@ class Change {
 
   public function persist(): void {
     $shareChangeQuery = ShareChange::create()
-      ->addValue('type', $this->type)
+      ->addValue('change_type', $this->type)
       ->addValue('entity', $this->entity)
       ->addValue('entity_reference', $this->entityId)
       ->addValue('data_before', $this->getDataBefore())
