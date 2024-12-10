@@ -81,8 +81,8 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
     ->addValue('change_group_id', null)
     ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.contact.base')
-    ->addValue('data_before', json_encode($virtual_contact_before))
-    ->addValue('data_after', json_encode($virtual_contact_after))
+    ->addValue('data_before', $virtual_contact_before)
+    ->addValue('data_after', $virtual_contact_after)
     ->addValue('local_contact_id', $virtual_contact_before['local_contact_id'])
     ->addValue('source_node_id', $remote_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
@@ -91,8 +91,6 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
     ->addValue('triggerd_by', '') // not triggered by applying another change
     ->execute();
   $change_id = $change->first()['id'];
-
-
 
 
   // register a 'civishare.change.contact.base' change processor
@@ -113,6 +111,12 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
     throw new Exception("Changes were NOT processed.");
   }
 
+  // see if the contact has been created
+  $result = civicrm_api3('Contact', 'get', ['last_name' => $virtual_contact_after['last_name']]);
+  $contact = reset($result['values']);
+  if ($contact['last_name'] != $virtual_contact_after['last_name']) {
+    throw new Exception("Change data not applied!");
+  }
   return civicrm_api3_create_success();
 }
 
@@ -144,6 +148,10 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
     $change = $processing_event->getChange();
     $change_data = $processing_event->getChangeDataAfter();
     $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
+
+    // basically: process the data by applying to the given local contact:
+    \civicrm_api3('Contact', 'create', $change_data);
+
     $processing_event->setProcessed();
   }
 }
