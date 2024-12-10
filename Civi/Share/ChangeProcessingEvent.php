@@ -185,7 +185,8 @@ class ChangeProcessingEvent extends Event
   public function getChangeDataBefore()
   {
     // todo: cache? might be tricky...
-    return $this->getJsonData($this->change_data['data_before']);
+//    return $this->getJsonData($this->change_data['data_before']);
+    return $this->change_data['data_before'];
   }
 
   /**
@@ -196,7 +197,8 @@ class ChangeProcessingEvent extends Event
   public function getChangeDataAfter()
   {
     // todo: cache? might be tricky...
-    return $this->getJsonData($this->change_data['data_after']);
+//    return $this->getJsonData($this->change_data['data_after']);
+      return $this->change_data['data_after'];
   }
 
   /**
