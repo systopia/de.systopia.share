@@ -81,7 +81,6 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
     ->addValue('change_group_id', null)
     ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.contact.base')
-    ->addValue('status', 'PENDING')
     ->addValue('data_before', json_encode($virtual_contact_before))
     ->addValue('data_after', json_encode($virtual_contact_after))
     ->addValue('local_contact_id', $virtual_contact_before['local_contact_id'])
@@ -94,18 +93,18 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
   $change_id = $change->first()['id'];
 
 
+
+
   // register a 'civishare.change.contact.base' change processor
   $result = \Civi::dispatcher()->addListener(
     'de.systopia.change.process',
     'civicrm_civi_share_test_register_test3_hander'
   );
 
-  // create a change message
+  // create and send a change message
   $change_message = new Message();
   $change_message->addChangeById($change_id);
   $change_message->processChanges($local_node['id']);
-
-  // send
   $change_message->send();
 
   // this should now be processed
