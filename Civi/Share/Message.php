@@ -125,7 +125,7 @@ class Message
   public function markChanges(string $status): void {
     ShareChange::update(TRUE)
       ->addValue('status', $status)
-      ->addWhere('id', 'IN', $this->getPersistedChangeIds())
+      ->addWhere('id', 'IN',  (array) $this->getPersistedChangeIds())
       ->execute();
   }
 
@@ -209,7 +209,7 @@ class Message
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN', $this->change_ids],
+        ['id', 'IN', (array) $this->getPersistedChangeIds()],
       ],
       'checkPermissions' => TRUE,
     ]);
@@ -257,6 +257,34 @@ class Message
       ->execute();
   }
 
+  /**
+   * Process the received and verified message on the given node
+   *
+   * @param int $local_node_id
+   *   the node where this will be processed on
+   *
+   * @return void
+   */
+  public function processOnNode($local_node_id)
+  {
+    $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
+
+    // load the changes
+    $changes = civicrm_api4('ShareChange', 'get', [
+      'where' => [
+        ['id', 'IN',  (array) $this->getPersistedChangeIds()],
+      ],
+      'checkPermissions' => TRUE,
+    ]);
+
+    // process them
+    foreach ($changes as $change) {
+      $this->applyChange($change);
+    }
+
+    $lock->release();
+  }
+
 
   /**
    * Apply the given change by extracting the relevant change handler
@@ -284,7 +312,7 @@ class Message
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN', $this->change_ids],
+        ['id', 'IN',  (array) $this->getPersistedChangeIds()],
         ['status', 'IN', Change::ACTIVE_STATUS],
       ],
       'checkPermissions' => TRUE,
