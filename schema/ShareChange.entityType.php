@@ -78,7 +78,6 @@ return [
       'title' => E::ts('Received date'),
       'sql_type' => 'datetime',
       'input_type' => 'Select Date',
-      'required' => TRUE,
       'description' => E::ts('Timestamp of the reception of the change'),
     ],
     'processed_date' => [

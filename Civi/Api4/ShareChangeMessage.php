@@ -5,6 +5,7 @@ namespace Civi\Api4;
 use Civi\Api4\Generic\AbstractEntity;
 use Civi\Share\Api4\Action\ShareChangeMessage\GetFieldsAction;
 use Civi\Share\Api4\Action\ShareChangeMessage\ReceiveAction;
+use Civi\Share\Api4\Action\ShareChangeMessage\SendAction;
 use Civi\Share\Permissions;
 
 class ShareChangeMessage extends Generic\AbstractEntity {
@@ -18,6 +19,10 @@ class ShareChangeMessage extends Generic\AbstractEntity {
 
   public static function receive(bool $checkPermissions = TRUE) {
     return (new ReceiveAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function send(bool $checkPermissions = TRUE) {
+    return (new SendAction())->setCheckPermissions($checkPermissions);
   }
 
   /**

@@ -33,6 +33,12 @@ class Message
    */
   protected array $changes = [];
 
+  protected ?string $senderNodeId = NULL;
+
+  public function setSenderNodeId(?string $senderNodeId): void {
+    $this->senderNodeId = $senderNodeId;
+  }
+
   /**
    * @var \Civi\Share\CiviMRF\CiviMRFClient
    * @inject civi.share.civimrf_client
@@ -334,11 +340,28 @@ class Message
   }
 
   /**
-   * @return string
-   *   JSON-formatted serialisation of the message.
+   * @return array
+   *   Representation of the message in sending format.
    */
-  public function serialize(): string {
-    // TODO.
+  public function serialize(): array {
+    $senderNode = ShareNode::get(FALSE)
+      ->addSelect('short_name')
+      ->addWhere('id', '=', $this->senderNodeId)
+      ->execute()
+      ->single();
+    return [
+      'payload' => [
+        'sender' => $senderNode['short_name'],
+        'sent' => date(Utils::DATE_FORMAT),
+        'changes' => (array) $this->serializeChanges(),
+      ]
+    ];
+  }
+
+  protected function serializeChanges() : iterable {
+    foreach ($this->changes as $change) {
+      yield $change->serialize();
+    }
   }
 
 }

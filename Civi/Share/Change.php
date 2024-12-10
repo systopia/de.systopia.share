@@ -20,14 +20,14 @@ class Change {
 
   /**
    * @var string
-   *   This change is currently being worked on, and should be left alone from
+   *   This change has been received and is currently being worked on, and should be left alone from
    *   other processes.
    */
   public const STATUS_BUSY = 'BUSY';
 
   /**
    * @var string
-   *   This change has been recorded locally, and should be sent out.
+   *   This change has been processed locally, and should be relayed.
    */
   public const STATUS_FORWARD = 'FORWARD';
 
@@ -39,7 +39,7 @@ class Change {
 
   /**
    * @var string
-   *   This change has been recorded locally, and should be sent out.
+   *   This change was received and has been processed locally.
    */
   public const STATUS_PROCESSED = 'PROCESSED';
 
@@ -67,6 +67,11 @@ class Change {
     self::STATUS_DROPPED,
     self::STATUS_ERROR,
     self::STATUS_PROCESSED,
+  ];
+
+  const PENDING_FROM_SENDING_STATUS = [
+    self::STATUS_LOCAL,
+    self::STATUS_FORWARD,
   ];
 
   /**
@@ -174,6 +179,10 @@ class Change {
     return $dataAfter;
   }
 
+  public function getSourceNodeId(): int {
+    return $this->sourceNodeId;
+  }
+
   public function persist(): void {
     $shareChangeQuery = ShareChange::create()
       ->addValue('change_type', $this->type)
@@ -201,6 +210,15 @@ class Change {
       ];
     }
     return $attributeChanges;
+  }
+
+  public function serialize(): array {
+    return [
+      'type' => $this->type,
+      'timestamp' => $this->changedDate->format(Utils::DATE_FORMAT),
+      'local_contact_id' => $this->localContactId,
+      'attribute_changes' => $this->attributeChanges,
+    ];
   }
 
 }
