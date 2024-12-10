@@ -72,6 +72,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
     ->addValue('change_type', 'civishare.change.test')
     ->addValue('status', 'PENDING')
+    ->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())
     ->addValue('source_node_id', $local_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
     ->addValue('received_date', date('Y-m-d H:i:s')) // since this is a local change
