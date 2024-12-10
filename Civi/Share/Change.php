@@ -87,9 +87,7 @@ class Change {
 
   protected \DateTimeInterface $receivedDate;
 
-  protected string $entity;
-
-  protected int $entityId;
+  protected int $localContactId;
 
   protected array $attributeChanges;
 
@@ -97,8 +95,7 @@ class Change {
 
   public function __construct(
     string $type,
-    string $entity,
-    string $entityId,
+    string $localContactId,
     int $sourceNodeId,
     array $attributeChanges = [],
     ?\DateTime $changedDate = NULL,
@@ -106,8 +103,7 @@ class Change {
     ?int $id = NULL
   ) {
     $this->type = $type;
-    $this->entity = $entity;
-    $this->entityId = $entityId;
+    $this->localContactId = $localContactId;
     $this->sourceNodeId = $sourceNodeId;
     $this->attributeChanges = $attributeChanges;
     $this->changedDate = $changedDate ?? new \DateTime();
@@ -119,8 +115,7 @@ class Change {
     if (array_diff(
         [
           'type',
-          'entity',
-          'entity_reference',
+          'local_contact_id',
           'attribute_changes',
           'timestamp',
         ],
@@ -130,8 +125,7 @@ class Change {
     }
     return new self(
       $serializedChange['type'],
-      $serializedChange['entity'],
-      $serializedChange['entity_reference'],
+      $serializedChange['local_contact_id'],
       $sourceNodeId,
       $serializedChange['attribute_changes'],
       \DateTime::createFromFormat(Utils::DATE_FORMAT, $serializedChange['timestamp']),
@@ -141,14 +135,13 @@ class Change {
 
   public static function createFromExisting(int $id): self {
     $shareChange = ShareChange::get()
-      ->addSelect('id', 'change_type', 'entity', 'entity_reference', 'source_node_id', 'date', 'data_before', 'data_after')
+      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'data_before', 'data_after')
       ->addWhere('id', '=', $id)
       ->execute()
       ->single();
     return new self(
       $shareChange['change_type'],
-      $shareChange['entity'],
-      $shareChange['entity_reference'],
+      $shareChange['local_contact_id'],
       $shareChange['source_node_id'],
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
       $shareChange['change_date'],
@@ -184,8 +177,7 @@ class Change {
   public function persist(): void {
     $shareChangeQuery = ShareChange::create()
       ->addValue('change_type', $this->type)
-      ->addValue('entity', $this->entity)
-      ->addValue('entity_reference', $this->entityId)
+      ->addValue('local_contact_id', $this->localContactId)
       ->addValue('data_before', $this->getDataBefore())
       ->addValue('data_after', $this->getDataAfter())
       ->addValue('change_date', $this->changedDate->format(Utils::DATE_FORMAT))
