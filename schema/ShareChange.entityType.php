@@ -55,11 +55,6 @@ return [
       'sql_type' => 'int unsigned',
       'input_type' => 'EntityRef',
       'description' => E::ts('FK to the local contact ID'),
-      'entity_reference' => [
-        'entity' => 'Contact',
-        'key' => 'id',
-        'on_delete' => 'CASCADE',
-      ],
     ],
     'source_node_id' => [
       'title' => E::ts('Source node ID'),
