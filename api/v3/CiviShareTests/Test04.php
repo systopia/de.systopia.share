@@ -17,13 +17,13 @@ use \Civi\Share\Message;
 
 
 /**
- * Test04 for CiviShare - test contact CREATE+PEERING
+ * Test04 for CiviShare - test membership processor
  *
- * - Set up two local nodes
- * - send a NEW CONTACT to the other node,
- *    i.e. peering has not happened yet
- * - send contact data through XCM
- * - use the resulting contact_id for peering
+ * - create two contacts, peer tje,
+ * - set up membership for one
+ * - create change record
+ * - send ot other (local) node
+ * - check if memberhsip was created
  *
  * @todo migrate to unit tests (once running)
  **/
@@ -64,34 +64,39 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->execute();
 
   // invent some contact data
-  $virtual_contact_before = [
+  $contact = \civicrm_api3('Contact', 'create', [
     'first_name' => base64_encode(random_bytes(8)),
     'last_name'  => base64_encode(random_bytes(8)),
     'contact_type' => 'Individual',
-    'local_contact_id' => 10000 + rand(10000, 99999999) // fake contact ID
-  ];
+  ]);
+
+  // with a membership
+  $membershipType = \Civi\Api4\MembershipType::get(TRUE)
+    ->addSelect('id')
+    ->addWhere('is_active', '=', TRUE)
+    ->setLimit(1)->execute()->first();
+  $membership = \Civi\Api4\Membership::create(TRUE)
+    ->addValue('contact_id', $contact['id'])
+    ->addValue('membership_type_id', $membershipType['id'])
+    ->execute();
 
   // insert a share handler
-  $results = \Civi\Api4\ShareHandler::create(TRUE)
+  \Civi\Api4\ShareHandler::create(TRUE)
     ->addValue('name', 'Default')
-    ->addValue('class', 'Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor')
+    ->addValue('class', 'Civi\Share\ChangeProcessor\SimpleMembershipChangeProcessor')
     ->addValue('weight', 100)
     ->addValue('is_enabled', true)
     ->execute();
 
-  // invent some minor change
-  $virtual_contact_after = $virtual_contact_before;
-  $virtual_contact_after['last_name'] = base64_encode(random_bytes(8));
-
-  // register a 'civishare.change.contact.base' change
+  // register a 'civishare.change.membership.base' change
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TEST-' . $virtual_contact_after['last_name'])
     ->addValue('change_group_id', null)
     ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
-    ->addValue('change_type', 'civishare.change.contact.base')
-    ->addValue('data_before', $virtual_contact_before)
-    ->addValue('data_after', $virtual_contact_after)
-    ->addValue('local_contact_id', $virtual_contact_before['local_contact_id'])
+    ->addValue('change_type', 'civishare.change.membership.base')
+    ->addValue('data_before', '')
+    ->addValue('data_after', '')
+    ->addValue('local_contact_id', $contact['local_contact_id'])
     ->addValue('source_node_id', $remote_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
     ->addValue('received_date', date('Y-m-d H:i:s')) // since this is a local change
@@ -112,10 +117,9 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     throw new Exception("Changes were NOT processed.");
   }
 
-  // see if the contact has been created
-  $result = civicrm_api3('Contact', 'get', ['last_name' => $virtual_contact_after['last_name']]);
-  $contact = reset($result['values']);
-  if ($contact['last_name'] != $virtual_contact_after['last_name']) {
+  // see if the membership has been altered
+  $membership_after = \civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
+  if ($membership['membership_type_id'] != $membership_after['membership_type_id']) {
     throw new Exception("Change data not applied!");
   }
   return civicrm_api3_create_success();

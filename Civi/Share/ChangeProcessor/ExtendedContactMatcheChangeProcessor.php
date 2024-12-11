@@ -5,7 +5,7 @@ use Civi\Core\Event\GenericHookEvent as Event;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 
-class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
+class ExtendedContactMatcheChangeProcessor extends ChangeProcessorBase
 {
   /**
    * Process the given change if you can/should/want and don't forget to mark processed when done

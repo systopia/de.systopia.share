@@ -249,4 +249,16 @@ class ChangeProcessingEvent extends Event
   {
     return $this->change_data;
   }
+
+    /**
+     * Log a message from change processing
+     *
+     * @param string $message
+     *
+     * @return void
+     */
+  public function logProcessingMessage($message)
+  {
+      \Civi::log("[CHANGE#{$this->change_id}] " . $message);
+  }
 }
