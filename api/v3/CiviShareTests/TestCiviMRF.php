@@ -37,7 +37,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->single();
 
   // Create a peering.
-  $shared_key = base64_encode(random_bytes(64));
+  $shared_key = base64_encode(random_bytes(32));
   $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
@@ -138,5 +138,5 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->setSourceNodeId($local_node['id'])
     ->execute();
 
-  return civicrm_api3_create_success($result);
+  return civicrm_api3_create_success();
 }

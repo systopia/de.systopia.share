@@ -4,6 +4,7 @@ namespace Civi\Share\ChangeProcessor;
 use Civi\Core\Event\GenericHookEvent as Event;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
+use Civi\Share\ChangeProcessingEvent;
 
 /**
  * Abstract class providing infrastructure for change processors
@@ -15,6 +16,9 @@ abstract class ChangeProcessorBase
    *
    * @param ChangeProcessingEvent $processing_event
    *   the event provides data and infrastructure
+   *
+   * @param string $ch
+   *   make sure this is an event type you actually *can* process
    *
    * @param string $event_type
    *   make sure this is an event type you actually *can* process
@@ -43,6 +47,31 @@ abstract class ChangeProcessorBase
     } catch (\Exception $ex) {
       $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
     }
+  }
+
+    /**
+     * Return a short name, mostly used for logging
+     *
+     * @return string
+     */
+  public function getShortName()
+  {
+    return get_class($this);
+  }
+
+    /**
+     * Log messages in order to trace/debug change processing
+     *
+     * @param $node_id
+     * @param $change_id
+     * @param $message
+     * @return void
+     */
+  public function log($node_id, $change_id, $message)
+  {
+      $processor_short_name = $this->getShortName();
+      // @todo: create a separate log?
+      \Civi::log()->debug("[{$processor_short_name}|#N{$node_id}|C{$change_id}]: " . $message);
   }
 
   /**
