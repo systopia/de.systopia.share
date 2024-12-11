@@ -56,14 +56,9 @@ return [
     ],
   ],
   'getIndices' => fn() => [
-    'UI_local_node' => [
+    'UI_local_node_remote_node' => [
       'fields' => [
         'local_node' => TRUE,
-      ],
-      'unique' => TRUE,
-    ],
-    'UI_remote_node' => [
-      'fields' => [
         'remote_node' => TRUE,
       ],
       'unique' => TRUE,
