@@ -353,15 +353,17 @@ class Message
       'payload' => [
         'sender' => $senderNode['short_name'],
         'sent' => date(Utils::DATE_FORMAT),
-        'changes' => (array) $this->serializeChanges(),
+        'changes' => $this->serializeChanges(),
       ]
     ];
   }
 
-  protected function serializeChanges() : iterable {
+  protected function serializeChanges() : array {
+    $serializedChanges = [];
     foreach ($this->changes as $change) {
-      yield $change->serialize();
+      $serializedChanges[] = $change->serialize();
     }
+    return $serializedChanges;
   }
 
 }
