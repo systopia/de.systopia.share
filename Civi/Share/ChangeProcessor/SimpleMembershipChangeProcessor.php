@@ -75,7 +75,7 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase
       $processing_event->logProcessingMessage('Updating membership for contact [{$local_contact_id}]');
       try {
         $change_data['id'] = $membership['id'];
-        civicrm_api4('Membership', 'create', $change_data);
+        \civicrm_api4('Membership', 'create', $change_data);
         $processing_event->logProcessingMessage("Updated membership [{$membership['id']}].");
         $processing_event->setProcessed();
 
