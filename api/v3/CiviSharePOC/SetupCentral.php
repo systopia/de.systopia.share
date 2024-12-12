@@ -35,7 +35,7 @@ function civicrm_api3_civi_share_p_o_c_setup_central(&$params) {
     return civicrm_api3_create_error(E::ts('Failed loading credentials file.'));
   }
 
-  if ($params['clear']) {
+  if ($params['clear'] ?? FALSE) {
     // Delete existing peerings and nodes.
     \Civi\Api4\ShareNodePeering::delete(FALSE)
       ->addWhere('id', 'IS NOT NULL')
