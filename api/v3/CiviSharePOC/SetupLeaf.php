@@ -59,7 +59,7 @@ function civicrm_api3_civi_share_p_o_c_setup_leaf(&$params) {
   // Create a remote node representing the central instance.
   $centralNode = \Civi\Api4\ShareNode::create(FALSE)
     ->addValue('name', 'Central Instance')
-    ->addValue('short_name', 'centra')
+    ->addValue('short_name', 'central')
     ->addValue('description', 'Automated test node representing the central instance.')
     ->addValue('is_local', FALSE)
     ->addValue('is_enabled', TRUE)
