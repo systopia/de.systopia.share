@@ -88,6 +88,8 @@ class Change {
 
   protected string $type;
 
+  protected string $status;
+
   protected \DateTimeInterface $changedDate;
 
   protected \DateTimeInterface $receivedDate;
@@ -105,6 +107,7 @@ class Change {
     array $attributeChanges = [],
     ?\DateTime $changedDate = NULL,
     ?\DateTime $receivedDate = NULL,
+    string $status = self::STATUS_LOCAL,
     ?int $id = NULL
   ) {
     $this->type = $type;
@@ -113,6 +116,7 @@ class Change {
     $this->attributeChanges = $attributeChanges;
     $this->changedDate = $changedDate ?? new \DateTime();
     $this->receivedDate = $receivedDate ?? new \DateTime();
+    $this->status = $status;
     $this->id = $id;
   }
 
@@ -135,12 +139,13 @@ class Change {
       $serializedChange['attribute_changes'],
       \DateTime::createFromFormat(Utils::DATE_FORMAT, $serializedChange['timestamp']),
       $receivedDate ?? new \DateTime(),
+      Change::STATUS_PENDING
     );
   }
 
   public static function createFromExisting(int $id): self {
     $shareChange = ShareChange::get()
-      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'received_date', 'data_before', 'data_after')
+      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'status', 'received_date', 'data_before', 'data_after')
       ->addWhere('id', '=', $id)
       ->execute()
       ->single();
@@ -151,6 +156,7 @@ class Change {
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']),
+      $shareChange['status'],
       $id
     );
   }
@@ -191,6 +197,7 @@ class Change {
       ->addValue('data_after', $this->getDataAfter())
       ->addValue('change_date', $this->changedDate->format(Utils::DATE_FORMAT))
       ->addValue('received_date', $this->receivedDate->format(Utils::DATE_FORMAT))
+      ->addValue('status', $this->status)
       ->addValue('source_node_id', $this->sourceNodeId);
     if ($this->isPersisted()) {
       $shareChangeQuery

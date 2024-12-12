@@ -42,7 +42,17 @@ class SendAction extends AbstractAction {
     }
 
     $shareChanges = ShareChange::get()
-      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'received_date', 'data_before', 'data_after')
+      ->addSelect(
+        'id',
+        'change_type',
+        'local_contact_id',
+        'source_node_id',
+        'change_date',
+        'received_date',
+        'status',
+        'data_before',
+        'data_after'
+      )
       ->addWhere('source_node_id', '=', $this->sourceNodeId)
       ->addWhere('status', 'IN', Change::PENDING_FROM_SENDING_STATUS)
       ->execute();
@@ -60,6 +70,7 @@ class SendAction extends AbstractAction {
         Change::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
         \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
         isset($shareChange['received_date']) ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']) : NULL,
+        $shareChange['status'],
         $shareChange['id']
       );
       $message->addChange($change);
