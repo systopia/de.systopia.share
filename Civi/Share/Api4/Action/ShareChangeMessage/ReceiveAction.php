@@ -9,6 +9,7 @@ use Civi\Share\Message;
 
 /**
  * @method array getMessage()
+ * @method $this setMessage(array $message)
  */
 class ReceiveAction extends AbstractAction {
 
@@ -27,8 +28,10 @@ class ReceiveAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result) {
-    (Message::createFromSerializedMessage($this->getMessage()))
+    $message = Message::createFromSerializedMessage($this->getMessage());
+    $message
       ->persistChanges();
+    $result->rowCount = count($message->getPersistedChangeIds());
   }
 
 }

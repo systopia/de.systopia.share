@@ -13,7 +13,7 @@ use Civi\Share\Utils;
 
 /**
  * @method int getSourceNodeId()
- * @method void setSourceNodeId(int $sourceNodeId)
+ * @method $this setSourceNodeId(int $sourceNodeId)
  */
 class SendAction extends AbstractAction {
 
@@ -66,11 +66,14 @@ class SendAction extends AbstractAction {
     }
     $serializedMessade = $message->serialize();
 
+    $apiResult = [];
     foreach ($peerings as $peering) {
-      \Civi::service('civi.share.api')->sendMessage($peering['id'], $serializedMessade);
+      $apiResult[] = [
+        'remote_node_id' => $peering['remote_node'],
+        'result' => \Civi::service('civi.share.api')->sendMessage($peering['id'], $serializedMessade)
+      ];
     }
-
-    // TODO: Store to result.
+    $result->exchangeArray($apiResult);
   }
 
 }
