@@ -1,6 +1,6 @@
 <?php
 
-function _civicrm_api3_civi_share_poc_change_on_leaf_test_spec(&$spec) {
+function _civicrm_api3_civi_share_p_o_c_test_change_on_leaf_spec(&$spec) {
   $spec['clear'] = [
     'title'       => 'Clear CiviShare change entities pending from sending for the "leaf" node',
     'description' => 'Whether to delete all CiviShare change entities local to the "leaf" node which are to be sent out before running this test.',
@@ -15,7 +15,7 @@ function _civicrm_api3_civi_share_poc_change_on_leaf_test_spec(&$spec) {
  * (when using with the SetupLeaf test only, this should be the "central" node
  * environment only).
  */
-function civicrm_api3_civi_share_poc_change_on_leaf_test($params) {
+function civicrm_api3_civi_share_p_o_c_test_change_on_leaf(&$params) {
   $leafNodeId = \Civi\Api4\ShareNode::get(FALSE)
     ->addSelect('id')
     ->addWhere('short_name', '=', 'leaf')
