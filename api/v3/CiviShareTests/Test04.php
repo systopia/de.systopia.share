@@ -39,6 +39,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   $local_contact = \Civi\Api4\Contact::create(TRUE)
     ->addValue('first_name', base64_encode(random_bytes(8)))
     ->addValue('last_name', base64_encode(random_bytes(8)))
+    ->addValue('contact_id', $local_contact['id'])
     ->addValue('contact_type', 'Individual')
     ->execute()
     ->first();
@@ -46,12 +47,10 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   $remote_contact = \Civi\Api4\Contact::create(TRUE)
     ->addValue('first_name', base64_encode(random_bytes(8)))
     ->addValue('last_name', base64_encode(random_bytes(8)))
+    ->addValue('contact_id', $local_contact['id'])
     ->addValue('contact_type', 'Individual')
     ->execute()
     ->first();
-
-  // create a peering
-  $peering->peer($remote_contact['id'], $local_contact['id'], $remote_node['id'], $local_node['id']);
 
   // create a change data set
   $change_data_before = [
@@ -98,6 +97,9 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->addValue('is_enabled', true)
     ->addValue('shared_secret', $shared_key)
     ->execute();
+
+  // create a contact peering
+  $peering->peer($remote_contact['id'], $local_contact['id'], $remote_node['id'], $local_node['id']);
 
   // with a membership
   $membershipType = \Civi\Api4\MembershipType::get(TRUE)
