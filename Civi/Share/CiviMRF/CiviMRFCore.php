@@ -32,7 +32,7 @@ class CiviMRFCore extends \CMRF\Core\Core implements AutoServiceInterface {
   public function getConnectionProfiles() {
     $profiles = [];
     $query = ShareNode::get()
-      ->addSelect('id', 'rest_url', 'api_key', 'site_key');
+      ->addSelect('id', 'rest_url', 'api_key', 'auth_key');
     // TODO: only enabled?
     if (isset($shareNodeIds)) {
       $query
@@ -45,7 +45,7 @@ class CiviMRFCore extends \CMRF\Core\Core implements AutoServiceInterface {
         'id' => $shareNode['id'],
         'urlV4' => $shareNode['rest_url'],
         'api_key' => $shareNode['api_key'],
-        'site_key' => $shareNode['site_key'],
+        'site_key' => $shareNode['auth_key'],
       ];
     }
     return $profiles;
