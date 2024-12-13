@@ -134,9 +134,9 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->execute();
 
   // Send changes.
-  \Civi\Api4\ShareChangeMessage::send()
+  $result = \Civi\Api4\ShareChangeMessage::send()
     ->setSourceNodeId($local_node['id'])
     ->execute();
 
-  return civicrm_api3_create_success();
+  return civicrm_api3_create_success($result);
 }
