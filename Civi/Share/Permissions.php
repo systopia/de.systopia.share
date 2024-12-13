@@ -10,11 +10,10 @@ class Permissions {
 
   public static function getPermissions(): array {
     return [
-      [
-        'name' => self::RECEIVE_CHANGE_MESSAGES,
+      self::RECEIVE_CHANGE_MESSAGES => [
         'label' => E::ts('Receive Change Messages'),
         'description' => E::ts('Allows receiving change messages via'),
-      ]
+      ],
     ];
   }
 
