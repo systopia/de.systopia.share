@@ -32,7 +32,7 @@ class ShareChangeMessage extends Generic\AbstractEntity {
     return [
       'meta' => ['access CiviCRM'],
       'default' => ['administer CiviCRM'],
-      'receive' => [Permissions::RECEIVE_CHANGE_MESSAGES],
+      'receive' => [Permissions::CHANGE_MESSAGE_RECEIVE],
     ];
   }
 
