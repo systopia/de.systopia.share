@@ -6,15 +6,15 @@ use CRM_Share_ExtensionUtil as E;
 
 class Permissions {
 
-  public const NODE_READ = 'civishare: read nodes';
+  public const NODE_READ = 'civishare read nodes';
 
-  public const NODE_PEERING_READ = 'civishare: read node peerings';
+  public const NODE_PEERING_READ = 'civishare read node peerings';
 
-  public const CHANGE_CREATE = 'civishare: create changes';
+  public const CHANGE_CREATE = 'civishare create changes';
 
-  public const CHANGE_READ = 'civishare: read changes';
+  public const CHANGE_READ = 'civishare read changes';
 
-  public const CHANGE_MESSAGE_RECEIVE = 'civishare: receive change messages';
+  public const CHANGE_MESSAGE_RECEIVE = 'civishare receive change messages';
 
   public static function getPermissions(): array {
     return [
