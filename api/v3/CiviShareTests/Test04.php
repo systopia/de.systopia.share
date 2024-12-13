@@ -23,12 +23,16 @@ use \Civi\Share\Message;
  * - set up membership for one
  * - create change record
  * - send ot other (local) node
- * - check if memberhsip was created
+ * - check if membership was created
  *
  * @todo migrate to unit tests (once running)
  **/
 function civicrm_api3_civi_share_tests_test04(&$params) {
   define('CIVISHARE_ALLOW_LOCAL_LOOP', 1); // allow local loops
+
+  if (!function_exists('xcm_civicrm_config')) {
+      throw new \Exception("This test requires XCM");
+  }
 
   // create a local node
   CRM_Share_TestTools::clearCiviShareConfig();

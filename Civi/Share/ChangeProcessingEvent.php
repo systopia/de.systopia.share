@@ -186,7 +186,45 @@ class ChangeProcessingEvent extends Event
     return $this->new_change_status;
   }
 
-  /**
+
+    /**
+     * Will try to use the local_contact_id from the receieved change to look up the
+     *   corresponding local contact using the peering service
+     *
+     * @return ?int
+     */
+    public function getLocalContactID()
+    {
+        $submitted_contact_id = (int) $this->change_data['local_contact_id'] ?? 0;
+        if (empty($submitted_contact_id)) return null;
+
+        // use peering to look up local contact
+        // @todo migrate peering to service
+        $peering = new \Civi\Share\IdentityTrackerContactPeering();
+        $change_data = $this->getChange();
+        $local_contact_id = $peering->getLocalContactId($submitted_contact_id, $change_data['source_node_id']);
+
+        if (empty($local_contact_id)) {
+            // isn't peered
+            return null;
+        } else {
+            return (int) $local_contact_id;
+        }
+    }
+
+
+    /**
+     * Will return the remote contact ID, as long as it's submitted
+     *
+     * @return ?int
+     */
+    public function getRemoteContactID()
+    {
+        return (int) $this->change_data['local_contact_id'] ?? 0;
+    }
+
+
+    /**
    * Helper to deserialise JSON data in the Change object
    *
    * @param string $serialised_data
