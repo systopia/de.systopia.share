@@ -9,7 +9,7 @@ use Civi\Share\ChangeProcessingEvent;
 
 /**
  *  This simple processor will process membership data, i.e. update an existing membership
- *    or create a new one. It works under the assumption that there i at most one active
+ *    or create a new one. It works under the assumption that there is at most one active
  *    membership per contact, so no further identification of the specific membership is needed
  */
 class SimpleMembershipChangeProcessor extends ChangeProcessorBase
