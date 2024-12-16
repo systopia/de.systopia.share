@@ -1,4 +1,5 @@
 <?php
+
 namespace Civi\Share\ChangeProcessor;
 
 use Civi\Core\Event\GenericHookEvent as Event;
@@ -6,23 +7,28 @@ use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 use Civi\Share\Change;
 
-class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
-{
+class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
+
   /**
-   * Process the given change if you can/should/want and don't forget to mark processed when done
+   * Process the given change if you can/should/want and don't forget to mark
+   * processed when done
    *
    * @param $processing_event
    * @param $event_type
    * @param $dispatcher
+   *
    * @return void
    */
-  public function process_change($processing_event, $event_type, $dispatcher)
-  {
+  public function process_change($processing_event, $event_type, $dispatcher) {
     // nothing to do here
-    if ($processing_event->isProcessed()) return;
+    if ($processing_event->isProcessed()) {
+      return;
+    }
 
     // check if this is the one we're looking for
-    if (!$processing_event->hasChangeType('civishare.change.contact.base')) return;
+    if (!$processing_event->hasChangeType('civishare.change.contact.base')) {
+      return;
+    }
 
     /***************************************/
     /****  CONTACT IDENTIFICATION PHASE  ***/
@@ -33,8 +39,8 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
     if (!$local_contact_id) { // local contact not known, look for it...
       // IDENTIFY LOCAL CONTACT: using identification attribute sets (later from config)
       $identification_attribute_sets = $this->getConfigValue('contact_identifying_attribute_sets', [
-          ['first_name', 'last_name', 'contact_type', 'email'],
-          ['first_name', 'contact_type', 'email']
+        ['first_name', 'last_name', 'contact_type', 'email'],
+        ['first_name', 'contact_type', 'email'],
       ]);
 
       // now that we have the attribute sets for identification, iterate lookups until we find a match
@@ -47,7 +53,8 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
           $local_contact_id = $result['id'];
           $processing_event->logProcessingMessage("Local contact {$local_contact_id} identified.");
           break;
-        } else {
+        }
+        else {
           $processing_event->logProcessingMessage("Local contact not be identified via attributes: " . json_encode($attribute_set));
         }
       }
@@ -57,7 +64,6 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
     /****   CONTACT CREATE/UPDATEPHASE   ***/
     /***************************************/
     if ($local_contact_id) {
-
       // FIRST: store this information as a new peering
       if ($remote_contact_id) {
         $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
@@ -76,16 +82,16 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
           \civicrm_api3($update_entity, $update_action, $update_data);
           $processing_event->logProcessingMessage("Updated contact [{$local_contact_id}].");
           $processing_event->setProcessed();
-        } catch (\Exception $ex) {
+        }
+        catch (\Exception $ex) {
           $processing_event->logProcessingMessage("Updating contact failed: " . $ex->getMessage());
           $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
         }
       }
-
-
-    } else {
+    }
+    else {
       // CONTACT COULD *NOT* BE IDENTIFIED
-      $create_new_contact = $this->getConfigValue('create_new_contact', true);
+      $create_new_contact = $this->getConfigValue('create_new_contact', TRUE);
       if ($create_new_contact) {
         try {
           // CREATE A NEW CONTACT!
@@ -104,15 +110,17 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase
           }
           // that's it
           $processing_event->setProcessed();
-
-        } catch (\Exception $ex) {
+        }
+        catch (\Exception $ex) {
           $processing_event->logProcessingMessage("Creating contact failed: " . $ex->getMessage());
           $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
         }
-      } else {
-          // contact NOT identified and creation not enabled
-          $processing_event->logProcessingMessage("Couldn't identify contact, and creating a new one is not allowed.");
-        }
+      }
+      else {
+        // contact NOT identified and creation not enabled
+        $processing_event->logProcessingMessage("Couldn't identify contact, and creating a new one is not allowed.");
+      }
     }
   }
+
 }

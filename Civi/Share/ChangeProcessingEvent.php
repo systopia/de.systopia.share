@@ -1,4 +1,5 @@
 <?php
+
 namespace Civi\Share;
 
 use Civi\Core\Event\GenericHookEvent as Event;
@@ -19,8 +20,7 @@ use Civi\Api4\ShareNode;
  *
  * Provided by the CiviShare extension.
  */
-class ChangeProcessingEvent extends Event
-{
+class ChangeProcessingEvent extends Event {
 
   /** ChangeProcessor priority PRIORITY: use if you definitely want the have a first go a this */
   public const PRIORITY_PROCESSING = 1000;
@@ -43,6 +43,8 @@ class ChangeProcessingEvent extends Event
   /** ChangeProcessor priority REPORTING: at this point everything should've happened */
   const REPORTING = 0;
 
+  /** @var boolean change_handlers_registered */
+  protected static bool $configured_change_handlers_registered = FALSE;
 
   /** @var int node ID */
   protected int $node_id;
@@ -51,23 +53,20 @@ class ChangeProcessingEvent extends Event
   protected int $change_id;
 
   /** @var array node data */
-  protected ?array $node_data = null;
+  protected ?array $node_data = NULL;
 
   /** @var array change data */
-  protected ?array $change_data = null;
+  protected ?array $change_data = NULL;
 
   /** @var bool has this change been processed? */
-  protected bool $is_processed = false;
+  protected bool $is_processed = FALSE;
 
   /** @var string the new status after the processing */
   protected string $new_change_status = 'DONE';
 
-    /** @var boolean change_handlers_registered */
-    protected static bool $configured_change_handlers_registered = false;
-
   /**
-   * Create a new change processor for the given node. You can also add APIv4 data
-   *   of the node if you have it.
+   * Create a new change processor for the given node. You can also add APIv4
+   * data of the node if you have it.
    *
    * @param int $node_id
    *   ID of the node the changes should be processed on.
@@ -78,11 +77,10 @@ class ChangeProcessingEvent extends Event
    * @param array $node_data
    *   APIv4 data of the node, in case you have it - will otherwise be loaded
    */
-  public function __construct($change_id, $node_id, $change_data = null, $node_data = null)
-  {
+  public function __construct($change_id, $node_id, $change_data = NULL, $node_data = NULL) {
     $this->node_id = $node_id;
     $this->change_id = $change_id;
-    $this->is_processed = false;
+    $this->is_processed = FALSE;
     $this->change_data = $change_data;
     $this->node_data = $node_data;
 
@@ -106,21 +104,21 @@ class ChangeProcessingEvent extends Event
 
     // register change handlers as defined in the database (ONCE)
     if (!self::$configured_change_handlers_registered) {
-        $shareHandlers = \Civi\Api4\ShareHandler::get(true)
-            ->addSelect('id', 'name', 'class', 'weight', 'configuration')
-            ->addWhere('is_enabled', '=', 1)
-            ->addOrderBy('weight', 'ASC')
-            ->execute();
-        foreach ($shareHandlers as $shareHandler) {
-            // todo: make sure you can't inject code here
-            $handler = new $shareHandler['class']();
-            \Civi::dispatcher()->addListener(
-                'de.systopia.change.process',
-                [$handler, 'process_change'],
-                $shareHandler['weight']
-            );
-        }
-        self::$configured_change_handlers_registered = true;
+      $shareHandlers = \Civi\Api4\ShareHandler::get(TRUE)
+        ->addSelect('id', 'name', 'class', 'weight', 'configuration')
+        ->addWhere('is_enabled', '=', 1)
+        ->addOrderBy('weight', 'ASC')
+        ->execute();
+      foreach ($shareHandlers as $shareHandler) {
+        // todo: make sure you can't inject code here
+        $handler = new $shareHandler['class']();
+        \Civi::dispatcher()->addListener(
+          'de.systopia.change.process',
+          [$handler, 'process_change'],
+          $shareHandler['weight']
+        );
+      }
+      self::$configured_change_handlers_registered = TRUE;
     }
   }
 
@@ -129,8 +127,7 @@ class ChangeProcessingEvent extends Event
    *
    * @return bool
    */
-  public function isProcessed()
-  {
+  public function isProcessed() {
     return $this->is_processed;
   }
 
@@ -139,8 +136,7 @@ class ChangeProcessingEvent extends Event
    *
    * @return bool
    */
-  public function setProcessed($is_processed = true)
-  {
+  public function setProcessed($is_processed = TRUE) {
     $this->is_processed = $is_processed;
   }
 
@@ -149,8 +145,7 @@ class ChangeProcessingEvent extends Event
    *
    * @return string
    */
-  public function getNewChangeStatus()
-  {
+  public function getNewChangeStatus() {
     return $this->$new_change_status;
   }
 
@@ -158,10 +153,10 @@ class ChangeProcessingEvent extends Event
    * Set the new status for the CHANGE object being processed
    *
    * @param string $status
+   *
    * @return void
    */
-  public function setNewChangeStatus($status)
-  {
+  public function setNewChangeStatus($status) {
     $this->$new_change_status = $status;
   }
 
@@ -169,10 +164,10 @@ class ChangeProcessingEvent extends Event
    * Check if the change being processed is the given type
    *
    * @param $change_type
+   *
    * @return void
    */
-  public function hasChangeType($change_type)
-  {
+  public function hasChangeType($change_type) {
     return $this->change_data['change_type'] == $change_type;
   }
 
@@ -181,100 +176,34 @@ class ChangeProcessingEvent extends Event
    *
    * @return string
    */
-  public function getNewStatus() : string
-  {
+  public function getNewStatus(): string {
     return $this->new_change_status;
   }
 
-
-    /**
-     * Will try to use the local_contact_id from the receieved change to look up the
-     *   corresponding local contact using the peering service
-     *
-     * @return ?int
-     */
-    public function getLocalContactID()
-    {
-        $submitted_contact_id = (int) $this->change_data['local_contact_id'] ?? 0;
-        if (empty($submitted_contact_id)) return null;
-
-        // use peering to look up local contact
-        // @todo migrate peering to service
-        $peering = new \Civi\Share\IdentityTrackerContactPeering();
-        $change_data = $this->getChange();
-        $local_contact_id = $peering->getLocalContactId($submitted_contact_id, $change_data['source_node_id']);
-
-        if (empty($local_contact_id)) {
-            // isn't peered
-            return null;
-        } else {
-            return (int) $local_contact_id;
-        }
-    }
-
-
-    /**
-     * Will return the remote contact ID, as long as it's submitted
-     *
-     * @return ?int
-     */
-    public function getRemoteContactID()
-    {
-        return (int) $this->change_data['local_contact_id'] ?? 0;
-    }
-
-
-    /**
-   * Helper to deserialise JSON data in the Change object
-   *
-   * @param string $serialised_data
-   * @return array
-   */
-  protected function getJsonData($serialised_data)
-  {
-    $data = json_decode($serialised_data, true);
-    // todo: error handling
-    return $data;
-  }
-
   /**
-   * Get the data BEFORE the change
-   *
-   * @return array
-   */
-  public function getChangeDataBefore()
-  {
-    // todo: cache? might be tricky...
-//    return $this->getJsonData($this->change_data['data_before']);
-    return $this->change_data['data_before'];
-  }
-
-  /**
-   * Get the data AFTER the change
-   *
-   * @return array
-   */
-  public function getChangeDataAfter()
-  {
-    // todo: cache? might be tricky...
-//    return $this->getJsonData($this->change_data['data_after']);
-      return $this->change_data['data_after'];
-  }
-
-  /**
-   * Get the data AFTER the change
+   * Will try to use the local_contact_id from the receieved change to look up
+   * the corresponding local contact using the peering service
    *
    * @return ?int
    */
-  public function getContactID()
-  {
-    $before_data_contact_id = $this->getChangeDataBefore()['contact_id'] ?? null;
-    $after_data_contact_id = $this->getChangeDataAfter()['contact_id'] ?? null;
-    if ($before_data_contact_id && $after_data_contact_id && $before_data_contact_id != $after_data_contact_id) {
-      // todo: log as contact_id conflict
-      return null; // there is a conflict
-    } else {
-      return $after_data_contact_id ?? $before_data_contact_id ?? null;
+  public function getLocalContactID() {
+    $submitted_contact_id = (int) $this->change_data['local_contact_id'] ?? 0;
+    if (empty($submitted_contact_id)) {
+      return NULL;
+    }
+
+    // use peering to look up local contact
+    // @todo migrate peering to service
+    $peering = new \Civi\Share\IdentityTrackerContactPeering();
+    $change_data = $this->getChange();
+    $local_contact_id = $peering->getLocalContactId($submitted_contact_id, $change_data['source_node_id']);
+
+    if (empty($local_contact_id)) {
+      // isn't peered
+      return NULL;
+    }
+    else {
+      return (int) $local_contact_id;
     }
   }
 
@@ -283,20 +212,80 @@ class ChangeProcessingEvent extends Event
    *
    * @return array
    */
-  public function getChange() : array
-  {
+  public function getChange(): array {
     return $this->change_data;
   }
 
-    /**
-     * Log a message from change processing
-     *
-     * @param string $message
-     *
-     * @return void
-     */
-  public function logProcessingMessage($message)
-  {
-      \Civi::log("[CHANGE#{$this->change_id}] " . $message);
+  /**
+   * Will return the remote contact ID, as long as it's submitted
+   *
+   * @return ?int
+   */
+  public function getRemoteContactID() {
+    return (int) $this->change_data['local_contact_id'] ?? 0;
   }
+
+  /**
+   * Get the data AFTER the change
+   *
+   * @return ?int
+   */
+  public function getContactID() {
+    $before_data_contact_id = $this->getChangeDataBefore()['contact_id'] ?? NULL;
+    $after_data_contact_id = $this->getChangeDataAfter()['contact_id'] ?? NULL;
+    if ($before_data_contact_id && $after_data_contact_id && $before_data_contact_id != $after_data_contact_id) {
+      // todo: log as contact_id conflict
+      return NULL; // there is a conflict
+    }
+    else {
+      return $after_data_contact_id ?? $before_data_contact_id ?? NULL;
+    }
+  }
+
+  /**
+   * Get the data BEFORE the change
+   *
+   * @return array
+   */
+  public function getChangeDataBefore() {
+    // todo: cache? might be tricky...
+    //    return $this->getJsonData($this->change_data['data_before']);
+    return $this->change_data['data_before'];
+  }
+
+  /**
+   * Get the data AFTER the change
+   *
+   * @return array
+   */
+  public function getChangeDataAfter() {
+    // todo: cache? might be tricky...
+    //    return $this->getJsonData($this->change_data['data_after']);
+    return $this->change_data['data_after'];
+  }
+
+  /**
+   * Log a message from change processing
+   *
+   * @param string $message
+   *
+   * @return void
+   */
+  public function logProcessingMessage($message) {
+    \Civi::log("[CHANGE#{$this->change_id}] " . $message);
+  }
+
+  /**
+   * Helper to deserialise JSON data in the Change object
+   *
+   * @param string $serialised_data
+   *
+   * @return array
+   */
+  protected function getJsonData($serialised_data) {
+    $data = json_decode($serialised_data, TRUE);
+    // todo: error handling
+    return $data;
+  }
+
 }
