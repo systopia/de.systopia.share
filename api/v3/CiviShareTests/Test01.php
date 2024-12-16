@@ -13,8 +13,8 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use \Civi\Share\Message;
-use \Civi\Share\ChangeProcessingEvent;
+use Civi\Share\Message;
+use Civi\Share\ChangeProcessingEvent;
 
 /**
  * Test01 for CiviShare
@@ -85,7 +85,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
 
   // add a dummy listener to the 'civishare.change.test' change type
   $result = \Civi::dispatcher()->addListener(
-    'de.systopia.change.process',
+    ChangeprocessingEvent::NAME,
     'civicrm_civi_share_test_register_test_hander',
     ChangeProcessingEvent::LATE_PROCESSING
   );

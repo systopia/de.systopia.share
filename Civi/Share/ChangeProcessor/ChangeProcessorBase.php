@@ -111,7 +111,7 @@ abstract class ChangeProcessorBase {
    */
   public function register($change_types, $weight = ChangeProcessingEvent::DEFAULT_PROCESSING) {
     $result = \Civi::dispatcher()->addListener(
-      'de.systopia.change.process',
+      ChangeProcessingEvent::NAME,
       [$this, 'process_change'],
       $weight
     );

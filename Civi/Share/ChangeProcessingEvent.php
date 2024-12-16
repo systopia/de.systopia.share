@@ -22,6 +22,8 @@ use Civi\Api4\ShareNode;
  */
 class ChangeProcessingEvent extends Event {
 
+  public const NAME = 'de.systopia.change.process';
+
   /** ChangeProcessor priority PRIORITY: use if you definitely want the have a first go a this */
   public const PRIORITY_PROCESSING = 1000;
 
@@ -113,7 +115,7 @@ class ChangeProcessingEvent extends Event {
         // todo: make sure you can't inject code here
         $handler = new $shareHandler['class']();
         \Civi::dispatcher()->addListener(
-          'de.systopia.change.process',
+          self::NAME,
           [$handler, 'process_change'],
           $shareHandler['weight']
         );

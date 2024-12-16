@@ -3,7 +3,7 @@ namespace Civi\Share;
 
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
-use \Civi\Share\ChangeProcessingEvent;
+use Civi\Share\ChangeProcessingEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 
 

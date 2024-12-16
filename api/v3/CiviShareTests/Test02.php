@@ -13,7 +13,8 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use \Civi\Share\Message;
+use Civi\Share\ChangeProcessingEvent;
+use Civi\Share\Message;
 
 
 /**
@@ -115,7 +116,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
 
   // register a 'civishare.change.contact.base' change processor
   $result = \Civi::dispatcher()->addListener(
-    'de.systopia.change.process',
+    ChangeProcessingEvent::NAME,
     'civicrm_civi_share_test_register_test2_hander'
   );
 
