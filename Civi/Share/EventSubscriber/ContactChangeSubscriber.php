@@ -72,25 +72,38 @@ class ContactChangeSubscriber extends AutoSubscriber {
           ->execute()
           ->single();
 
-        // TODO: How to determine the default local node?
-        $localNodeId = ShareNode::get(FALSE)
-          ->addSelect('id')
-          ->addWhere('is_local', '=', TRUE)
-          ->addWhere('is_enabled', '=', TRUE)
-          ->execute()
-          ->first()['id'];
+        // Remove fields with identical values
+        // (occurs when comparison in pre hook yielded differences that weren't persisted or only in type).
+        $dataBefore = array_filter($dataBefore, function ($value, $key) use ($dataAfter) {
+          return $value !== $dataAfter[$key];
+        }, ARRAY_FILTER_USE_BOTH);
+        // Remove fields that weren't changed (e.g. the "id" field is always being added by the API).
+        $dataAfter = array_intersect_key($dataAfter, $dataBefore);
 
-        $change = ShareChange::create()
-          ->addValue('change_type', 'civishare.change.contact.base')
-          ->addValue('change_date', (new \DateTime())->format(Utils::CIVICRM_DATE_FORMAT))
-          ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
-          ->addValue('local_contact_id', $objectId)
-          ->addValue('source_node_id', $localNodeId)
-          ->addValue('data_before', $dataBefore)
-          ->addValue('data_after', array_intersect_key($dataAfter, $dataBefore))
-          ->execute();
+        if ([] !== $dataBefore) {
+          // TODO: How to determine the default local node?
+          $localNodeId = ShareNode::get(FALSE)
+            ->addSelect('id')
+            ->addWhere('is_local', '=', TRUE)
+            ->addWhere('is_enabled', '=', TRUE)
+            ->execute()
+            ->first()['id'];
+
+          $change = ShareChange::create()
+            ->addValue('change_type', 'civishare.change.contact.base')
+            ->addValue('change_date', (new \DateTime())->format(Utils::CIVICRM_DATE_FORMAT))
+            ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
+            ->addValue('local_contact_id', $objectId)
+            ->addValue('source_node_id', $localNodeId)
+            ->addValue('data_before', $dataBefore)
+            ->addValue('data_after', $dataAfter)
+            ->execute();
+        }
       }
-      unset(\Civi::$statics[__CLASS__]['changes'][$objectId]);
+
+      if (isset(\Civi::$statics[__CLASS__]['changes'][$objectId])) {
+        unset(\Civi::$statics[__CLASS__]['changes'][$objectId]);
+      }
     }
   }
 
