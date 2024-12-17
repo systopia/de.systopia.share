@@ -13,15 +13,15 @@ class ShareChangeMessage extends Generic\AbstractEntity {
   /**
    * @inheritDoc
    */
-  public static function getFields(bool $checkPermissions = TRUE) {
+  public static function getFields(bool $checkPermissions = TRUE): GetFieldsAction {
     return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function send(bool $checkPermissions = TRUE) {
+  public static function send(bool $checkPermissions = TRUE): SendAction {
     return (new SendAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function receive(bool $checkPermissions = TRUE) {
+  public static function receive(bool $checkPermissions = TRUE): ReceiveAction {
     return (new ReceiveAction())->setCheckPermissions($checkPermissions);
   }
 
