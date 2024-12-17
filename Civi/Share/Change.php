@@ -149,6 +149,10 @@ class Change {
       ->addWhere('id', '=', $id)
       ->execute()
       ->single();
+    return self::createFromApiResultArray($shareChange);
+  }
+
+  public static function createFromApiResultArray(array $shareChange): self {
     return new self(
       $shareChange['change_type'],
       $shareChange['local_contact_id'],
@@ -157,7 +161,7 @@ class Change {
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']),
       $shareChange['status'],
-      $id
+      $shareChange['id']
     );
   }
 
@@ -187,6 +191,52 @@ class Change {
 
   public function getSourceNodeId(): int {
     return $this->sourceNodeId;
+  }
+
+  public function setStatus(string $status): void {
+    // TODO Validate.
+    $this->status = $status;
+  }
+
+  public function process(int $localNodeId): void {
+    $lock = \Civi::lockManager()
+      // TODO: Is 'data' the right type?
+      ->acquire('data.civishare.changes');
+    if (!$lock->isAcquired()) {
+      throw new \RuntimeException('CiviShare: Could not acquire lock for processing changes.');
+    }
+
+    if (!$this->isPersisted()) {
+      throw new \RuntimeException('CiviShare: cannot process unpersisted changes.');
+    }
+    // TODO: Replace $change with instance of $this in ChangeProcessingEvent.
+    $change = \Civi\Api4\ShareChange::get(TRUE)
+      ->addWhere('id', '=', $this->id)
+      ->setLimit(1)
+      ->execute()
+      ->first();
+    $changeProcessingEvent = new \Civi\Share\ChangeProcessingEvent($this->id, $localNodeId, $change);
+    try {
+      \Civi::dispatcher()
+        ->dispatch(ChangeProcessingEvent::NAME, $changeProcessingEvent);
+      if ($changeProcessingEvent->isProcessed()) {
+        $this->setStatus($changeProcessingEvent->getNewStatus() ?? self::STATUS_PROCESSED);
+      }
+      else {
+        $this->setStatus($changeProcessingEvent->getNewStatus() ?? self::STATUS_ERROR);
+        \Civi::log()
+          ->warning("Change [{$this->id}] could not be processed - no processor found.");
+      }
+      $this->persist();
+    }
+    catch (\Exception $exception) {
+      \Civi::log()
+        ->warning("Change [{$this->id}] failed processing, exception was " . $exception->getMessage());
+      $this->setStatus(self::STATUS_ERROR);
+      $changeProcessingEvent->setFailed($exception->getMessage());
+    }
+
+    $lock->release();
   }
 
   public function persist(): void {

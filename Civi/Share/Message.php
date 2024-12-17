@@ -206,6 +206,9 @@ class Message
   public function processChanges($local_node_id)
   {
     $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
+    if (!$lock->isAcquired()) {
+      throw new \RuntimeException('CiviShare: Could not acquire lock for processing changes.');
+    }
 
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
