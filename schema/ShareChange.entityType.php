@@ -34,9 +34,9 @@ return [
     ],
     'status' => [
       'title' => E::ts('Status'),
-      'sql_type' => 'varchar(8)',
+      'sql_type' => 'varchar(12)',
       'input_type' => 'Text',
-      'description' => E::ts('Status: LOCAL, PENDING, BUSY, FORWARD, DONE, DROPPED, ERROR'),
+      'description' => E::ts('Status: LOCAL, PENDING, BUSY, FORWARD, DONE, PROCESSED, DROPPED, ERROR'),
     ],
     'hash' => [
       'title' => E::ts('Name'),

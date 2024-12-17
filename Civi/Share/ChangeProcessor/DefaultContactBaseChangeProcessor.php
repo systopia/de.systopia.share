@@ -35,6 +35,7 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
     /***************************************/
     $remote_contact_id = (int) $processing_event->getRemoteContactID();
     $local_contact_id = $processing_event->getLocalContactID();
+    $change = $processing_event->getChange();
 
     if (!$local_contact_id) { // local contact not known, look for it...
       // IDENTIFY LOCAL CONTACT: using identification attribute sets (later from config)
@@ -51,6 +52,11 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
         $result = \civicrm_api3('Contact', 'get', $search_parameters);
         if ($result['count'] == 1) {
           $local_contact_id = $result['id'];
+          // Store this information as a new peering.
+          if ($remote_contact_id) {
+            $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
+            $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
+          }
           $processing_event->logProcessingMessage("Local contact {$local_contact_id} identified.");
           break;
         }
@@ -64,12 +70,7 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
     /****   CONTACT CREATE/UPDATEPHASE   ***/
     /***************************************/
     if ($local_contact_id) {
-      // FIRST: store this information as a new peering
       if ($remote_contact_id) {
-        $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
-        $change = $processing_event->getChange();
-        $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
-
         // run a CONTACT UPDATE
         $update_entity = $this->getConfigValue('update_entity', 'Contact');
         $update_action = $this->getConfigValue('update_action', 'create');

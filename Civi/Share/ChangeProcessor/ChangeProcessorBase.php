@@ -12,6 +12,8 @@ use Civi\Share\ChangeProcessingEvent;
  */
 abstract class ChangeProcessorBase {
 
+  public const CHANGE_TYPE_CONTACT_BASE = 'civishare.change.contact.base';
+
   /**
    * This method will be called when a change is offered to this processor for
    * processing

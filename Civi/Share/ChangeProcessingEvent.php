@@ -65,8 +65,8 @@ class ChangeProcessingEvent extends Event {
   /** @var bool has this change been processed? */
   protected bool $is_processed = FALSE;
 
-  /** @var string the new status after the processing */
-  protected string $new_change_status = 'DONE';
+  /** @var string|null the new status after the processing */
+  protected ?string $new_change_status = NULL;
 
   /**
    * Create a new change processor for the given node. You can also add APIv4
@@ -87,6 +87,7 @@ class ChangeProcessingEvent extends Event {
     $this->is_processed = FALSE;
     $this->change_data = $change_data;
     $this->node_data = $node_data;
+    $this->change = Change::createFromExisting($change_id);
 
     // load node data if not given
     if (empty($this->change_data)) {
@@ -178,9 +179,9 @@ class ChangeProcessingEvent extends Event {
   /**
    * Get the new status of the change as suggested by the change processor(s)
    *
-   * @return string
+   * @return string|null
    */
-  public function getNewStatus(): string {
+  public function getNewStatus(): ?string {
     return $this->new_change_status;
   }
 

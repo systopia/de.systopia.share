@@ -48,22 +48,22 @@ function share_civicrm_searchTasks($objectType, &$tasks) {
  * Pre hook: use for change detection
  */
 function share_civicrm_pre($op, $objectName, $id, &$params) {
-  if ($op == 'create' || $op == 'edit' || $op == 'delete') {
-    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
-      CRM_Share_ChangeDetectionByHook::processPre($op, $objectName, $id, $params);
-    }
-  }
+//  if ($op == 'create' || $op == 'edit' || $op == 'delete') {
+//    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
+//      CRM_Share_ChangeDetectionByHook::processPre($op, $objectName, $id, $params);
+//    }
+//  }
 }
 
 /**
  * Post hook: use for change detection
  */
 function share_civicrm_post($op, $objectName, $objectId, &$objectRef) {
-  if ($op == 'create' || $op == 'edit' || $op == 'delete') {
-    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
-      CRM_Share_ChangeDetectionByHook::processPost($op, $objectName, $objectId, $objectRef);
-    }
-  }
+//  if ($op == 'create' || $op == 'edit' || $op == 'delete') {
+//    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
+//      CRM_Share_ChangeDetectionByHook::processPost($op, $objectName, $objectId, $objectRef);
+//    }
+//  }
 }
 
 /**
@@ -74,6 +74,9 @@ function share_civicrm_post($op, $objectName, $objectId, &$objectRef) {
 function share_civicrm_config(&$config) {
   _share_composer_autoload();
   _share_civix_civicrm_config($config);
+  $defaultContactBaseChangeProcessor = new \Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor();
+  $defaultContactBaseChangeProcessor
+    ->register([\Civi\Share\ChangeProcessor\ChangeProcessorBase::CHANGE_TYPE_CONTACT_BASE]);
 }
 
 function share_civicrm_container(ContainerBuilder $container): void {
