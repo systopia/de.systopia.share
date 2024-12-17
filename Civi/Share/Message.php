@@ -1,8 +1,10 @@
 <?php
 namespace Civi\Share;
 
+use Civi\Api4\Generic\Result;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
 use Civi\Share\ChangeProcessingEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Civi\Share\CiviMRF\CiviMRFClient;
@@ -44,6 +46,50 @@ class Message
    * @inject civi.share.civimrf_client
    */
   protected $civiMRFClient;
+
+  public static function createFromChangesApiResult(Result $shareChanges): self {
+    if ('ShareChange' !== $shareChanges->entity) {
+      throw new \RuntimeException('CiviShare: invalid API entity for creating change message from API result.');
+    }
+
+    $message = new self();
+    foreach ($shareChanges as $shareChange) {
+      $change = new Change(
+        $shareChange['change_type'],
+        $shareChange['local_contact_id'],
+        $shareChange['source_node_id'],
+        Change::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
+        \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
+        isset($shareChange['received_date']) ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']) : NULL,
+        $shareChange['status'],
+        $shareChange['id']
+      );
+      $message->addChange($change);
+    }
+    return $message;
+  }
+
+  public static function createForSourceNode(int $sourceNodeId): self {
+    $shareChanges = ShareChange::get()
+      ->addSelect(
+        'id',
+        'change_type',
+        'local_contact_id',
+        'source_node_id',
+        'change_date',
+        'received_date',
+        'status',
+        'data_before',
+        'data_after'
+      )
+      ->addWhere('source_node_id', '=', $sourceNodeId)
+      ->addWhere('status', 'IN', Change::PENDING_FROM_SENDING_STATUS)
+      ->execute();
+    // TODO: Really return empty message when there are no changes?
+    $message = self::createFromChangesApiResult($shareChanges);
+    $message->setSenderNodeId($sourceNodeId);
+    return $message;
+  }
 
   public static function createFromSerializedMessage(array $serializedMessage, ?\DateTimeInterface $receivedDate = NULL) {
     $message = new self();
@@ -133,66 +179,71 @@ class Message
   /**
    * Send out a compiled message
    *
-   * @param int $local_node_id
+   * @param int $localNodeId
    *    ID of the local node. Only required if multiple local nodes present
    *
-   * @return void
-   *
-   * @throws \CRM_Core_Exception
+   * @throws \Exception
    */
-  public function send($local_node_id = NULL) {
-    // select the changes for the payload
-    $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
+  public function send($localNodeId = NULL): array {
+    // TODO: Is 'data' the right type?
+    $lock = \Civi::lockManager()->acquire('data.civishare.changes');
 
     // get the local node
     // TODO: cache?
-    if (empty($local_node_id)) {
+    if (!isset($localNodeId)) {
       // first: get the source node, and then find nodes to send these changes to
-      $local_node = \Civi\Api4\ShareNode::get(TRUE)
+      // TODO: What if there's multiple ones?
+      $localNode = \Civi\Api4\ShareNode::get(TRUE)
         ->addSelect('is_local')
         ->addWhere('is_local', '=', TRUE)
         ->setLimit(1)
         ->execute()
-        ->first(); // TODO: What if there's multiple ones?
-      $local_node_id = $local_node['id'];
-    }
+        ->first();
+      if (isset($localNode)) {
+        $localNodeId = $localNode['id'];
+      }
 
-    // get target nodes
-    $peerings = \Civi\Api4\ShareNodePeering::get(TRUE)
-      ->addSelect('shared_secret', 'remote_node.*', '*')
-      ->addWhere('local_node', '=', $local_node_id)
-      ->addWhere('is_enabled', '=', 1)
-      ->execute();
-
-    if ($peerings->count()) {
-      foreach ($peerings as $peering) {
-        // send message to every peered node
-        if ($peering) {
-          // shortcut: local-to-local connection
-          if (empty($peering['remote_node.rest_url']) || empty($peering['remote_node.api_key'])) {
-            // this is not a proper node...but we might allow this anyway:
-            if (defined('CIVISHARE_ALLOW_LOCAL_LOOP')) {
-              $this->processOnNode($peering['remote_node.id']);
-            }
-          } else {
-            // TODO: implement SENDING
-            \Civi::log()->warning("todo: implement serialisation and sending (directly/queue/etc)");
-
-            $shareApi = Civi::service('civi.share.api');
-            $shareApi->sendMessage($peering['id'], $this->serialize());
-          }
-
-          // todo: mark as SENT
-
-        }
+      if (!isset($localNodeId)) {
+        throw new \RuntimeException('CiviShare: Could not find local source node for sending change message.');
       }
     }
-    else {
+
+    $peerings = ShareNodePeering::get(FALSE)
+      ->addSelect('remote_node', 'remote_node.*')
+      ->addWhere('local_node', '=', $localNodeId)
+      ->addWhere('is_enabled', '=', TRUE)
+      ->execute();
+    if (0 === $peerings->count()) {
       // no peered instances: mark changes as DROPPED
-      $this->markChanges('DROPPED');
+      $this->markChanges(Change::STATUS_DROPPED);
+    }
+
+    $sendResult = [];
+    foreach ($peerings as $peering) {
+      // shortcut: local-to-local connection
+      if (empty($peering['remote_node.rest_url']) || empty($peering['remote_node.api_key'])) {
+        // this is not a proper node...but we might allow this anyway:
+        if (defined('CIVISHARE_ALLOW_LOCAL_LOOP')) {
+          $this->processOnNode($peering['remote_node.id']);
+        }
+      }
+      else {
+        $shareApi = \Civi::service('civi.share.api');
+        $apiResult = $shareApi->sendMessage($peering['id'], $this->serialize());
+        foreach ($this->changes as $change) {
+          $change->setStatus(Change::STATUS_DONE);
+          $change->persist();
+        }
+      }
+
+      $sendResult[] = [
+        'remote_node_id' => $peering['remote_node'],
+        'result' => $apiResult ?? NULL,
+      ];
     }
 
     $lock->release();
+    return $sendResult;
   }
 
   /**

@@ -32,59 +32,10 @@ class SendAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $peerings = ShareNodePeering::get(FALSE)
-      ->addSelect('remote_node')
-      ->addWhere('local_node', '=', $this->sourceNodeId)
-      ->addWhere('is_enabled', '=', TRUE)
-      ->execute();
-    if (0 === $peerings->count()) {
-      return;
-    }
-
-    $shareChanges = ShareChange::get()
-      ->addSelect(
-        'id',
-        'change_type',
-        'local_contact_id',
-        'source_node_id',
-        'change_date',
-        'received_date',
-        'status',
-        'data_before',
-        'data_after'
-      )
-      ->addWhere('source_node_id', '=', $this->sourceNodeId)
-      ->addWhere('status', 'IN', Change::PENDING_FROM_SENDING_STATUS)
-      ->execute();
-    if (0 === $shareChanges->count()) {
-      return;
-    }
-
-    $message = new Message();
+    $message = Message::createForSourceNode($this->sourceNodeId);
     $message->setSenderNodeId($this->sourceNodeId);
-    foreach ($shareChanges as $shareChange) {
-      $change = new Change(
-        $shareChange['change_type'],
-        $shareChange['local_contact_id'],
-        $shareChange['source_node_id'],
-        Change::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
-        \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
-        isset($shareChange['received_date']) ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']) : NULL,
-        $shareChange['status'],
-        $shareChange['id']
-      );
-      $message->addChange($change);
-    }
-    $serializedMessade = $message->serialize();
-
-    $apiResult = [];
-    foreach ($peerings as $peering) {
-      $apiResult[] = [
-        'remote_node_id' => $peering['remote_node'],
-        'result' => \Civi::service('civi.share.api')->sendMessage($peering['id'], $serializedMessade)
-      ];
-    }
-    $result->exchangeArray($apiResult);
+    $sendResult = $message->send($this->sourceNodeId);
+    $result->exchangeArray($sendResult);
   }
 
 }
