@@ -44,9 +44,10 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
     // use peering service to find local_contact_id
     // @todo migrate peering to service
     $peering = new \Civi\Share\IdentityTrackerContactPeering();
-    $change = $processing_event->getChange();
+    $change = $processing_event->getChangeData();
+    $changeObject = $processing_event->getChange();
     $change_data = $processing_event->getChangeDataAfter();
-    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
+    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $changeObject->getSourceNodeId(), $change['local_node_id']);
     if (!$local_contact_id) {
       $processing_event->logProcessingMessage("Couldn't identify contact, processing declined.");
       $processing_event->setNewChangeStatus(Change::STATUS_ERROR);

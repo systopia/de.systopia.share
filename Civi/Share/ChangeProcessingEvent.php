@@ -51,6 +51,8 @@ class ChangeProcessingEvent extends Event {
   /** @var int node ID */
   protected int $node_id;
 
+  protected Change $change;
+
   /** @var int change ID */
   protected int $change_id;
 
@@ -197,8 +199,7 @@ class ChangeProcessingEvent extends Event {
     // use peering to look up local contact
     // @todo migrate peering to service
     $peering = new \Civi\Share\IdentityTrackerContactPeering();
-    $change_data = $this->getChange();
-    $local_contact_id = $peering->getLocalContactId($submitted_contact_id, $change_data['source_node_id']);
+    $local_contact_id = $peering->getLocalContactId($submitted_contact_id, $this->change->getSourceNodeId());
 
     if (empty($local_contact_id)) {
       // isn't peered
@@ -209,12 +210,16 @@ class ChangeProcessingEvent extends Event {
     }
   }
 
+  public function getChange(): Change {
+    return $this->change;
+  }
+
   /**
    * Get the attributes of the change entiti being processed right now
    *
    * @return array
    */
-  public function getChange(): array {
+  public function getChangeData(): array {
     return $this->change_data;
   }
 

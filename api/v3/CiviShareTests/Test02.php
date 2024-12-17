@@ -162,7 +162,7 @@ function civicrm_civi_share_test_register_test2_hander($processing_event, $event
     // use peering service to find local_contact_id
     // @todo migrate peering to service
     $peering = new \Civi\Share\IdentityTrackerContactPeering();
-    $change = $processing_event->getChange();
+    $change = $processing_event->getChangeData();
     $change_data = $processing_event->getChangeDataAfter();
     $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
     $processing_event->setProcessed();

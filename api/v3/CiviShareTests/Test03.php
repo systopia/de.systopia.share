@@ -156,8 +156,7 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
         }
     }
 
-    $change_data = $processing_event->getChange();
-
+    $change_data = $processing_event->getChangeData();
 
     $data_before = $processing_event->getChangeDataBefore();
     $data_after = $processing_event->getChangeDataAfter();
@@ -166,7 +165,6 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
     // use peering service to find local_contact_id
     // @todo migrate peering to service
 
-    $change = $processing_event->getChange();
     $change_data = $processing_event->getChangeDataAfter();
 
     $remote_contact = \Civi\Api4\Contact::create(TRUE)

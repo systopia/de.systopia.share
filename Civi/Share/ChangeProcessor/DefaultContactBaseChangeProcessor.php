@@ -67,8 +67,8 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
       // FIRST: store this information as a new peering
       if ($remote_contact_id) {
         $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
-        $change_data = $processing_event->getChange();
-        $peering->peer($remote_contact_id, $local_contact_id, $change_data['source_node_id']);
+        $change = $processing_event->getChange();
+        $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
 
         // run a CONTACT UPDATE
         $update_entity = $this->getConfigValue('update_entity', 'Contact');
@@ -78,7 +78,7 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
 
         // basically: process the data by applying to the given local contact:
         try {
-          $processing_event->logProcessingMessage("Creating/Updating contact: " . json_encode($change_data));
+          $processing_event->logProcessingMessage("Creating/Updating contact: " . json_encode($change->serialize()));
           \civicrm_api3($update_entity, $update_action, $update_data);
           $processing_event->logProcessingMessage("Updated contact [{$local_contact_id}].");
           $processing_event->setProcessed();
@@ -104,9 +104,9 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
 
           // peer the new contact
           if ($remote_contact_id) {
-            $change_data = $processing_event->getChange();
+            $change = $processing_event->getChange();
             $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
-            $peering->peer($remote_contact_id, $local_contact_id, $change_data['source_node_id']);
+            $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
           }
           // that's it
           $processing_event->setProcessed();
