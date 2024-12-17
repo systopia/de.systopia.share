@@ -28,6 +28,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
     }
 
     // make sure we have our CiviShare ID type
+    // TODO: This should be a managed entity.
     \CRM_Identitytracker_Configuration::add_identity_type(CIVISHARE_IDTRACKER_TYPE, E::ts("CiviShare Contact Linking"));
   }
 

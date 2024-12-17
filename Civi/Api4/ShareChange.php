@@ -1,6 +1,7 @@
 <?php
 namespace Civi\Api4;
 
+use Civi\Share\Api4\Action\ShareChange\ProcessAction;
 use Civi\Share\Permissions;
 
 /**
@@ -11,6 +12,10 @@ use Civi\Share\Permissions;
  * @package Civi\Api4
  */
 class ShareChange extends Generic\DAOEntity {
+
+  public static function process(bool $checkPermissions = TRUE): ProcessAction {
+    return (new ProcessAction())->setCheckPermissions($checkPermissions);
+  }
 
   /**
    * @inheritDoc

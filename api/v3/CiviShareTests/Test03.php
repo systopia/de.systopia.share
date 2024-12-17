@@ -13,7 +13,7 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use \Civi\Share\Message;
+use Civi\Share\Message;
 
 
 /**
@@ -22,8 +22,8 @@ use \Civi\Share\Message;
  * - Set up two local nodes
  * - send a NEW CONTACT to the other node,
  *    i.e. peering has not happened yet
- * - send contact data through XCM
- * - use the resulting contact_id for peering
+ * - send contact data and use it to identify the contact for peering
+ * - apply the changes via Contact.create API
  *
  * @todo migrate to unit tests (once running)
  **/
@@ -92,12 +92,9 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
     ->execute();
   $change_id = $change->first()['id'];
 
-
-  // register a 'civishare.change.contact.base' change processor
-  $result = \Civi::dispatcher()->addListener(
-    'de.systopia.change.process',
-    'civicrm_civi_share_test_register_test3_hander'
-  );
+  // manually register a 'civishare.change.contact.base' change processor
+  $change_processor = new \Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor();
+  $change_processor->register(['civishare.change.contact.base']);
 
   // create and send a change message
   $change_message = new Message();
@@ -136,18 +133,52 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
 
   // check if this is the one we're looking for
   if ($processing_event->hasChangeType('civishare.change.contact.base')) {
-    // do the processing!
+    // do the processing: first check, if we know this contact
+    $local_contact_id = $processing_event->getLocalContactID();
+
+    if (empty($local_contact_id)) {
+        // there is no peered local contact, so we'll look it up
+        $change_data = $processing_event->getChangeDataAfter();
+
+        // @fixme this is a prototype implementation, will use first/last name
+        $identifier_attributes = ['first_name', 'last_name', 'contact_type'];
+        $contact_identifier = array_intersect_key($change_data, array_flip($identifier_attributes));
+        $result = \civicrm_api3('Contact', 'get', $contact_identifier);
+        if (empty($result['id'])) {
+            // not found? create a new contact
+            if (empty($result['contact_type'])) $result['contact_type'] = 'Individual';
+            $result = \civicrm_api3('Contact', 'create', $contact_identifier);
+
+            // peer it
+            $new_contact_id = $result['id'];
+
+
+        }
+    }
+
+    $change_data = $processing_event->getChangeData();
+
     $data_before = $processing_event->getChangeDataBefore();
     $data_after = $processing_event->getChangeDataAfter();
-    $remote_contact_id = $processing_event->getContactID();
     $change_date = $processing_event->getChangeDataBefore();
 
     // use peering service to find local_contact_id
     // @todo migrate peering to service
-    $peering = new \Civi\Share\IdentityTrackerContactPeering();
-    $change = $processing_event->getChange();
+
     $change_data = $processing_event->getChangeDataAfter();
-    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
+
+    $remote_contact = \Civi\Api4\Contact::create(TRUE)
+      ->addValue('first_name', base64_encode(random_bytes(8)))
+      ->addValue('last_name', base64_encode(random_bytes(8)))
+      ->addValue('contact_type', 'Individual')
+      ->execute()
+      ->first();
+
+      // create a peering
+      //$local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
+
+      //      $peering->peer($remote_contact['id'], $local_contact['id'], $remote_node['id'], $local_node['id']);
+
 
     // basically: process the data by applying to the given local contact:
     \civicrm_api3('Contact', 'create', $change_data);

@@ -13,7 +13,8 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use \Civi\Share\Message;
+use Civi\Share\ChangeProcessingEvent;
+use Civi\Share\Message;
 
 
 /**
@@ -115,7 +116,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
 
   // register a 'civishare.change.contact.base' change processor
   $result = \Civi::dispatcher()->addListener(
-    'de.systopia.change.process',
+    ChangeProcessingEvent::NAME,
     'civicrm_civi_share_test_register_test2_hander'
   );
 
@@ -161,7 +162,7 @@ function civicrm_civi_share_test_register_test2_hander($processing_event, $event
     // use peering service to find local_contact_id
     // @todo migrate peering to service
     $peering = new \Civi\Share\IdentityTrackerContactPeering();
-    $change = $processing_event->getChange();
+    $change = $processing_event->getChangeData();
     $change_data = $processing_event->getChangeDataAfter();
     $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
     $processing_event->setProcessed();

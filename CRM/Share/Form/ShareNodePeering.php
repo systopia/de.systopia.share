@@ -1,7 +1,7 @@
 <?php
 
 use CRM_Share_ExtensionUtil as E;
-use \Civi\Api4\ShareNodePeering;
+use Civi\Api4\ShareNodePeering;
 
 /**
  * Form controller class

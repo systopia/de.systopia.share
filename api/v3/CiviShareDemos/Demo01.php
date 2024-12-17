@@ -13,8 +13,8 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use \Civi\Share\Message;
-use \Civi\Share\ChangeProcessingEvent;
+use Civi\Share\Message;
+use Civi\Share\ChangeProcessingEvent;
 
 /**
  * Demo01 for CiviShare

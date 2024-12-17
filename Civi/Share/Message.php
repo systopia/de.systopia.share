@@ -3,7 +3,7 @@ namespace Civi\Share;
 
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
-use \Civi\Share\ChangeProcessingEvent;
+use Civi\Share\ChangeProcessingEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Civi\Share\CiviMRF\CiviMRFClient;
 use Civi\Share\CiviMRF\ShareApi;
@@ -206,6 +206,9 @@ class Message
   public function processChanges($local_node_id)
   {
     $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
+    if (!$lock->isAcquired()) {
+      throw new \RuntimeException('CiviShare: Could not acquire lock for processing changes.');
+    }
 
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
@@ -219,7 +222,7 @@ class Message
     foreach ($changes as $change) {
       $change_processor = new \Civi\Share\ChangeProcessingEvent($change['id'], $local_node_id, $change);
       try {
-        \Civi::dispatcher()->dispatch('de.systopia.change.process', $change_processor);
+        \Civi::dispatcher()->dispatch(ChangeProcessingEvent::NAME, $change_processor);
         if ($change_processor->isProcessed()) {
           $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? Change::STATUS_PROCESSED);
         } else {

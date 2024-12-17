@@ -1,4 +1,5 @@
 <?php
+
 namespace Civi\Share\ChangeProcessor;
 
 use Civi\Core\Event\GenericHookEvent as Event;
@@ -8,27 +9,32 @@ use Civi\Share\Change;
 use Civi\Share\ChangeProcessingEvent;
 
 /**
- *  This simple processor will process membership data, i.e. update an existing membership
- *    or create a new one. It works under the assumption that there i at most one active
- *    membership per contact, so no further identification of the specific membership is needed
+ *  This simple processor will process membership data, i.e. update an existing
+ * membership or create a new one. It works under the assumption that there is
+ * at most one active membership per contact, so no further identification of
+ * the specific membership is needed
  */
-class SimpleMembershipChangeProcessor extends ChangeProcessorBase
-{
+class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
+
   /**
    * Processes membership submissions
    *
    * @param ChangeProcessingEvent $processing_event
    * @param string $event_type
    * @param $dispatcher
+   *
    * @return void
    */
-  public function process_change($processing_event, $event_type, $dispatcher)
-  {
+  public function process_change($processing_event, $event_type, $dispatcher) {
     // nothing to do here
-    if ($processing_event->isProcessed()) return;
+    if ($processing_event->isProcessed()) {
+      return;
+    }
 
     // check if this is the one we're looking for
-    if (!$processing_event->hasChangeType('civishare.change.membership.base')) return;
+    if (!$processing_event->hasChangeType('civishare.change.membership.base')) {
+      return;
+    }
 
     // do the processing!
     $data_before = $processing_event->getChangeDataBefore();
@@ -38,9 +44,10 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase
     // use peering service to find local_contact_id
     // @todo migrate peering to service
     $peering = new \Civi\Share\IdentityTrackerContactPeering();
-    $change = $processing_event->getChange();
+    $change = $processing_event->getChangeData();
+    $changeObject = $processing_event->getChange();
     $change_data = $processing_event->getChangeDataAfter();
-    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
+    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $changeObject->getSourceNodeId(), $change['local_node_id']);
     if (!$local_contact_id) {
       $processing_event->logProcessingMessage("Couldn't identify contact, processing declined.");
       $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
@@ -62,29 +69,31 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase
           $membership = civicrm_api4('Membership', 'create', $change_data);
           $processing_event->logProcessingMessage("Created new membership [{$membership['id']}].");
           $processing_event->setProcessed();
-        } catch (\Exception $ex) {
+        }
+        catch (\Exception $ex) {
           $error_message = $ex->getMessage();
           // @todo remove sensitive data from log
           $processing_event->logProcessingMessage("Could't create membership ({$error_message}) with data provided: " . json_encode($change_data));
         }
         break;
 
-  case 1:
-      // update active membership
-      $membership = reset($memberships);
-      $processing_event->logProcessingMessage('Updating membership for contact [{$local_contact_id}]');
-      try {
-        $change_data['id'] = $membership['id'];
-        \civicrm_api4('Membership', 'create', $change_data);
-        $processing_event->logProcessingMessage("Updated membership [{$membership['id']}].");
-        $processing_event->setProcessed();
-
-      } catch (\Exception $ex) {
-        $error_message = $ex->getMessage();
-        // @todo remove sensitive data from log
-        $processing_event->logProcessingMessage("Could't create membership ({$error_message}) with data provided: " . json_encode($change_data));
-      }
-      break;
+      case 1:
+        // update active membership
+        $membership = reset($memberships);
+        $processing_event->logProcessingMessage('Updating membership for contact [{$local_contact_id}]');
+        try {
+          $change_data['id'] = $membership['id'];
+          \civicrm_api4('Membership', 'create', $change_data);
+          $processing_event->logProcessingMessage("Updated membership [{$membership['id']}].");
+          $processing_event->setProcessed();
+        }
+        catch (\Exception $ex) {
+          $error_message = $ex->getMessage();
+          // @todo remove sensitive data from log
+          $processing_event->logProcessingMessage("Could't create membership ({$error_message}) with data provided: " . json_encode($change_data));
+        }
+        break;
     }
   }
+
 }
