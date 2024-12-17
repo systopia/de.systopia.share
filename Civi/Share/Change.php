@@ -190,20 +190,24 @@ class Change {
   }
 
   public function persist(): void {
-    $shareChangeQuery = ShareChange::create()
-      ->addValue('change_type', $this->type)
-      ->addValue('local_contact_id', $this->localContactId)
-      ->addValue('data_before', $this->getDataBefore())
-      ->addValue('data_after', $this->getDataAfter())
-      ->addValue('change_date', $this->changedDate->format(Utils::DATE_FORMAT))
-      ->addValue('received_date', $this->receivedDate->format(Utils::DATE_FORMAT))
-      ->addValue('status', $this->status)
-      ->addValue('source_node_id', $this->sourceNodeId);
+    $record = [
+      'change_type' => $this->type,
+      'local_contact_id' => $this->localContactId,
+      'data_before' => $this->getDataBefore(),
+      'data_after' => $this->getDataAfter(),
+      'change_date' => $this->changedDate->format(Utils::DATE_FORMAT),
+      'received_date' => $this->receivedDate->format(Utils::DATE_FORMAT),
+      'status' => $this->status,
+      'source_node_id' => $this->sourceNodeId,
+    ];
     if ($this->isPersisted()) {
-      $shareChangeQuery
-        ->addValue('id', $this->id);
+      $record['id'] = $this->id;
     }
-    $shareChange = $shareChangeQuery->execute();
+    $shareChange = ShareChange::save()
+      ->addRecord($record)
+      ->setMatch(['id'])
+      ->execute();
+
     $this->id = $shareChange['id'];
   }
 
