@@ -31,7 +31,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
      * @var int|null $id
      * @var array $params
      */
-    [$op, $objectName, $id, &$params] = $event->getHookValues();
+    [$op, $objectName, $id, $params] = $event->getHookValues();
     // TODO: Handle other operations.
     if ('edit' === $op && \Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
       // TODO: This does not include "custom_" fields submitted in $params - and is generally not comparing compatible
@@ -61,7 +61,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
      * @var int $objectId
      * @var \CRM_Contact_BAO_Contact $objectRef
      */
-    [$op, $objectName, $objectId, &$objectRef] = $event->getHookValues();
+    [$op, $objectName, $objectId, $objectRef] = $event->getHookValues();
     // TODO: Handle other operations.
     if (\Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
       switch ($op) {
