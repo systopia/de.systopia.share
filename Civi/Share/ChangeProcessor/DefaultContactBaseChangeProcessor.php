@@ -46,8 +46,14 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
 
       // now that we have the attribute sets for identification, iterate lookups until we find a match
       foreach ($identification_attribute_sets as $attribute_set) {
-        // search query
-        $search_parameters = $this->buildSearchParameters($attribute_set, $processing_event->getChangeDataBefore());
+        // Search query: use data before the change, but fall back to data after the change if no attribute was matched.
+        // This will most likely be a new record, which has no before values.
+        // TODO: The final semantics of this behavior will have to be defined.
+        $search_parameters = $this->buildSearchParameters(
+          $attribute_set,
+          $processing_event->getChangeDataBefore(),
+          $processing_event->getChangeDataAfter()
+        );
         $processing_event->logProcessingMessage("Using attributes " . json_encode($attribute_set) . " to identifiy contact...");
         $result = \civicrm_api3('Contact', 'get', $search_parameters);
         if ($result['count'] == 1) {

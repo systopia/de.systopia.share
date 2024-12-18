@@ -127,11 +127,18 @@ abstract class ChangeProcessorBase {
    *
    * @return array
    */
-  public function buildSearchParameters($attribute_set, $data) {
+  public function buildSearchParameters($attribute_set, $data, $fallbackData) {
     $query = [];
     foreach ($attribute_set as $attribute) {
       if (isset($data[$attribute])) {
         $query[$attribute] = $data[$attribute];
+      }
+    }
+    if ([] === $query) {
+      foreach ($attribute_set as $attribute) {
+        if (isset($fallbackData[$attribute])) {
+          $query[$attribute] = $fallbackData[$attribute];
+        }
       }
     }
     return $query;
