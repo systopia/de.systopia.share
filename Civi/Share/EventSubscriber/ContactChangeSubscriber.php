@@ -34,8 +34,8 @@ class ContactChangeSubscriber extends AutoSubscriber {
     [$op, $objectName, $id, $params] = $event->getHookValues();
     // TODO: Handle other operations.
     if ('edit' === $op && \Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
-      // TODO: This does not include "custom_" fields submitted in $params - and is generally not comparing compatible
-      //       data structures. Which keys can $params contain in the first place?
+      // TODO: This does not include "custom_" fields FK entities (like "email") submitted in $params - and is generally
+      //       not comparing compatible data structures. Which keys can $params contain in the first place?
       $fields = Contact::getFields(FALSE)
         ->addSelect('name')
         ->execute()
