@@ -63,24 +63,38 @@ class ContactChangeSubscriber extends AutoSubscriber {
      */
     [$op, $objectName, $objectId, &$objectRef] = $event->getHookValues();
     // TODO: Handle other operations.
-    if ('edit' === $op && \Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
-      $dataBefore = \Civi::$statics[__CLASS__]['changes'][$objectId]['before'] ?? [];
-      if ([] !== $dataBefore) {
-        $dataAfter = Contact::get(FALSE)
-          ->addSelect(...array_keys(\Civi::$statics[__CLASS__]['changes'][$objectId]['before']))
-          ->addWhere('id', '=', $objectId)
-          ->execute()
-          ->single();
+    if (\Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
+      switch ($op) {
+        case 'edit':
+          $dataBefore = \Civi::$statics[__CLASS__]['changes'][$objectId]['before'] ?? [];
+          $changedFields = array_keys($dataBefore);
+          // Intentional fall-through to "create" without break.
 
-        // Remove fields with identical values
-        // (occurs when comparison in pre hook yielded differences that weren't persisted or only in type).
-        $dataBefore = array_filter($dataBefore, function ($value, $key) use ($dataAfter) {
-          return $value !== $dataAfter[$key];
-        }, ARRAY_FILTER_USE_BOTH);
-        // Remove fields that weren't changed (e.g. the "id" field is always being added by the API).
-        $dataAfter = array_intersect_key($dataAfter, $dataBefore);
+        case 'create':
+          // Load created/updated contact.
+          $dataAfter = Contact::get(FALSE)
+            ->addSelect(...$changedFields ?? ['*'])
+            ->addWhere('id', '=', $objectId)
+            ->execute()
+            ->single();
 
-        if ([] !== $dataBefore) {
+          if (!isset($dataBefore)) {
+            // TODO: Filter irrelevant fields with a value (e.g. "id" or "hash"?
+            $dataAfter = array_filter($dataAfter);
+            // For "create", assume no values for all fields.
+            $dataBefore = array_fill_keys(array_keys($dataAfter), NULL);
+          }
+          else {
+            // Remove fields with identical values
+            // (occurs when comparison in pre hook yielded differences that weren't persisted or only in type).
+            $dataBefore = array_filter($dataBefore, function ($value, $key) use ($dataAfter) {
+              return $value !== $dataAfter[$key];
+            }, ARRAY_FILTER_USE_BOTH);
+
+            // Remove fields that weren't changed (e.g. the "id" field is always being added by the API).
+            $dataAfter = array_intersect_key($dataAfter, $dataBefore);
+          }
+
           // TODO: How to determine the default local node?
           $localNodeId = ShareNode::get(FALSE)
             ->addSelect('id')
@@ -98,11 +112,11 @@ class ContactChangeSubscriber extends AutoSubscriber {
             ->addValue('data_before', $dataBefore)
             ->addValue('data_after', $dataAfter)
             ->execute();
-        }
-      }
 
-      if (isset(\Civi::$statics[__CLASS__]['changes'][$objectId])) {
-        unset(\Civi::$statics[__CLASS__]['changes'][$objectId]);
+          if (isset(\Civi::$statics[__CLASS__]['changes'][$objectId])) {
+            unset(\Civi::$statics[__CLASS__]['changes'][$objectId]);
+          }
+          break;
       }
     }
   }
