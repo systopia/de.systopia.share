@@ -79,8 +79,17 @@ class ContactChangeSubscriber extends AutoSubscriber {
             ->single();
 
           if (!isset($dataBefore)) {
-            // TODO: Filter irrelevant fields with a value (e.g. "id" or "hash"?
-            $dataAfter = array_filter($dataAfter);
+            $dataAfter = array_filter($dataAfter, function ($value, $key) {
+              // TODO: Filter more irrelevant fields with a value?
+              return
+                NULL !== $value
+                && '' !== $value
+                && [] !== $value
+                && 'created_date' !== $key
+                && 'modified_date' !== $key
+                && 'hash' !== $key
+                && 'id' !== $key;
+            }, ARRAY_FILTER_USE_BOTH);
             // For "create", assume no values for all fields.
             $dataBefore = array_fill_keys(array_keys($dataAfter), NULL);
           }
@@ -95,26 +104,28 @@ class ContactChangeSubscriber extends AutoSubscriber {
             $dataAfter = array_intersect_key($dataAfter, $dataBefore);
           }
 
-          // TODO: How to determine the default local node?
-          $localNodeId = ShareNode::get(FALSE)
-            ->addSelect('id')
-            ->addWhere('is_local', '=', TRUE)
-            ->addWhere('is_enabled', '=', TRUE)
-            ->execute()
-            ->first()['id'];
+          if ([] !== $dataBefore && [] !== $dataAfter) {
+            // TODO: How to determine the default local node?
+            $localNodeId = ShareNode::get(FALSE)
+              ->addSelect('id')
+              ->addWhere('is_local', '=', TRUE)
+              ->addWhere('is_enabled', '=', TRUE)
+              ->execute()
+              ->first()['id'];
 
-          $change = ShareChange::create()
-            ->addValue('change_type', 'civishare.change.contact.base')
-            ->addValue('change_date', (new \DateTime())->format(Utils::CIVICRM_DATE_FORMAT))
-            ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
-            ->addValue('local_contact_id', $objectId)
-            ->addValue('source_node_id', $localNodeId)
-            ->addValue('data_before', $dataBefore)
-            ->addValue('data_after', $dataAfter)
-            ->execute();
+            $change = ShareChange::create()
+              ->addValue('change_type', 'civishare.change.contact.base')
+              ->addValue('change_date', (new \DateTime())->format(Utils::CIVICRM_DATE_FORMAT))
+              ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
+              ->addValue('local_contact_id', $objectId)
+              ->addValue('source_node_id', $localNodeId)
+              ->addValue('data_before', $dataBefore)
+              ->addValue('data_after', $dataAfter)
+              ->execute();
 
-          if (isset(\Civi::$statics[__CLASS__]['changes'][$objectId])) {
-            unset(\Civi::$statics[__CLASS__]['changes'][$objectId]);
+            if (isset(\Civi::$statics[__CLASS__]['changes'][$objectId])) {
+              unset(\Civi::$statics[__CLASS__]['changes'][$objectId]);
+            }
           }
           break;
       }
