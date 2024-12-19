@@ -80,13 +80,13 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
    */
-  public function getLocalContactId($remote_contact_id,  $remote_contact_node_id, $local_contact_node_id = null)
-  {
+  public function getLocalContactId($remote_contact_id, $remote_contact_node_id, $local_contact_node_id = NULL): ?int {
     // get the remote node's short name  TODO: cache?
-    $remote_node = civicrm_api4('ShareNode', 'get', [
-      'select' => ['short_name'],
-      'where' => [['id', '=', $remote_contact_node_id]],
-    ])->first();
+    $remote_node = ShareNode::get()
+      ->addSelect('short_name')
+      ->addWhere('id', '=', $remote_contact_node_id)
+      ->execute()
+      ->first();
 
     // create ID string
     $remote_identifier = "{$remote_node['short_name']}-{$remote_contact_id}";
@@ -98,7 +98,9 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
       'identifier_type' => CIVISHARE_IDTRACKER_TYPE,
     ]);
 
-    return $search_result['id'] ?? null;
+    return isset($search_result['id'])
+      ? (int) $search_result['id']
+      : NULL;
   }
 
 

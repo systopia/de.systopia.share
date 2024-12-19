@@ -192,8 +192,8 @@ class ChangeProcessingEvent extends Event {
    * @return ?int
    */
   public function getLocalContactID() {
-    $submitted_contact_id = (int) $this->change_data['local_contact_id'] ?? 0;
-    if (empty($submitted_contact_id)) {
+    $submitted_contact_id = $this->getRemoteContactID();
+    if (NULL === $submitted_contact_id) {
       return NULL;
     }
 
@@ -225,12 +225,12 @@ class ChangeProcessingEvent extends Event {
   }
 
   /**
-   * Will return the remote contact ID, as long as it's submitted
-   *
-   * @return ?int
+   * Will return the remote contact ID, as long as it's submitted.
    */
-  public function getRemoteContactID() {
-    return (int) $this->change_data['local_contact_id'] ?? 0;
+  public function getRemoteContactID(): ?int {
+    return isset($this->change_data['local_contact_id'])
+      ? (int) $this->change_data['local_contact_id']
+      : NULL;
   }
 
   /**
