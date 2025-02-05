@@ -2,6 +2,7 @@
 
 namespace Civi\Share\Event;
 
+use Civi\Api4\ShareNodePeering;
 use Civi\Share\Change;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -25,6 +26,15 @@ class TargetNodePeeringDetermineEvent extends Event {
 
   public function getTargetNodePeeringIds() {
     return $this->targetNodePeeringIds;
+  }
+
+  public function getEligibleTargetNodePeeringIds() {
+    return ShareNodePeering::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('id', 'IN', $this->targetNodePeeringIds)
+      ->addWhere('is_enabled', '=', TRUE)
+      ->execute()
+      ->column('id');
   }
 
 }

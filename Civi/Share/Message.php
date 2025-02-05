@@ -98,7 +98,7 @@ class Message
       // Determine target node peerings to send this message to depending on the change.
       $targetNodePeeringResolveEvent = new TargetNodePeeringDetermineEvent($change);
       $message->eventDispatcher->dispatch($targetNodePeeringResolveEvent);
-      $message->targetNodePeeringIds = $targetNodePeeringResolveEvent->getTargetNodePeeringIds();
+      $message->targetNodePeeringIds = $targetNodePeeringResolveEvent->getEligibleTargetNodePeeringIds();
       $message->setSenderNodeId($sourceNodeId);
 
       // TODO: As this currently creates one message per change record, this should be optimized by e. g. combining
