@@ -32,10 +32,12 @@ class SendAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $message = Message::createForSourceNode($this->sourceNodeId);
-    $message->setSenderNodeId($this->sourceNodeId);
-    $sendResult = $message->send($this->sourceNodeId);
-    $result->exchangeArray($sendResult);
+    $sendResults = [];
+    foreach (Message::generateForSourceNode($this->sourceNodeId) as $message) {
+      $message->setSenderNodeId($this->sourceNodeId);
+      $sendResults[] = $message->send();
+    }
+    $result->exchangeArray($sendResults);
   }
 
 }

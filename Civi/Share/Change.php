@@ -159,7 +159,7 @@ class Change {
       $shareChange['source_node_id'],
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
-      \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']),
+      isset($shareChange['received_date']) ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']) : NULL,
       $shareChange['status'],
       $shareChange['id']
     );
