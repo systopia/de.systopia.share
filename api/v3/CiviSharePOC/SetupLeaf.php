@@ -81,6 +81,10 @@ function civicrm_api3_civi_share_p_o_c_setup_leaf(&$params) {
     ->execute()
     ->single();
 
+
+// set the awoshare mode to 'Ortsverein'
+  \Civi::settings()->set('awo_share_node_type', 'leaf');
+
   return civicrm_api3_create_success([
     'shared_secret_central' => $sharedSecretCentral,
   ]);
