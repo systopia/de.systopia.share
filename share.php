@@ -44,27 +44,6 @@ function share_civicrm_searchTasks($objectType, &$tasks) {
   }
 }
 
-/**
- * Pre hook: use for change detection
- */
-function share_civicrm_pre($op, $objectName, $id, &$params) {
-//  if ($op == 'create' || $op == 'edit' || $op == 'delete') {
-//    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
-//      CRM_Share_ChangeDetectionByHook::processPre($op, $objectName, $id, $params);
-//    }
-//  }
-}
-
-/**
- * Post hook: use for change detection
- */
-function share_civicrm_post($op, $objectName, $objectId, &$objectRef) {
-//  if ($op == 'create' || $op == 'edit' || $op == 'delete') {
-//    if (CRM_Share_Configuration::hook_change_detection_enabled()) {
-//      CRM_Share_ChangeDetectionByHook::processPost($op, $objectName, $objectId, $objectRef);
-//    }
-//  }
-}
 
 /**
  * Implements hook_civicrm_config().
