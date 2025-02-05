@@ -168,6 +168,9 @@ class Change {
   public function getId(): ?int {
     return $this->id;
   }
+  public function getLocalContactId(): ?int {
+    return $this->localContactId;
+  }
 
   public function isPersisted(): bool {
     return isset($this->id);
