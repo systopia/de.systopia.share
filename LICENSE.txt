@@ -1,5 +1,5 @@
 Package: de.systopia.share
-Copyright (C) 2019, B. Endres <endres@systopia.de>
+Copyright (C) 2025, B. Endres <endres@systopia.de>
 Licensed under the GNU Affero Public License 3.0 (below).
 
 -------------------------------------------------------------------------------

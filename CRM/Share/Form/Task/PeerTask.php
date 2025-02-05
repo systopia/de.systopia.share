@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | CiviShare                                              |
-| Copyright (C) 2019 SYSTOPIA                            |
+| Copyright (C) 2025 SYSTOPIA                            |
 | Author: B. Endres (endres@systopia.de)                 |
 +--------------------------------------------------------+
 | This program is released as free software under the    |
