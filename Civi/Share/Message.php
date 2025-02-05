@@ -5,10 +5,12 @@ use Civi\Api4\Generic\Result;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 use Civi\Api4\ShareNodePeering;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Share\ChangeProcessingEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Civi\Share\CiviMRF\CiviMRFClient;
 use Civi\Share\CiviMRF\ShareApi;
+use Civi\Share\Event\TargetNodePeeringDetermineEvent;
 
 /**
  * CiviShare Message object (transient)
@@ -37,9 +39,10 @@ class Message
 
   protected ?string $senderNodeId = NULL;
 
-  public function setSenderNodeId(?string $senderNodeId): void {
-    $this->senderNodeId = $senderNodeId;
-  }
+  /**
+   * @phpstan-var list<int>
+   */
+  protected array $targetNodePeeringIds = [];
 
   /**
    * @var \Civi\Share\CiviMRF\CiviMRFClient
@@ -47,29 +50,30 @@ class Message
    */
   protected $civiMRFClient;
 
-  public static function createFromChangesApiResult(Result $shareChanges): self {
-    if ('ShareChange' !== $shareChanges->entity) {
-      throw new \RuntimeException('CiviShare: invalid API entity for creating change message from API result.');
-    }
+  /**
+   * @var \Civi\Share\CiviMRF\ShareApi
+   * @inject civi.share.api
+   */
+  protected $shareApi;
 
-    $message = new self();
-    foreach ($shareChanges as $shareChange) {
-      $change = new Change(
-        $shareChange['change_type'],
-        $shareChange['local_contact_id'],
-        $shareChange['source_node_id'],
-        Change::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
-        \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
-        isset($shareChange['received_date']) ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']) : NULL,
-        $shareChange['status'],
-        $shareChange['id']
-      );
-      $message->addChange($change);
-    }
-    return $message;
+  /**
+   * @var \Civi\Core\CiviEventDispatcherInterface
+   * @inject dispatcher
+   */
+  protected CiviEventDispatcherInterface $eventDispatcher;
+
+  public function setShareApi(ShareApi $shareApi) {
+    $this->shareApi = $shareApi;
   }
 
-  public static function createForSourceNode(int $sourceNodeId): self {
+  public function setSenderNodeId(?string $senderNodeId): void {
+    $this->senderNodeId = $senderNodeId;
+  }
+
+  /**
+   * @phpstan-return iterable<\Civi\Share\Message>
+   */
+  public static function generateForSourceNode(int $sourceNodeId): iterable {
     $shareChanges = ShareChange::get()
       ->addSelect(
         'id',
@@ -85,10 +89,23 @@ class Message
       ->addWhere('source_node_id', '=', $sourceNodeId)
       ->addWhere('status', 'IN', Change::PENDING_FROM_SENDING_STATUS)
       ->execute();
-    // TODO: Really return empty message when there are no changes?
-    $message = self::createFromChangesApiResult($shareChanges);
-    $message->setSenderNodeId($sourceNodeId);
-    return $message;
+
+    foreach ($shareChanges as $shareChange) {
+      $message = new self();
+      $change = Change::createFromApiResultArray($shareChange);
+      $message->addChange($change);
+
+      // Determine target node peerings to send this message to depending on the change.
+      $targetNodePeeringResolveEvent = new TargetNodePeeringDetermineEvent($change);
+      $message->eventDispatcher->dispatch($targetNodePeeringResolveEvent);
+      $message->targetNodePeeringIds = $targetNodePeeringResolveEvent->getTargetNodePeeringIds();
+      $message->setSenderNodeId($sourceNodeId);
+
+      // TODO: As this currently creates one message per change record, this should be optimized by e. g. combining
+      //       messages for the same target node peerings into one message.
+
+      yield $message;
+    }
   }
 
   public static function createFromSerializedMessage(array $serializedMessage, ?\DateTimeInterface $receivedDate = NULL) {
@@ -176,18 +193,7 @@ class Message
       ->execute();
   }
 
-  /**
-   * Send out a compiled message
-   *
-   * @param int $localNodeId
-   *    ID of the local node. Only required if multiple local nodes present
-   *
-   * @throws \Exception
-   */
-  public function send($localNodeId = NULL): array {
-    // TODO: Is 'data' the right type?
-    $lock = \Civi::lockManager()->acquire('data.civishare.changes');
-
+  public function sendToAll($localNodeId = NULL): array {
     // get the local node
     // TODO: cache?
     if (!isset($localNodeId)) {
@@ -208,36 +214,43 @@ class Message
       }
     }
 
-    $peerings = ShareNodePeering::get(FALSE)
-      ->addSelect('remote_node', 'remote_node.*')
+    // Add all enabled node peerings for this local node.
+    $this->targetNodePeeringIds = ShareNodePeering::get(FALSE)
+      ->addSelect('id', 'remote_node', 'remote_node.*')
       ->addWhere('local_node', '=', $localNodeId)
       ->addWhere('is_enabled', '=', TRUE)
-      ->execute();
-    if (0 === $peerings->count()) {
+      ->execute()
+      ->column('id');
+
+    $this->send();
+  }
+
+  /**
+   * Send out a compiled message
+   *
+   *    ID of the local node. Only required if multiple local nodes present
+   *
+   * @throws \Exception
+   */
+  public function send(): array {
+    // TODO: Is 'data' the right type?
+    $lock = \Civi::lockManager()->acquire('data.civishare.changes');
+
+    if (0 === count($this->targetNodePeeringIds)) {
       // no peered instances: mark changes as DROPPED
       $this->markChanges(Change::STATUS_DROPPED);
     }
 
     $sendResult = [];
-    foreach ($peerings as $peering) {
-      // shortcut: local-to-local connection
-      if (empty($peering['remote_node.rest_url']) || empty($peering['remote_node.api_key'])) {
-        // this is not a proper node...but we might allow this anyway:
-        if (defined('CIVISHARE_ALLOW_LOCAL_LOOP')) {
-          $this->processOnNode($peering['remote_node.id']);
-        }
-      }
-      else {
-        $shareApi = \Civi::service('civi.share.api');
-        $apiResult = $shareApi->sendMessage($peering['id'], $this->serialize());
-        foreach ($this->changes as $change) {
-          $change->setStatus(Change::STATUS_DONE);
-          $change->persist();
-        }
+    foreach ($this->targetNodePeeringIds as $peeringId) {
+      $apiResult = $this->shareApi->sendMessage($peeringId, $this);
+      foreach ($this->changes as $change) {
+        $change->setStatus(Change::STATUS_DONE);
+        $change->persist();
       }
 
       $sendResult[] = [
-        'remote_node_id' => $peering['remote_node'],
+        'node_peering_id' => $peeringId,
         'result' => $apiResult ?? NULL,
       ];
     }

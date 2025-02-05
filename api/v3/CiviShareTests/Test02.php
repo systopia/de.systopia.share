@@ -126,7 +126,8 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   $change_message->processChanges($local_node['id']);
 
   // send
-  $change_message->send();
+  $change_message->setShareApi(Civi::service('civi.share.mock.api'));
+  $change_message->sendToAll();
 
   // this should now be processed
   if (!$change_message->allChangesProcessed()) {
