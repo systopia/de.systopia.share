@@ -63,20 +63,11 @@ function share_civicrm_config(&$config) {
 }
 
 /**
- * Implements hook_civicrm_container()
+ * Implements hook_civicrm_container().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_container/
  */
 function share_civicrm_container(ContainerBuilder $container): void {
-  _share_composer_autoload();
-}
-
-/**
- * Implements hook_civicrm_container()
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_container/
- */
-function share_civicrm_container(ContainerBuilder $container) {
   _share_composer_autoload();
 }
 
