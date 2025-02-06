@@ -1,7 +1,9 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace Civi\Share;
 
-use Civi\Api4\Generic\Result;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 use Civi\Api4\ShareNodePeering;
@@ -25,8 +27,7 @@ use Civi\Share\Event\MessageGenerateEvent;
  *
  * @package Civi\Api4
  */
-class Message
-{
+class Message {
 
   /**
    * @phpstan-var list<\Civi\Share\Change>
@@ -129,7 +130,10 @@ class Message
     }
   }
 
-  public static function createFromSerializedMessage(array $serializedMessage, ?\DateTimeInterface $receivedDate = NULL) {
+  public static function createFromSerializedMessage(
+    array $serializedMessage,
+    ?\DateTimeInterface $receivedDate = NULL
+  ): self {
     $message = new self();
 
     try {
@@ -210,7 +214,7 @@ class Message
   public function markChanges(string $status): void {
     ShareChange::update(TRUE)
       ->addValue('status', $status)
-      ->addWhere('id', 'IN',  $this->getPersistedChangeIds())
+      ->addWhere('id', 'IN', $this->getPersistedChangeIds())
       ->execute();
   }
 
@@ -286,9 +290,9 @@ class Message
    *
    * @return void
    */
-  public function processChanges($local_node_id)
-  {
-    $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
+  public function processChanges($local_node_id) {
+    // is 'data' the right type?
+    $lock = \Civi::lockManager()->acquire('data.civishare.changes');
     if (!$lock->isAcquired()) {
       throw new \RuntimeException('CiviShare: Could not acquire lock for processing changes.');
     }
@@ -308,7 +312,8 @@ class Message
         \Civi::dispatcher()->dispatch(ChangeProcessingEvent::NAME, $change_processor);
         if ($change_processor->isProcessed()) {
           $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? Change::STATUS_PROCESSED);
-        } else {
+        }
+        else {
           $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? Change::STATUS_ERROR);
           \Civi::log()->warning("Change [{$change['id']}] could not be processed - no processor found.");
         }
@@ -334,8 +339,7 @@ class Message
    *
    * @return void
    */
-  public function setChangeStatus($change_id, $status)
-  {
+  public function setChangeStatus($change_id, $status) {
     // update change status
     // @todo check if necessary?
     // @todo check if one of the expected ones?
@@ -353,14 +357,14 @@ class Message
    *
    * @return void
    */
-  public function processOnNode($local_node_id)
-  {
-    $lock = \Civi::lockManager()->acquire('data.civishare.changes'); // is 'data' the right type?
+  public function processOnNode($local_node_id) {
+    // is 'data' the right type?
+    $lock = \Civi::lockManager()->acquire('data.civishare.changes');
 
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN',  $this->getPersistedChangeIds()],
+        ['id', 'IN', $this->getPersistedChangeIds()],
       ],
       'checkPermissions' => TRUE,
     ]);
@@ -373,7 +377,6 @@ class Message
     $lock->release();
   }
 
-
   /**
    * Apply the given change by extracting the relevant change handler
    *
@@ -382,8 +385,7 @@ class Message
    *
    * @return void
    */
-  public function applyChange(array $change)
-  {
+  public function applyChange(array $change) {
     // @todo rename handler_class to change_type
     $change_type = $change['handler_class'];
 
@@ -395,12 +397,11 @@ class Message
    *
    * @return boolean
    */
-  public function allChangesProcessed()
-  {
+  public function allChangesProcessed() {
     // load the changes
     $changes = civicrm_api4('ShareChange', 'get', [
       'where' => [
-        ['id', 'IN',  $this->getPersistedChangeIds()],
+        ['id', 'IN', $this->getPersistedChangeIds()],
         ['status', 'IN', Change::ACTIVE_STATUS],
       ],
       'checkPermissions' => TRUE,
@@ -414,16 +415,15 @@ class Message
    * @param string $data
    *   a raw data packed (encrypted and serialised)
    *
-   * @param int node_peering ID
+   * @param int $node_peering_id
    *   the ID of an active peering object
    *
    * @return ?Message
    */
-  public static function extractSerialisedMessage($data, $node_peering_id) : ?Message
-  {
+  public static function extractSerialisedMessage($data, $node_peering_id) : ?Message {
     // todo: implement
-    throw new \Exception("not implemented");
-    return null;
+    throw new \Exception('not implemented');
+    return NULL;
   }
 
   /**
@@ -441,7 +441,7 @@ class Message
         'sender' => $senderNode['short_name'],
         'sent' => date(Utils::DATE_FORMAT),
         'changes' => $this->serializeChanges(),
-      ]
+      ],
     ];
   }
 

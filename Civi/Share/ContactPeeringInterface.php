@@ -1,18 +1,15 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace Civi\Share;
-
-use Civi\Api4\ShareChange;
-use Civi\Api4\ShareNode;
-use Civi\Share\ChangeProcessingEvent;
-use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
-
 
 /**
  * Interface definition for for contact peering, i.e. the link between two (or more) contacts
  *   between different systems (nodes)
  */
-interface ContactPeeringInterface
-{
+interface ContactPeeringInterface {
+
   /**
    * This method allows you connect (peer) two contact Ids
    *
@@ -28,8 +25,7 @@ interface ContactPeeringInterface
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
    */
-  public function peer($remote_contact_id, $local_contact_id, $remote_contact_node_id, $local_contact_node_id = null);
-
+  public function peer($remote_contact_id, $local_contact_id, $remote_contact_node_id, $local_contact_node_id = NULL);
 
   /**
    * This method gives you the local contact ID based on a remote contact ID and the associate node.
@@ -43,8 +39,7 @@ interface ContactPeeringInterface
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
    */
-  public function getLocalContactId($remote_contact_id,  $remote_contact_node_id, $local_contact_node_id = null);
-
+  public function getLocalContactId($remote_contact_id, $remote_contact_node_id, $local_contact_node_id = NULL);
 
   /**
    * This method gives you the local contact ID based on a remote contact ID and the associate node.
@@ -59,5 +54,6 @@ interface ContactPeeringInterface
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
    */
-  public function getOrCreateLocalContactId($remote_contact_id,  $remote_contact_node_id, $local_contact_node_id = null);
+  public function getOrCreateLocalContactId($remote_contact_id, $remote_contact_node_id, $local_contact_node_id = NULL);
+
 }

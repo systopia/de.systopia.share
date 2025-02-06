@@ -1,5 +1,9 @@
 <?php
+
+declare(strict_types = 1);
+
 use CRM_Share_ExtensionUtil as E;
+
 return [
   'name' => 'ShareHandler',
   'table' => 'civicrm_share_handler',

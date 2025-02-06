@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\CiviMRF;
 
 use Civi\Core\Service\AutoServiceInterface;

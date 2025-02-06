@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\ChangeProcessor;
 
-use Civi\Core\Event\GenericHookEvent as Event;
-use Civi\Api4\ShareChange;
-use Civi\Api4\ShareNode;
 use Civi\Share\Change;
 use Civi\Share\IdentityTrackerContactPeering;
 
-class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
+class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
 
   /**
    * Process the given change if you can/should/want and don't forget to mark
@@ -57,20 +56,25 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
           $processing_event->getChangeDataBefore(),
           $processing_event->getChangeDataAfter()
         );
-        $processing_event->logProcessingMessage("Using attributes " . json_encode($attribute_set) . " to identifiy contact...");
+        $processing_event->logProcessingMessage(
+          'Using attributes ' . json_encode($attribute_set) . ' to identifiy contact...'
+        );
         $result = \civicrm_api3('Contact', 'get', $search_parameters);
         if ($result['count'] == 1) {
           $local_contact_id = $result['id'];
           // Store this information as a new peering.
           if (NULL !== $remote_contact_id) {
-            $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
+            // refactor as service
+            $peering = new \Civi\Share\IdentityTrackerContactPeering();
             $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
           }
           $processing_event->logProcessingMessage("Local contact {$local_contact_id} identified.");
           break;
         }
         else {
-          $processing_event->logProcessingMessage("Local contact could not be identified via attributes: " . json_encode($attribute_set));
+          $processing_event->logProcessingMessage(
+            'Local contact could not be identified via attributes: ' . json_encode($attribute_set)
+          );
         }
       }
     }
@@ -80,8 +84,8 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
     /***************************************/
     // TODO: Make using XCM configurable
     if (\CRM_Extension_Manager::STATUS_INSTALLED === \CRM_Extension_System::singleton()
-        ->getManager()
-        ->getStatus('de.systopia.xcm')) {
+      ->getManager()
+      ->getStatus('de.systopia.xcm')) {
       $defaultCreateAction = $defaultUpdateAction = 'createifnotexists';
       $xcmProfile = $this->getConfigValue('xcm_profile', 'default');
     }
@@ -117,7 +121,9 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
       }
 
       try {
-        $processing_event->logProcessingMessage("Creating/Updating contact using XCM: " . json_encode($change->serialize()));
+        $processing_event->logProcessingMessage(
+          'Creating/Updating contact using XCM: ' . json_encode($change->serialize())
+        );
         $xcmResult = \civicrm_api3('Contact', 'createifnotexists', $update_data);
 
         if ((bool) $xcmResult['was_created']) {
@@ -140,7 +146,7 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
         $processing_event->setProcessed();
       }
       catch (\Exception $ex) {
-        $processing_event->logProcessingMessage("Creating/Updating contact using XCM failed: " . $ex->getMessage());
+        $processing_event->logProcessingMessage('Creating/Updating contact using XCM failed: ' . $ex->getMessage());
         $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
       }
     }
@@ -153,13 +159,13 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
 
         // basically: process the data by applying to the given local contact:
         try {
-          $processing_event->logProcessingMessage("Creating/Updating contact: " . json_encode($change->serialize()));
+          $processing_event->logProcessingMessage('Creating/Updating contact: ' . json_encode($change->serialize()));
           \civicrm_api3($update_entity, $update_action, $update_data);
           $processing_event->logProcessingMessage("Updated contact [{$local_contact_id}].");
           $processing_event->setProcessed();
         }
         catch (\Exception $ex) {
-          $processing_event->logProcessingMessage("Updating contact failed: " . $ex->getMessage());
+          $processing_event->logProcessingMessage('Updating contact failed: ' . $ex->getMessage());
           $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
         }
       }
@@ -176,14 +182,15 @@ class DefaultContactBaseChangeProcessor extends ChangeProcessorBase {
             // peer the new contact
             if (NULL !== $remote_contact_id) {
               $change = $processing_event->getChange();
-              $peering = new \Civi\Share\IdentityTrackerContactPeering(); // refactor as service
+              // refactor as service
+              $peering = new \Civi\Share\IdentityTrackerContactPeering();
               $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
             }
             // that's it
             $processing_event->setProcessed();
           }
           catch (\Exception $ex) {
-            $processing_event->logProcessingMessage("Creating contact failed: " . $ex->getMessage());
+            $processing_event->logProcessingMessage('Creating contact failed: ' . $ex->getMessage());
             $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
           }
         }

@@ -13,8 +13,7 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use Civi\Share\Message;
-use Civi\Share\ChangeProcessingEvent;
+declare(strict_types = 1);
 
 /**
  * Demo01 for CiviShare
@@ -25,7 +24,7 @@ use Civi\Share\ChangeProcessingEvent;
  * - send it
  *
  * @todo migrate to unit tests (once running)
- **/
+ */
 function civicrm_api3_civi_share_demos_demo01(&$params) {
   // make sure there is one local node
   if (!empty($params['local_node_id'])) {
@@ -38,10 +37,8 @@ function civicrm_api3_civi_share_demos_demo01(&$params) {
 
   // register ShareHandler
 
-
   return civicrm_api3_create_success();
 }
-
 
 /**
  * Process test events
@@ -51,14 +48,14 @@ function civicrm_api3_civi_share_demos_demo01(&$params) {
  * @param $dispatcher
  * @return void
  */
-function civicrm_civi_share_test_register_test_hander($processing_event, $event_type, $dispatcher)
-{
+function civicrm_civi_share_test_register_test_hander($processing_event, $event_type, $dispatcher) {
   // nothing to do here
-  if ($processing_event->isProcessed()) return;
+  if ($processing_event->isProcessed()) {
+    return;
+  }
 
   // check if this is the one we're looking for
   if ($processing_event->hasChangeType('civishare.change.test')) {
     $processing_event->setProcessed();
   }
 }
-

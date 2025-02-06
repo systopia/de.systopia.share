@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types = 1);
+
 function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
-//  // Delete existing peerings and nodes.
-//  \Civi\Api4\ShareNodePeering::delete(TRUE)
-//    ->addWhere('id', 'IS NOT NULL')
-//    ->execute();
-//  \Civi\Api4\ShareNode::delete(TRUE)
-//    ->addWhere('id', 'IS NOT NULL')
-//    ->execute();
-//  \Civi\Api4\ShareChange::delete(TRUE)
-//    ->addWhere('id', 'IS NOT NULL')
-//    ->execute();
+  //  // Delete existing peerings and nodes.
+  //  \Civi\Api4\ShareNodePeering::delete(TRUE)
+  //    ->addWhere('id', 'IS NOT NULL')
+  //    ->execute();
+  //  \Civi\Api4\ShareNode::delete(TRUE)
+  //    ->addWhere('id', 'IS NOT NULL')
+  //    ->execute();
+  //  \Civi\Api4\ShareChange::delete(TRUE)
+  //    ->addWhere('id', 'IS NOT NULL')
+  //    ->execute();
 
   // Create a local node.
   $local_node = \Civi\Api4\ShareNode::create(FALSE)
     ->addValue('name', 'local_node_01')
     ->addValue('short_name', 'local_node_01')
     ->addValue('is_local', TRUE)
-    ->addValue('description', "automated test node")
+    ->addValue('description', 'automated test node')
     ->addValue('is_enabled', TRUE)
     ->addValue('receive_identifiers', CRM_Utils_Array::implodePadded([]))
     ->addValue('send_identifiers', CRM_Utils_Array::implodePadded([]))
@@ -46,61 +48,61 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->execute()
     ->single();
 
-//  $testMessage = [
-//    'id' => 'some-unique-id',
-//    'payload_signature' => '/HbL/n2GaZWex15bmNquRUYWUriGEPpncqcIUQkqgwoltCzQU+x2IjMZZNgSFJ2oMJBk24AzHn/WZw8eOn5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZBjmwdmtlJ4e/f5SNWRi2kNQ=',
-//    'payload' => [
-//      'sender' => 'local_node_01',
-//      'sent' => '2024-12-09T13:13:29+01:00',
-//      'changes' => [
-//        [
-//          'type' => 'civishare.change.contact.base',
-//          'timestamp' => '2024-12-09T13:13:29+01:00',
-//          'entity' => 'Contact',
-//          'entity_reference' => '312',
-//          'local_contact_id' => '312',
-//          'attribute_changes' => [
-//            [
-//              'name' => 'first_name',
-//              'from' => 'Karl',
-//              'to' => 'Carl',
-//            ],
-//            [
-//              'name' => 'birth_date',
-//              'from' => '',
-//              'to' => '2000-01-01',
-//            ],
-//          ],
-//          'loop_detection' => [
-//            '5R+hJjo8pEpgTQvp0WMmV8DZNEVZB',
-//          ],
-//        ],
-//        [
-//          'type' => 'civishare.change.contact.base',
-//          'timestamp' => '2024-12-09T13:13:29+01:00',
-//          'entity' => 'Contact',
-//          'entity_reference' => '2312',
-//          'local_contact_id' => '2312',
-//          'attribute_changes' => [
-//            [
-//              'name' => 'first_name',
-//              'from' => 'Karlotta',
-//              'to' => 'Escarlata',
-//            ],
-//            [
-//              'name' => 'last_name',
-//              'from' => '',
-//              'to' => 'La Pirata',
-//            ],
-//          ],
-//          'loop_detection' => [
-//            '5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB',
-//            '5RPX2frgjtPtR1FO2asdwqwewqe+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB',
-//          ],
-//        ],
-//      ],
-//    ],
-//  ];
+  //  $testMessage = [
+  //    'id' => 'some-unique-id',
+  //    'payload_signature' => '/HbL/n2GaZWex15bmNquRUYWUriGEPpncqcIUQkqgwoltCzQU+x2IjMZZNgSFJ2oMJBk24AzHn/WZw8eOn5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZBjmwdmtlJ4e/f5SNWRi2kNQ=',
+  //    'payload' => [
+  //      'sender' => 'local_node_01',
+  //      'sent' => '2024-12-09T13:13:29+01:00',
+  //      'changes' => [
+  //        [
+  //          'type' => 'civishare.change.contact.base',
+  //          'timestamp' => '2024-12-09T13:13:29+01:00',
+  //          'entity' => 'Contact',
+  //          'entity_reference' => '312',
+  //          'local_contact_id' => '312',
+  //          'attribute_changes' => [
+  //            [
+  //              'name' => 'first_name',
+  //              'from' => 'Karl',
+  //              'to' => 'Carl',
+  //            ],
+  //            [
+  //              'name' => 'birth_date',
+  //              'from' => '',
+  //              'to' => '2000-01-01',
+  //            ],
+  //          ],
+  //          'loop_detection' => [
+  //            '5R+hJjo8pEpgTQvp0WMmV8DZNEVZB',
+  //          ],
+  //        ],
+  //        [
+  //          'type' => 'civishare.change.contact.base',
+  //          'timestamp' => '2024-12-09T13:13:29+01:00',
+  //          'entity' => 'Contact',
+  //          'entity_reference' => '2312',
+  //          'local_contact_id' => '2312',
+  //          'attribute_changes' => [
+  //            [
+  //              'name' => 'first_name',
+  //              'from' => 'Karlotta',
+  //              'to' => 'Escarlata',
+  //            ],
+  //            [
+  //              'name' => 'last_name',
+  //              'from' => '',
+  //              'to' => 'La Pirata',
+  //            ],
+  //          ],
+  //          'loop_detection' => [
+  //            '5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB',
+  //            '5RPX2frgjtPtR1FO2asdwqwewqe+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB',
+  //          ],
+  //        ],
+  //      ],
+  //    ],
+  //  ];
 
   // Create changes.
   \Civi\Api4\ShareChange::create(FALSE)

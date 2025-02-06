@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 /**
  * This is the base class of all CiviShare handlers
  *
@@ -29,24 +31,24 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @throws Exception should there be a problem
    */
   public function apply($change) {
-    $this->log("Starting change application...", $change, 'debug');
+    $this->log('Starting change application...', $change, 'debug');
 
     // get data
     $data_before = $change->getJSONData('data_before');
     $data_after  = $change->getJSONData('data_after');
     if (!isset($data_after) || !isset($data_before)) {
-      throw new Exception("No change data!");
+      throw new Exception('No change data!');
     }
 
     // load contact
     $fields = array_unique(array_merge(array_keys($data_before), array_keys($data_after)));
     $contact_id = $change->getContactID();
     if (empty($contact_id)) {
-      throw new Exception("No contact linked to the change!");
+      throw new Exception('No contact linked to the change!');
     }
     $data_current = civicrm_api3('Contact', 'getsingle', [
-        'id'     => $contact_id,
-        'return' => implode(',', $fields),
+      'id'     => $contact_id,
+      'return' => implode(',', $fields),
     ]);
 
     // compile update
@@ -67,9 +69,10 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
     }
 
     if (empty($contact_update)) {
-      $this->log("No applicable changes detected.", $change);
+      $this->log('No applicable changes detected.', $change);
       return FALSE;
-    } else {
+    }
+    else {
       $this->log("Will update contact [{$contact_id}]: " . json_encode($contact_update), $change, 'debug');
       $contact_update['id'] = $contact_id;
       civicrm_api3('Contact', 'create', $contact_update);
@@ -89,12 +92,8 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
   protected function hasFieldChanged($field, $data1, $data2) {
     $value1 = $data1[$field];
     $value2 = CRM_Utils_Array::value($field, $data2);
-    switch ($field) {
-      default:
-        return $value1 != $value2;
-    }
+    return $value1 != $value2;
   }
-
 
   /**
    * Add the right value to the contact update data
@@ -107,12 +106,8 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    */
   protected function applyUpdate($field, &$contact_update, $new_value, $contact_current) {
     $current_value = CRM_Utils_Array::value($field, $contact_current);
-    switch ($field) {
-      default:
-        if ($current_value != $new_value) {
-          $contact_update[$field] = $new_value;
-        }
-        break;
+    if ($current_value != $new_value) {
+      $contact_update[$field] = $new_value;
     }
   }
 
@@ -128,19 +123,16 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @return array before_record
    */
   public function createPreHookRecord($op, $objectName, $id, $params) {
-    if ($objectName == 'Individual' || $objectName == 'Household' || $objectName == 'Organization') {
-      if ($op == 'create' || $op == 'edit') {
-        if (empty($id)) {
-          // a new contact is created => we don't want to detect this.
-        } else {
-          if ($this->isContactCurrentlyLinked($id)) {
-            return civicrm_api3('Contact', 'getsingle', [
-                'id'     => $id,
-                'return' => 'id,' . $this->getFieldList(TRUE)
-            ]);
-          }
-        }
-      }
+    if (
+      ($objectName == 'Individual' || $objectName == 'Household' || $objectName == 'Organization')
+      && ($op == 'create' || $op == 'edit')
+      && !empty($id)
+      && $this->isContactCurrentlyLinked($id)
+    ) {
+      return civicrm_api3('Contact', 'getsingle', [
+        'id'     => $id,
+        'return' => 'id,' . $this->getFieldList(TRUE),
+      ]);
     }
     return NULL;
   }
@@ -154,11 +146,11 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
    * @param $id          int    object ID
    * @param $objectRef   mixed  depends on the hook (afaik)
    */
-  public function createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef) {
+  public function createPostHookChange($pre_record, $op, $objectName, $id, $objectRef) {
     if (!empty($pre_record)) {
       $current_data = civicrm_api3('Contact', 'getsingle', [
-          'id'     => $id,
-          'return' => 'id,' . $this->getFieldList(TRUE)
+        'id'     => $id,
+        'return' => 'id,' . $this->getFieldList(TRUE),
       ]);
       $diff = $this->dataDiff($pre_record, $current_data);
       if (!empty($diff)) {
@@ -179,7 +171,8 @@ class CRM_Share_Handler_ContactBase extends CRM_Share_Handler {
     $fields = ['first_name', 'last_name', 'formal_title', 'prefix_id', 'organization_name', 'birth_date'];
     if ($as_string) {
       return implode(',', $fields);
-    } else {
+    }
+    else {
       return $fields;
     }
   }

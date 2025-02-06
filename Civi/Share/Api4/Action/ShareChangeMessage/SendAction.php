@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\Api4\Action\ShareChangeMessage;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Api4\ShareChange;
 use Civi\Api4\ShareChangeMessage;
-use Civi\Api4\ShareNodePeering;
-use Civi\Share\Change;
 use Civi\Share\Message;
-use Civi\Share\Utils;
 
 /**
  * @method int getSourceNodeId()

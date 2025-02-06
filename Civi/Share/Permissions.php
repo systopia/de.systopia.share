@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share;
 
 use CRM_Share_ExtensionUtil as E;

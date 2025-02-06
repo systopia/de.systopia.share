@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use CRM_Share_ExtensionUtil as E;
 use Civi\Api4\ShareNode;
 

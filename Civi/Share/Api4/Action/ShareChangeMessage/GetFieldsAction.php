@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\Api4\Action\ShareChangeMessage;
 
 use CRM_Share_ExtensionUtil as E;

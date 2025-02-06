@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\Api4\Action\ShareChangeMessage;
 
 use Civi\Api4\Generic\AbstractAction;

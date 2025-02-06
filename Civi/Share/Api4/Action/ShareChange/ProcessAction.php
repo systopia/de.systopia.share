@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\Api4\Action\ShareChange;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\ShareChange;
 use Civi\Share\Change;
-use Civi\Share\ChangeProcessingEvent;
 
 /**
  * @method int getLocalNodeId()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\CiviMRF;
 
 use Civi\Api4\ShareNode;
@@ -7,7 +9,6 @@ use Civi\Api4\ShareNodePeering;
 use Civi\Core\Service\AutoServiceInterface;
 use Civi\Core\Service\AutoServiceTrait;
 use CMRF\Core\Connection;
-use CMRF\Exception\ProfileNotFoundException;
 use CMRF\PersistenceLayer\CallFactory;
 
 /**

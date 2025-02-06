@@ -13,6 +13,8 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 /**
  * This is the base class of all CiviShare handlers
  *
@@ -20,10 +22,12 @@
  */
 class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
 
-  /** @var array $tag_cache caches a tag_id => tag_name list */
+  /**
+   * @var array*/
   protected static $tag_cache = [];
 
-  /** @var array $tag_name_cache caches a tag_name => tag_id  list */
+  /**
+   * @var array*/
   protected static $tag_name_cache = [];
 
   /**
@@ -35,20 +39,20 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
    * @throws Exception should there be a problem
    */
   public function apply($change) {
-    $this->log("Starting change application...", $change, 'debug');
+    $this->log('Starting change application...', $change, 'debug');
 
     // get data
-    $data  = $change->getJSONData('data_after');
+    $data = $change->getJSONData('data_after');
 
     // get contact
     $contact_id = $change->getContactID();
     if (empty($contact_id)) {
-      throw new Exception("No contact linked to the change!");
+      throw new Exception('No contact linked to the change!');
     }
 
     // get tag
     if (empty($data['tag_name'])) {
-      throw new Exception("No tag name given!");
+      throw new Exception('No tag name given!');
     }
     $tag_id = $this->getTagByName($data['tag_name']);
 
@@ -60,11 +64,13 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
           $this->log("Contact [{$contact_id}] already has tag '{$data['tag_name']}'");
           return FALSE;
 
-        } else {
+        }
+        else {
           civicrm_api3('EntityTag', 'create', [
-              'entity_id'    => $contact_id,
-              'entity_table' => 'civicrm_contact',
-              'tag_id'       => $tag_id]);
+            'entity_id'    => $contact_id,
+            'entity_table' => 'civicrm_contact',
+            'tag_id'       => $tag_id,
+          ]);
           $this->log("Contact [{$contact_id}] tagged with '{$data['tag_name']}'");
           return TRUE;
         }
@@ -75,13 +81,15 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
           // doesn't work: civicrm_api3('EntityTag', 'delete', ['id' => $contact_has_tag]);
           // this works:
           civicrm_api3('EntityTag', 'delete', [
-              'entity_id'    => $contact_id,
-              'entity_table' => 'civicrm_contact',
-              'tag_id'       => $tag_id]);
+            'entity_id'    => $contact_id,
+            'entity_table' => 'civicrm_contact',
+            'tag_id'       => $tag_id,
+          ]);
           $this->log("Tag '{$data['tag_name']}' has been removed from contact [{$contact_id}].");
           return TRUE;
 
-        } else {
+        }
+        else {
           $this->log("Contact [{$contact_id}] doesn't have tag '{$data['tag_name']}'");
           return FALSE;
         }
@@ -112,14 +120,15 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
           $contact_id = $data['entity_id'];
           if ($this->isContactCurrentlyLinked($contact_id)) {
             return [
-                'contact_id' => $contact_id,
-                'tag_id'     => $data['tag_id'],
-                'action'     => 'add',
-                'tag_name'   => $this->getTagName($data['tag_id']),
+              'contact_id' => $contact_id,
+              'tag_id'     => $data['tag_id'],
+              'action'     => 'add',
+              'tag_name'   => $this->getTagName($data['tag_id']),
             ];
           }
         }
-      } elseif ($op == 'delete' && $data) {
+      }
+      elseif ($op == 'delete' && $data) {
         if (empty($data['entity_table']) || empty($data['entity_table']) || empty($data['tag_id'])) {
           // insufficient data => load
           $data = civicrm_api3('EntityTag', 'getsingle', ['id' => $id]);
@@ -128,10 +137,10 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
           $contact_id = $data['entity_id'];
           if ($this->isContactCurrentlyLinked($contact_id)) {
             return [
-                'contact_id' => $contact_id,
-                'tag_id'     => $data['tag_id'],
-                'action'     => 'remove',
-                'tag_name'   => $this->getTagName($data['tag_id']),
+              'contact_id' => $contact_id,
+              'tag_id'     => $data['tag_id'],
+              'action'     => 'remove',
+              'tag_name'   => $this->getTagName($data['tag_id']),
             ];
           }
         }
@@ -149,7 +158,7 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
    * @param $id          int    object ID
    * @param $objectRef   mixed  depends on the hook (afaik)
    */
-  public function createPostHookChange($pre_record, $op, $objectName, $id,  $objectRef) {
+  public function createPostHookChange($pre_record, $op, $objectName, $id, $objectRef) {
     if (!empty($pre_record)) {
       // TODO: verify that the pre_hook record has actually been created?
       $this->createLocalChangeRecord($pre_record['contact_id'], [], $pre_record, 'now');
@@ -167,13 +176,15 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
         try {
           $tag_name = civicrm_api3('Tag', 'getvalue', ['id' => $tag_id, 'return' => 'name']);
           self::$tag_cache[$tag_id] = $tag_name;
-        } catch(Exception $ex) {
+        }
+        catch (Exception $ex) {
           // probably doesn't exist...
           self::$tag_cache[$tag_id] = NULL;
         }
       }
       return self::$tag_cache[$tag_id];
-    } else {
+    }
+    else {
       return NULL;
     }
   }
@@ -186,7 +197,7 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
    */
   protected function getTagByName($tag_name) {
     if (empty($tag_name)) {
-      throw Exception("No tag name given!");
+      throw Exception('No tag name given!');
     }
 
     if (!array_key_exists($tag_name, self::$tag_name_cache)) {
@@ -195,12 +206,12 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
       if (empty($tag['id'])) {
         // not found? create!
         $tag = civicrm_api3('Tag', 'create', [
-            'name'          => $tag_name,
-            'used_for'      => 'civicrm_contact',
-            'is_tagset'     => 0,
-            'is_selectable' => 1,
-            'is_reserved'   => 1,
-            'description'   => 'created by CiviShare'
+          'name'          => $tag_name,
+          'used_for'      => 'civicrm_contact',
+          'is_tagset'     => 0,
+          'is_selectable' => 1,
+          'is_reserved'   => 1,
+          'description'   => 'created by CiviShare',
         ]);
         $this->log("Created missing tag '{$tag_name}'.");
       }
@@ -219,14 +230,15 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
    */
   protected function hasTag($contact_id, $tag_id) {
     $entity_tag = civicrm_api3('EntityTag', 'get', [
-        'entity_id'    => $contact_id,
-        'tag_id'       => $tag_id,
-        'entity_table' => 'civicrm_contact',
-        'return'       => 'id'
+      'entity_id'    => $contact_id,
+      'tag_id'       => $tag_id,
+      'entity_table' => 'civicrm_contact',
+      'return'       => 'id',
     ]);
     if (empty($entity_tag['id'])) {
       return FALSE;
-    } else {
+    }
+    else {
       return (int) $entity_tag['id'];
     }
   }
@@ -240,9 +252,10 @@ class CRM_Share_Handler_ContactTag extends CRM_Share_Handler {
   protected function loadTag($tag_id, $params) {
     // remark: idk what's wrong with this call's params...
     return [
-        'tag_id'       => $tag_id,
-        'entity_table' => $params[1],
-        'entity_id'    => $params[0][0]
+      'tag_id'       => $tag_id,
+      'entity_table' => $params[1],
+      'entity_id'    => $params[0][0],
     ];
   }
+
 }

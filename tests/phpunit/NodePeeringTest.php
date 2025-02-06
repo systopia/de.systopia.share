@@ -1,12 +1,13 @@
 <?php
-use Civi\Test\CiviEnvBuilder;
+
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
 
 use CRM_Share_ExtensionUtil as E;
-
-
 
 /**
  * FIXME - Add test description.
@@ -22,7 +23,7 @@ use CRM_Share_ExtensionUtil as E;
  *
  * @group headless
  */
-class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
+class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
 
   /**
    * Setup used when HeadlessInterface is implemented.
@@ -36,13 +37,13 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
    * @throws \CRM_Extension_Exception_ParseException
    */
   public function setUpHeadless() {
-//
-//
-//    // delete tables
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_handler");
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node_peering");
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node");
+    //
+    //
+    //    // delete tables
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_handler");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node_peering");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node");
 
     $result = \Civi\Test::headless()
       ->installMe(__DIR__)
@@ -50,12 +51,11 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
     return $result;
   }
 
-  public function setUp(): void
-  {
+  public function setUp(): void {
     // clean tables
     parent::setUp();
     // todo: remove?
-    require_once "/var/www/civicrm/awo/sites/default/civicrm.settings.php";
+    require_once '/var/www/civicrm/awo/sites/default/civicrm.settings.php';
     \CRM_Core_DAO_AllCoreTables::flush();
 
     parent::setUp();
@@ -68,26 +68,25 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
 
     \CRM_Core_DAO_AllCoreTables::flush();
     // create a local node
-    $local_node = \Civi\Api4\ShareNode::create(false)
+    $local_node = \Civi\Api4\ShareNode::create(FALSE)
       ->addValue('name', 'Local Node 1')
       ->addValue('short_name', 'basic_01')
-      ->addValue('is_local', true)
-      ->addValue('description', "automated test node")
+      ->addValue('is_local', TRUE)
+      ->addValue('description', 'automated test node')
       ->addValue('rest_url', 'TODO')
       ->addValue('api_key', 'TODO')
       ->addValue('auth_key', 'TODO')
-      ->addValue('is_enabled', true)
+      ->addValue('is_enabled', TRUE)
       ->addValue('receive_identifiers', CRM_Utils_Array::implodePadded(''))
       ->addValue('send_identifiers', '')
       ->execute()
       ->first();
 
-
     // create a "remote" node
-    $remote_node = \Civi\Api4\ShareNode::create(false)
+    $remote_node = \Civi\Api4\ShareNode::create(FALSE)
       ->addValue('name', 'basic_02_remote')
       ->addValue('short_name', 'Basic "Remote" Node')
-      ->addValue('is_local', false)
+      ->addValue('is_local', FALSE)
       ->execute()
       ->first();
 
@@ -96,7 +95,7 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
     $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
       ->addValue('local_node', $local_node['id'])
       ->addValue('remote_node', $remote_node['id'])
-      ->addValue('is_enabled', true)
+      ->addValue('is_enabled', TRUE)
       ->addValue('shared_secret', $shared_key)
       ->execute();
 
@@ -104,13 +103,11 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
     $node_peering = \Civi\Api4\ShareChange::create(TRUE)
       ->addValue('local_node', $local_node['id'])
       ->addValue('remote_node', $remote_node['id'])
-      ->addValue('is_enabled', true)
+      ->addValue('is_enabled', TRUE)
       ->addValue('shared_secret', $shared_key)
       ->execute();
 
-
-
-    $this->assertTrue(true);
+    $this->assertTrue(TRUE);
 
   }
 
@@ -119,7 +116,7 @@ class NodePeeringTest extends \PHPUnit\Framework\TestCase implements HeadlessInt
    */
   public function testPeeringSetup():void {
     // create a local node
-    $this->assertTrue(true);
+    $this->assertTrue(TRUE);
   }
 
 }
