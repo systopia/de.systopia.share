@@ -100,6 +100,7 @@ change back-and-forth.
         "timestamp": "2024-10-23 20:08:48 CEST",
         "entity": "Contact",
         "entity_reference": "312",
+        "entity_identification_context": {},
         "attribute_changes": [
           {
             "name": "first_name",
@@ -111,7 +112,7 @@ change back-and-forth.
             "from": "",
             "to": "2000-01-01"
           }
-        ]
+        ],
         "loop_detection": ["5R+hJjo8pEpgTQvp0WMmV8DZNEVZB"]
       },
       {
@@ -130,6 +131,25 @@ change back-and-forth.
             "from": "",
             "to": "La Pirata"
           }
+        ],
+        "loop_detection": ["5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB","5RPX2frgjtPtR1FO2asdwqwewqe+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB"]
+      },
+      {
+        "type": "civishare.change.membership",
+        "timestamp": "2024-10-23 20:08:48 CEST",
+        "entity": "Membership",
+        "entity_reference": "12455",
+        "entity_identification_context": {
+          "contact.first_name": "Escarlata",
+          "contact.last_name": "La Pirata",
+          "contact.email": "escarlata@pirat.as"
+        },
+        "attribute_changes": [
+          {
+            "name": "end_date",
+            "from": "2025-12-31",
+            "to": "2026-12-31"
+          },
         ],
         "loop_detection": ["5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB","5RPX2frgjtPtR1FO2asdwqwewqe+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZB"]
       }
