@@ -5,12 +5,8 @@ use Civi\Api4\Generic\Result;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 use Civi\Api4\ShareNodePeering;
-use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Share\ChangeProcessingEvent;
-use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
-use Civi\Share\CiviMRF\CiviMRFClient;
 use Civi\Share\CiviMRF\ShareApi;
-use Civi\Share\Event\TargetNodePeeringDetermineEvent;
+use Civi\Share\Event\MessageGenerateEvent;
 
 /**
  * CiviShare Message object (transient)
@@ -37,12 +33,17 @@ class Message
    */
   protected array $changes = [];
 
-  protected ?string $senderNodeId = NULL;
+  protected ?int $senderNodeId = NULL;
 
   /**
    * @phpstan-var list<int>
    */
   protected array $targetNodePeeringIds = [];
+
+  /**
+   * @phpstan-var array<string, array<string, mixed>>
+   */
+  protected array $entityIdentificationContext = [];
 
   /**
    * @var \Civi\Share\CiviMRF\CiviMRFClient
@@ -60,14 +61,32 @@ class Message
    * @var \Civi\Core\CiviEventDispatcherInterface
    * @inject dispatcher
    */
-  protected CiviEventDispatcherInterface $eventDispatcher;
+  protected $eventDispatcher;
 
-  public function setShareApi(ShareApi $shareApi) {
+  public function getEventDispatcher(): \Civi\Core\CiviEventDispatcherInterface {
+    return $this->eventDispatcher;
+  }
+
+  public function setShareApi(ShareApi $shareApi): void {
     $this->shareApi = $shareApi;
   }
 
-  public function setSenderNodeId(?string $senderNodeId): void {
+  public function setSenderNodeId(int $senderNodeId): void {
     $this->senderNodeId = $senderNodeId;
+  }
+
+  /**
+   * @phpstan-param list<int> $targetNodePeeringIds
+   */
+  public function setTargetNodePeeringIds(array $targetNodePeeringIds): void {
+    $this->targetNodePeeringIds = $targetNodePeeringIds;
+  }
+
+  /**
+   * @phpstan-param array<string, array<string, mixed>> $entityIdentificationContext
+   */
+  public function setEntityIdentificationContext(array $entityIdentificationContext): void {
+    $this->entityIdentificationContext = $entityIdentificationContext;
   }
 
   /**
@@ -95,10 +114,12 @@ class Message
       $change = Change::createFromApiResultArray($shareChange);
       $message->addChange($change);
 
-      // Determine target node peerings to send this message to depending on the change.
-      $targetNodePeeringResolveEvent = new TargetNodePeeringDetermineEvent($change);
-      $message->eventDispatcher->dispatch($targetNodePeeringResolveEvent);
-      $message->targetNodePeeringIds = $targetNodePeeringResolveEvent->getEligibleTargetNodePeeringIds();
+      // Determine target node peerings to send this message to and context for identification of entities, depending on
+      // the change.
+      $messageGenerateEvent = new MessageGenerateEvent($change);
+      $message->getEventDispatcher()->dispatch(MessageGenerateEvent::class, $messageGenerateEvent);
+      $message->setTargetNodePeeringIds($messageGenerateEvent->getEligibleTargetNodePeeringIds());
+      $message->setEntityIdentificationContext($messageGenerateEvent->getEntityIdentificationContext());
       $message->setSenderNodeId($sourceNodeId);
 
       // TODO: As this currently creates one message per change record, this should be optimized by e. g. combining
@@ -228,9 +249,7 @@ class Message
   /**
    * Send out a compiled message
    *
-   *    ID of the local node. Only required if multiple local nodes present
-   *
-   * @throws \Exception
+   * @return list<array{node_peering_id:int, result:array<string, mixed>}>
    */
   public function send(): array {
     // TODO: Is 'data' the right type?
@@ -275,7 +294,7 @@ class Message
     }
 
     // load the changes
-    $changes = civicrm_api4('ShareChange', 'get', [
+    $changes = \civicrm_api4('ShareChange', 'get', [
       'where' => [
         ['id', 'IN', $this->getPersistedChangeIds()],
       ],
@@ -293,7 +312,8 @@ class Message
           $this->setChangeStatus($change['id'], $change_processor->getNewStatus() ?? Change::STATUS_ERROR);
           \Civi::log()->warning("Change [{$change['id']}] could not be processed - no processor found.");
         }
-      } catch (\Exception $exception) {
+      }
+      catch (\RuntimeException $exception) {
         \Civi::log()->warning("Change [{$change['id']}] failed processing, exception was " . $exception->getMessage());
         $this->setChangeStatus($change['id'], Change::STATUS_ERROR);
         $change_processor->setFailed($exception->getMessage());

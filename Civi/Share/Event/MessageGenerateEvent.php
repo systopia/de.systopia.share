@@ -6,7 +6,7 @@ use Civi\Api4\ShareNodePeering;
 use Civi\Share\Change;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class TargetNodePeeringDetermineEvent extends Event {
+class MessageGenerateEvent extends Event {
 
   private Change $change;
 
@@ -15,20 +15,41 @@ class TargetNodePeeringDetermineEvent extends Event {
    */
   public array $targetNodePeeringIds = [];
 
+  /**
+   * @phpstan-var array<string, array<string, mixed>>
+   */
+  public array $entityIdentificationContext = [];
+
+  /**
+   * @phpstan-param list<int> $targetNodePeeringIds
+   */
   public function __construct(Change $change, array $targetNodePeeringIds = []) {
     $this->change = $change;
     $this->targetNodePeeringIds = $targetNodePeeringIds;
   }
 
-  public function getChange() {
+  public function getChange(): Change {
     return $this->change;
   }
 
-  public function getTargetNodePeeringIds() {
+  /**
+   * @return list<int>
+   */
+  public function getTargetNodePeeringIds(): array {
     return $this->targetNodePeeringIds;
   }
 
-  public function getEligibleTargetNodePeeringIds() {
+  /**
+   * @return array<string, array<string, mixed>>
+   */
+  public function getEntityIdentificationContext() {
+    return $this->entityIdentificationContext;
+  }
+
+  /**
+   * @return list<int>
+   */
+  public function getEligibleTargetNodePeeringIds(): array {
     return ShareNodePeering::get(FALSE)
       ->addSelect('id')
       ->addWhere('id', 'IN', $this->targetNodePeeringIds)
