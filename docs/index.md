@@ -93,7 +93,7 @@ change back-and-forth.
   "payload_signature": "/HbL/n2GaZWex15bmNquRUYWUriGEPpncqcIUQkqgwoltCzQU+x2IjMZZNgSFJ2oMJBk24AzHn/WZw8eOn5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZBjmwdmtlJ4e/f5SNWRi2kNQ=",
   "payload": {
     "sender": "https://node4.mydistributed.org",
-    "sent": "2024-10-23 20:10:00 CEST"
+    "sent": "2024-10-23 20:10:00 CEST",
     "changes": [
       {
         "type": "civishare.change.contact.base",
