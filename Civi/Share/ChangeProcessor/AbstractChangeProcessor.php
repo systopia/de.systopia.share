@@ -4,6 +4,10 @@ declare(strict_types = 1);
 
 namespace Civi\Share\ChangeProcessor;
 
+use Civi\Core\Event\GenericHookEvent as Event;
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareNode;
+use Civi\Share\Change;
 use Civi\Share\ChangeProcessingEvent;
 
 /**

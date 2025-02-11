@@ -155,6 +155,10 @@ class ChangeProcessingEvent extends Event {
     }
   }
 
+  public function getNodeId(): int {
+    return $this->node_id;
+  }
+
   /**
    * Has this change been procesed?
    *
