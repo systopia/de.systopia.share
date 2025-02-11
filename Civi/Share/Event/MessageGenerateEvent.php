@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\Event;
 
 use Civi\Api4\ShareNodePeering;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\CiviMRF;
 
 use Civi\Core\Service\AutoServiceInterface;
@@ -26,8 +28,8 @@ class ShareApi implements AutoServiceInterface {
     return $this->civiMRFClient
       ->init((string) $shareNodePeeringId)
       ->executeV4('ShareChangeMessage', 'receive', [
-      'message' => $message->serialize(),
-    ]);
+        'message' => $message->serialize(),
+      ]);
   }
 
 }

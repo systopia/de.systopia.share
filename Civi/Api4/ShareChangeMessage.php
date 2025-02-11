@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Api4;
 
-use Civi\Api4\Generic\AbstractEntity;
 use Civi\Share\Api4\Action\ShareChangeMessage\GetFieldsAction;
 use Civi\Share\Api4\Action\ShareChangeMessage\SendAction;
 use Civi\Share\Api4\Action\ShareChangeMessage\ReceiveAction;

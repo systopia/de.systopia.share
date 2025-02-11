@@ -13,9 +13,9 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use CRM_Share_ExtensionUtil as E;
+declare(strict_types = 1);
 
-require_once 'CRM/Core/Form.php';
+use CRM_Share_ExtensionUtil as E;
 
 /**
  * Form controller class
@@ -24,29 +24,27 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Share_Form_Task_PeerTask extends CRM_Contact_Form_Task {
 
-
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(E::ts('Peer contacts with another CiviShare node'));
   }
 
-
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $contact_ids = implode(',', $this->_contactIds);
 
     $this->add('select',
         'node_id',
         E::ts('Peer Node'),
         CRM_Share_Node::getNodeList(),
-        true,
-        array('class' => 'crm-select2'));
+        TRUE,
+        ['class' => 'crm-select2']);
 
     CRM_Core_Form::addDefaultButtons(E::ts('Peer'));
 
     parent::buildQuickForm();
   }
 
-  function postProcess() {
+  public function postProcess() {
     $values = $this->exportValues();
     $remote_host = CRM_Share_Node::getNodeByID($values['node_id']);
     $peering = new CRM_Share_Peering($remote_host);
@@ -54,18 +52,60 @@ class CRM_Share_Form_Task_PeerTask extends CRM_Contact_Form_Task {
 
     // Compile result
     $messages = [];
-    $messages[] = E::ts("%1 contact(s) were successfully peered with %2", [1 => $result['NEWLY_PEERED'], 2 => $remote_host->getShortName()]);
-    if (!empty($result['INSUFFICIENT_DATA']))
-      $messages[] = E::ts("%1 contact(s) did not provide enough data for peering", [1 => $result['INSUFFICIENT_DATA'], 2 => $remote_host->getShortName()]);
-    if (!empty($result['ALREADY_PEERED']))
-      $messages[] = E::ts("%1 contact(s) were already peered", [1 => $result['ALREADY_PEERED'], 2 => $remote_host->getShortName()]);
-    if (!empty($result['NOT_IDENTIFIED']))
-      $messages[] = E::ts("%1 contact(s) were not found on %2", [1 => $result['NOT_IDENTIFIED'], 2 => $remote_host->getShortName()]);
-    if (!empty($result['AMBIGUOUS']))
-      $messages[] = E::ts("%1 contact(s) could not be uniquely identified", [1 => $result['AMBIGUOUS'], 2 => $remote_host->getShortName()]);
-    if (!empty($result['ERROR']))
-      $messages[] = E::ts("%1 contact(s) produced an error", [1 => $result['ERROR'], 2 => $remote_host->getShortName()]);
+    $messages[] = E::ts(
+      '%1 contact(s) were successfully peered with %2',
+      [
+        1 => $result['NEWLY_PEERED'],
+        2 => $remote_host->getShortName(),
+      ]
+    );
+    if (!empty($result['INSUFFICIENT_DATA'])) {
+      $messages[] = E::ts(
+        '%1 contact(s) did not provide enough data for peering',
+        [
+          1 => $result['INSUFFICIENT_DATA'],
+          2 => $remote_host->getShortName(),
+        ]
+      );
+    }
+    if (!empty($result['ALREADY_PEERED'])) {
+      $messages[] = E::ts(
+        '%1 contact(s) were already peered',
+        [
+          1 => $result['ALREADY_PEERED'],
+          2 => $remote_host->getShortName(),
+        ]
+      );
+    }
+    if (!empty($result['NOT_IDENTIFIED'])) {
+      $messages[] = E::ts(
+        '%1 contact(s) were not found on %2',
+        [
+          1 => $result['NOT_IDENTIFIED'],
+          2 => $remote_host->getShortName(),
+        ]
+      );
+    }
+    if (!empty($result['AMBIGUOUS'])) {
+      $messages[] = E::ts(
+        '%1 contact(s) could not be uniquely identified',
+        [
+          1 => $result['AMBIGUOUS'],
+          2 => $remote_host->getShortName(),
+        ]
+      );
+    }
+    if (!empty($result['ERROR'])) {
+      $messages[] = E::ts(
+        '%1 contact(s) produced an error',
+        [
+          1 => $result['ERROR'],
+          2 => $remote_host->getShortName(),
+        ]
+      );
+    }
     $message = implode(', ', $messages) . '.';
-    CRM_Core_Session::setStatus($message, E::ts("Peering Completed"), 'info');
+    CRM_Core_Session::setStatus($message, E::ts('Peering Completed'), 'info');
   }
+
 }

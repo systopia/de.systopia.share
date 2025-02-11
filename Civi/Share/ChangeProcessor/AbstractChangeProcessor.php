@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\ChangeProcessor;
 
-use Civi\Core\Event\GenericHookEvent as Event;
-use Civi\Api4\ShareChange;
-use Civi\Api4\ShareNode;
 use Civi\Share\ChangeProcessingEvent;
 
 /**
  * Abstract class providing infrastructure for change processors
  */
-abstract class ChangeProcessorBase {
+abstract class AbstractChangeProcessor {
 
   public const CHANGE_TYPE_CONTACT_BASE = 'civishare.change.contact.base';
 
@@ -18,13 +17,13 @@ abstract class ChangeProcessorBase {
    * This method will be called when a change is offered to this processor for
    * processing
    *
-   * @param ChangeProcessingEvent $processing_event
+   * @param \Civi\Share\ChangeProcessingEvent $processing_event
    *   the event provides data and infrastructure
    *
    * @param string $event_type
    *   make sure this is an event type you actually *can* process
    */
-  function process_change_event($processing_event, $event_type, $dispatcher) {
+  public function process_change_event($processing_event, $event_type, $dispatcher) {
     // we don't want already processed events
     if ($processing_event->isProcessed()) {
       return;
@@ -48,16 +47,13 @@ abstract class ChangeProcessorBase {
    * This method will be called when a change is offered to this processor for
    * processing
    *
-   * @param ChangeProcessingEvent $processing_event
+   * @param \Civi\Share\ChangeProcessingEvent $processing_event
    *   the event provides data and infrastructure
-   *
-   * @param string $ch
-   *   make sure this is an event type you actually *can* process
    *
    * @param string $event_type
    *   make sure this is an event type you actually *can* process
    */
-  abstract function process_change($processing_event, $event_type, $dispatcher);
+  abstract public function process_change($processing_event, $event_type, $dispatcher);
 
   /**
    * Get a configuration option from the processor's/handler's configuration
@@ -73,7 +69,7 @@ abstract class ChangeProcessorBase {
   public function getConfigValue($path, $defalt_value): mixed {
     // @todo implement!
     \Civi::log()
-      ->debug("ChangeProcessor::getConfigValue needs to be implmented.");
+      ->debug('ChangeProcessor::getConfigValue needs to be implmented.');
     return $defalt_value;
   }
 

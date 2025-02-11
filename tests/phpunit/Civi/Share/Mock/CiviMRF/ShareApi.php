@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace tests\phpunit\Civi\Share\Mock\CiviMRF;
 
 use Civi\Api4\ShareNodePeering;

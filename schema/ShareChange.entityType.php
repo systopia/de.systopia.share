@@ -1,5 +1,9 @@
 <?php
+
+declare(strict_types = 1);
+
 use CRM_Share_ExtensionUtil as E;
+
 return [
   'name' => 'ShareChange',
   'table' => 'civicrm_share_change',

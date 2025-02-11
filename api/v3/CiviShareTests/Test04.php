@@ -13,8 +13,9 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
-use Civi\Share\Message;
+declare(strict_types = 1);
 
+use Civi\Share\Message;
 
 /**
  * Test04 for CiviShare - test membership processor
@@ -26,12 +27,13 @@ use Civi\Share\Message;
  * - check if membership was created
  *
  * @todo migrate to unit tests (once running)
- **/
+ */
 function civicrm_api3_civi_share_tests_test04(&$params) {
-  define('CIVISHARE_ALLOW_LOCAL_LOOP', 1); // allow local loops
+  // allow local loops
+  define('CIVISHARE_ALLOW_LOCAL_LOOP', 1);
 
   if (!function_exists('xcm_civicrm_config')) {
-      throw new \Exception("This test requires XCM");
+    throw new \Exception('This test requires XCM');
   }
 
   // create a local node
@@ -69,27 +71,26 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     'membership_type_id' => 1,
   ];
 
-
   // create NODES
 
   // generate a local node
-  $local_node = \Civi\Api4\ShareNode::create(false)
+  $local_node = \Civi\Api4\ShareNode::create(FALSE)
     ->addValue('name', 'Local Node 1')
     ->addValue('short_name', 'LOCAL1')
-    ->addValue('is_local', true)
-    ->addValue('description', "automated test node")
-    ->addValue('is_enabled', true)
+    ->addValue('is_local', TRUE)
+    ->addValue('description', 'automated test node')
+    ->addValue('is_enabled', TRUE)
     ->addValue('receive_identifiers', CRM_Utils_Array::implodePadded([]))
     ->addValue('send_identifiers', CRM_Utils_Array::implodePadded([]))
     ->execute()
     ->first();
 
   // create a "remote" node
-  $remote_node = \Civi\Api4\ShareNode::create(false)
+  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
     ->addValue('name', 'test_04_local')
     ->addValue('short_name', 'FAKE-REMOTE')
-    ->addValue('is_local', false)
-    ->addValue('is_enabled', true)
+    ->addValue('is_local', FALSE)
+    ->addValue('is_enabled', TRUE)
     ->execute()
     ->first();
 
@@ -98,7 +99,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
-    ->addValue('is_enabled', true)
+    ->addValue('is_enabled', TRUE)
     ->addValue('shared_secret', $shared_key)
     ->execute();
 
@@ -120,7 +121,8 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     'first_name' => base64_encode(random_bytes(8)),
     'last_name'  => base64_encode(random_bytes(8)),
     'contact_type' => 'Individual',
-    'local_contact_id' => 10000 + rand(10000, 99999999), // fake contact ID
+  // fake contact ID
+    'local_contact_id' => 10000 + rand(10000, 99999999),
     'membership_type_id' => $membershipType['id'],
   ];
 
@@ -129,13 +131,13 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->addValue('name', 'Default')
     ->addValue('class', 'Civi\Share\ChangeProcessor\SimpleMembershipChangeProcessor')
     ->addValue('weight', 100)
-    ->addValue('is_enabled', true)
+    ->addValue('is_enabled', TRUE)
     ->execute();
 
   // register a 'civishare.change.membership.base' change
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TEST-' . $virtual_contact_after['last_name'])
-    ->addValue('change_group_id', null)
+    ->addValue('change_group_id', NULL)
     ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.membership.base')
     ->addValue('data_before', '')
@@ -144,9 +146,11 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->addValue('contact_id', $data_after['local_contact_id'])
     ->addValue('source_node_id', $remote_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
-    ->addValue('received_date', date('Y-m-d H:i:s')) // since this is a local change
+  // since this is a local change
+    ->addValue('received_date', date('Y-m-d H:i:s'))
     // no processed_date yet
-    ->addValue('triggerd_by', '') // not triggered by applying another change
+  // not triggered by applying another change
+    ->addValue('triggerd_by', '')
     ->execute();
   $change_id = $change->first()['id'];
 
@@ -160,13 +164,13 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   // this should now be processed
   if (!$change_message->allChangesProcessed()) {
     // todo: replace with ->assertTrue()
-    throw new Exception("Changes were NOT processed.");
+    throw new Exception('Changes were NOT processed.');
   }
 
   // see if the membership has been altered
   $membership_after = \civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
   if ($membership['membership_type_id'] != $membership_after['membership_type_id']) {
-    throw new Exception("Change data not applied!");
+    throw new Exception('Change data not applied!');
   }
   return civicrm_api3_create_success();
 }

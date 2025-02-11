@@ -1,12 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share\ChangeProcessor;
 
-use Civi\Core\Event\GenericHookEvent as Event;
-use Civi\Api4\ShareChange;
-use Civi\Api4\ShareNode;
 use Civi\Share\Change;
-use Civi\Share\ChangeProcessingEvent;
 
 /**
  *  This simple processor will process membership data, i.e. update an existing
@@ -14,12 +12,12 @@ use Civi\Share\ChangeProcessingEvent;
  * at most one active membership per contact, so no further identification of
  * the specific membership is needed
  */
-class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
+class SimpleMembershipChangeProcessor extends AbstractChangeProcessor {
 
   /**
    * Processes membership submissions
    *
-   * @param ChangeProcessingEvent $processing_event
+   * @param \Civi\Share\ChangeProcessingEvent $processing_event
    * @param string $event_type
    * @param $dispatcher
    *
@@ -47,7 +45,11 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
     $change = $processing_event->getChangeData();
     $changeObject = $processing_event->getChange();
     $change_data = $processing_event->getChangeDataAfter();
-    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $changeObject->getSourceNodeId(), $change['local_node_id']);
+    $local_contact_id = $peering->getLocalContactId(
+      $remote_contact_id,
+      $changeObject->getSourceNodeId(),
+      $change['local_node_id']
+    );
     if (!$local_contact_id) {
       $processing_event->logProcessingMessage("Couldn't identify contact, processing declined.");
       $processing_event->setNewChangeStatus(Change::STATUS_ERROR);
@@ -64,7 +66,9 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
     switch (count($memberships)) {
       case 0:
         // no active membership found => create
-        $processing_event->logProcessingMessage("No active membership(s) found for contact [{$local_contact_id}]. Creating new membership...");
+        $processing_event->logProcessingMessage(
+          "No active membership(s) found for contact [{$local_contact_id}]. Creating new membership..."
+        );
         try {
           $membership = civicrm_api4('Membership', 'create', $change_data);
           $processing_event->logProcessingMessage("Created new membership [{$membership['id']}].");
@@ -73,7 +77,9 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
         catch (\Exception $ex) {
           $error_message = $ex->getMessage();
           // @todo remove sensitive data from log
-          $processing_event->logProcessingMessage("Could't create membership ({$error_message}) with data provided: " . json_encode($change_data));
+          $processing_event->logProcessingMessage(
+            "Could't create membership ({$error_message}) with data provided: " . json_encode($change_data)
+          );
         }
         break;
 
@@ -90,7 +96,9 @@ class SimpleMembershipChangeProcessor extends ChangeProcessorBase {
         catch (\Exception $ex) {
           $error_message = $ex->getMessage();
           // @todo remove sensitive data from log
-          $processing_event->logProcessingMessage("Could't create membership ({$error_message}) with data provided: " . json_encode($change_data));
+          $processing_event->logProcessingMessage(
+            "Could't create membership ({$error_message}) with data provided: " . json_encode($change_data)
+          );
         }
         break;
     }

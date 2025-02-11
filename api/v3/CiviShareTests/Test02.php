@@ -13,9 +13,10 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use Civi\Share\ChangeProcessingEvent;
 use Civi\Share\Message;
-
 
 /**
  * Test02 for CiviShare - test the contact peering
@@ -26,31 +27,32 @@ use Civi\Share\Message;
  * - validate
  *
  * @todo migrate to unit tests (once running)
- **/
+ */
 function civicrm_api3_civi_share_tests_test02(&$params) {
-  define('CIVISHARE_ALLOW_LOCAL_LOOP', 1); // allow local loops
+  // allow local loops
+  define('CIVISHARE_ALLOW_LOCAL_LOOP', 1);
 
   // create a local node
   CRM_Share_TestTools::clearCiviShareConfig();
 
   // generate a local node
-  $local_node = \Civi\Api4\ShareNode::create(false)
+  $local_node = \Civi\Api4\ShareNode::create(FALSE)
     ->addValue('name', 'Local Node 1')
     ->addValue('short_name', 'LOCAL1')
-    ->addValue('is_local', true)
-    ->addValue('description', "automated test node")
-    ->addValue('is_enabled', true)
+    ->addValue('is_local', TRUE)
+    ->addValue('description', 'automated test node')
+    ->addValue('is_enabled', TRUE)
     ->addValue('receive_identifiers', CRM_Utils_Array::implodePadded([]))
     ->addValue('send_identifiers', CRM_Utils_Array::implodePadded([]))
     ->execute()
     ->first();
 
   // create a "remote" node
-  $remote_node = \Civi\Api4\ShareNode::create(false)
+  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
     ->addValue('name', 'test_03_local')
     ->addValue('short_name', 'FAKE-REMOTE')
-    ->addValue('is_local', false)
-    ->addValue('is_enabled', true)
+    ->addValue('is_local', FALSE)
+    ->addValue('is_enabled', TRUE)
     ->execute()
     ->first();
 
@@ -59,10 +61,9 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
-    ->addValue('is_enabled', true)
+    ->addValue('is_enabled', TRUE)
     ->addValue('shared_secret', $shared_key)
     ->execute();
-
 
   // create and pair two contacts
   // @todo migrate peering to service
@@ -99,18 +100,20 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   // register a 'civishare.change.contact.base' change
   $change = \Civi\Api4\ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
-    ->addValue('change_group_id', null)
+    ->addValue('change_group_id', NULL)
     ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('status', 'PENDING')
-    ->addValue('data_before', json_encode($change_data_before, true))
-    ->addValue('data_after', json_encode($change_data_after, true))
+    ->addValue('data_before', json_encode($change_data_before, TRUE))
+    ->addValue('data_after', json_encode($change_data_after, TRUE))
     ->addValue('local_contact_id', $remote_contact['id'])
     ->addValue('source_node_id', $remote_node['id'])
     ->addValue('change_date', date('Y-m-d H:i:s'))
-    ->addValue('received_date', date('Y-m-d H:i:s')) // since this is a local change
+  // since this is a local change
+    ->addValue('received_date', date('Y-m-d H:i:s'))
     // no processed_date yet
-    ->addValue('triggerd_by', '') // not triggered by applying another change
+  // not triggered by applying another change
+    ->addValue('triggerd_by', '')
     ->execute();
   $change_id = $change->first()['id'];
 
@@ -132,12 +135,11 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   // this should now be processed
   if (!$change_message->allChangesProcessed()) {
     // todo: replace with ->assertTrue()
-    throw new Exception("Changes were NOT processed.");
+    throw new Exception('Changes were NOT processed.');
   }
 
   return civicrm_api3_create_success();
 }
-
 
 /**
  * Process test data: an update for contact data
@@ -147,10 +149,11 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
  * @param $dispatcher
  * @return void
  */
-function civicrm_civi_share_test_register_test2_hander($processing_event, $event_type, $dispatcher)
-{
+function civicrm_civi_share_test_register_test2_hander($processing_event, $event_type, $dispatcher) {
   // nothing to do here
-  if ($processing_event->isProcessed()) return;
+  if ($processing_event->isProcessed()) {
+    return;
+  }
 
   // check if this is the one we're looking for
   if ($processing_event->hasChangeType('civishare.change.contact.base')) {
@@ -165,7 +168,11 @@ function civicrm_civi_share_test_register_test2_hander($processing_event, $event
     $peering = new \Civi\Share\IdentityTrackerContactPeering();
     $change = $processing_event->getChangeData();
     $change_data = $processing_event->getChangeDataAfter();
-    $local_contact_id = $peering->getLocalContactId($remote_contact_id, $change['source_node_id'], $change['local_node_id']);
+    $local_contact_id = $peering->getLocalContactId(
+      $remote_contact_id,
+      $change['source_node_id'],
+      $change['local_node_id']
+    );
     $processing_event->setProcessed();
   }
 }

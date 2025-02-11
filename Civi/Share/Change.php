@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Share;
 
 use Civi\Api4\ShareChange;
@@ -55,21 +57,21 @@ class Change {
    */
   public const STATUS_ERROR = 'ERROR';
 
-  const ACTIVE_STATUS = [
+  public const ACTIVE_STATUS = [
     self::STATUS_LOCAL,
     self::STATUS_PENDING,
     self::STATUS_BUSY,
     self::STATUS_FORWARD,
   ];
 
-  const COMPLETED_STATUS = [
+  public const COMPLETED_STATUS = [
     self::STATUS_DONE,
     self::STATUS_DROPPED,
     self::STATUS_ERROR,
     self::STATUS_PROCESSED,
   ];
 
-  const PENDING_FROM_SENDING_STATUS = [
+  public const PENDING_FROM_SENDING_STATUS = [
     self::STATUS_LOCAL,
     self::STATUS_FORWARD,
   ];
@@ -120,7 +122,11 @@ class Change {
     $this->id = $id;
   }
 
-  public static function createFromSerialized(array $serializedChange, int $sourceNodeId, ?\DateTimeInterface $receivedDate = NULL): self {
+  public static function createFromSerialized(
+    array $serializedChange,
+    int $sourceNodeId,
+    ?\DateTimeInterface $receivedDate = NULL
+  ): self {
     if (array_diff(
         [
           'type',
@@ -145,7 +151,17 @@ class Change {
 
   public static function createFromExisting(int $id): self {
     $shareChange = ShareChange::get()
-      ->addSelect('id', 'change_type', 'local_contact_id', 'source_node_id', 'change_date', 'status', 'received_date', 'data_before', 'data_after')
+      ->addSelect(
+        'id',
+        'change_type',
+        'local_contact_id',
+        'source_node_id',
+        'change_date',
+        'status',
+        'received_date',
+        'data_before',
+        'data_after'
+      )
       ->addWhere('id', '=', $id)
       ->execute()
       ->single();
@@ -159,7 +175,9 @@ class Change {
       $shareChange['source_node_id'],
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
-      isset($shareChange['received_date']) ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date']) : NULL,
+      isset($shareChange['received_date'])
+        ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date'])
+        : NULL,
       $shareChange['status'],
       $shareChange['id']
     );

@@ -1,5 +1,8 @@
 <?php
-use Civi\Test\CiviEnvBuilder;
+
+declare(strict_types = 1);
+
+use PHPUnit\Framework\TestCase;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
@@ -20,9 +23,7 @@ use CRM_Share_ExtensionUtil as E;
  *
  * @group headless
  */
-
-
-class CiviShareTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
+class CiviShareTest extends TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
 
   /**
    * Setup used when HeadlessInterface is implemented.
@@ -38,19 +39,19 @@ class CiviShareTest extends \PHPUnit\Framework\TestCase implements HeadlessInter
   public function setUpHeadless() {
 
     // drop tables - @todo remove
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node");
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node_peering");
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
-//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_handler");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node_peering");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
+    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_handler");
 
     return \Civi\Test::headless()
       ->installMe(__DIR__)
       ->apply();
   }
 
-  public function testMe()
-  {
+  public function testMe() {
     \CRM_Contribute_BAO_Contribution::fields();
     $this->assertTrue(CRM_Share_DAO_ShareNode::fields());
   }
+
 }

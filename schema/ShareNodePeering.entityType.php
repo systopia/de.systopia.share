@@ -1,5 +1,9 @@
 <?php
+
+declare(strict_types = 1);
+
 use CRM_Share_ExtensionUtil as E;
+
 return [
   'name' => 'ShareNodePeering',
   'table' => 'civicrm_share_node_peering',

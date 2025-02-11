@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use CRM_Share_ExtensionUtil as E;
 use Civi\Api4\ShareNodePeering;
 
@@ -35,7 +37,11 @@ class CRM_Share_Form_ShareNodePeering extends CRM_Core_Form {
         ->first() ?? [];
 
       if (empty($this->shareNodePeering)) {
-        CRM_Core_Error::statusBounce(E::ts('Invalid ID parameter of ShareNodePeering'), $this->getRedirectUrl(), E::ts('Not Found'));
+        CRM_Core_Error::statusBounce(
+          E::ts('Invalid ID parameter of ShareNodePeering'),
+          $this->getRedirectUrl(),
+          E::ts('Not Found')
+        );
       }
 
       $this->assign('shareNodePeering', $this->shareNodePeering);
@@ -122,7 +128,10 @@ class CRM_Share_Form_ShareNodePeering extends CRM_Core_Form {
         ->execute()
         ->count();
 
-      if ($shareNodePeeringLocalCount > 0 && (int)$values['local_node'] !== ($this->shareNodePeering['local_node'] ?? 0)) {
+      if (
+        $shareNodePeeringLocalCount > 0
+        && (int) $values['local_node'] !== ($this->shareNodePeering['local_node'] ?? 0)
+      ) {
         $this->_errors['local_node'] = E::ts('A ShareNodePeering with this node already exists.');
       }
 
@@ -133,7 +142,10 @@ class CRM_Share_Form_ShareNodePeering extends CRM_Core_Form {
         ->execute()
         ->count();
 
-      if ($shareNodePeeringRemoteCount > 0 && (int)$values['remote_node'] !== ($this->shareNodePeering['remote_node'] ?? 0)) {
+      if (
+        $shareNodePeeringRemoteCount > 0
+        && (int) $values['remote_node'] !== ($this->shareNodePeering['remote_node'] ?? 0)
+      ) {
         $this->_errors['remote_node'] = E::ts('A ShareNodePeering with this node already exists.');
       }
     }

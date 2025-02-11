@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | CiviShare                                              |
-| Copyright (C) 2024 SYSTOPIA                            |
+| Copyright (C) 2025 SYSTOPIA                            |
 | Author: B. Endres (endres@systopia.de)                 |
 +--------------------------------------------------------+
 | This program is released as free software under the    |
@@ -13,15 +13,15 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
+declare(strict_types = 1);
+class CRM_Share_TestTools {
 
-class CRM_Share_TestTools
-{
-  public static function clearCiviShareConfig()
-  {
+  public static function clearCiviShareConfig() {
     // todo: remove listeners?
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_handler");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_change");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node_peering");
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_share_node");
+    CRM_Core_DAO::executeQuery('DELETE FROM civicrm_share_handler');
+    CRM_Core_DAO::executeQuery('DELETE FROM civicrm_share_change');
+    CRM_Core_DAO::executeQuery('DELETE FROM civicrm_share_node_peering');
+    CRM_Core_DAO::executeQuery('DELETE FROM civicrm_share_node');
   }
+
 }

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Civi\Share\EventSubscriber;
 
-use api\v4\Custom\FalseNotEqualsZeroTest;
 use Civi\Api4\Contact;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
@@ -81,8 +80,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
           if (!isset($dataBefore)) {
             $dataAfter = array_filter($dataAfter, function ($value, $key) {
               // TODO: Filter more irrelevant fields with a value?
-              return
-                NULL !== $value
+              return NULL !== $value
                 && '' !== $value
                 && [] !== $value
                 && 'created_date' !== $key

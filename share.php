@@ -13,10 +13,14 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*/
 
+declare(strict_types = 1);
+
+// phpcs:disable PSR1.Files.SideEffects
 require_once 'share.civix.php';
+// phpcs:enable
+
 use CRM_Share_ExtensionUtil as E;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
 
 function _share_composer_autoload(): void {
   if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -36,14 +40,14 @@ function share_civicrm_searchTasks($objectType, &$tasks) {
   // add PEER task to contribution list
   if ($objectType == 'contact') {
     if (CRM_Core_Permission::check('administer CiviCRM')) {
-      $tasks[] = array(
-          'title'  => E::ts('Peer Contacts (CiviShare)'),
-          'class'  => 'CRM_Share_Form_Task_PeerTask',
-          'result' => false);
+      $tasks[] = [
+        'title'  => E::ts('Peer Contacts (CiviShare)'),
+        'class'  => 'CRM_Share_Form_Task_PeerTask',
+        'result' => FALSE,
+      ];
     }
   }
 }
-
 
 /**
  * Implements hook_civicrm_config().
@@ -55,9 +59,14 @@ function share_civicrm_config(&$config) {
   _share_civix_civicrm_config($config);
   $defaultContactBaseChangeProcessor = new \Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor();
   $defaultContactBaseChangeProcessor
-    ->register([\Civi\Share\ChangeProcessor\ChangeProcessorBase::CHANGE_TYPE_CONTACT_BASE]);
+    ->register([\Civi\Share\ChangeProcessor\AbstractChangeProcessor::CHANGE_TYPE_CONTACT_BASE]);
 }
 
+/**
+ * Implements hook_civicrm_container()
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_container/
+ */
 function share_civicrm_container(ContainerBuilder $container): void {
   _share_composer_autoload();
 }

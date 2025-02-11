@@ -1,37 +1,44 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace Civi\Share;
 
 use CRM_Identitytracker_ExtensionUtil as E;
 
-use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
-use Civi\Share\ChangeProcessingEvent;
+use http\Exception\RuntimeException;
 
 const CIVISHARE_IDTRACKER_TYPE = 'civishare_contact_id';
 
 /**
  * This class provides contact peering functionality based on the ID-Tracker extension
  */
-class IdentityTrackerContactPeering implements ContactPeeringInterface
-{
-  /** @var string the ID Tracker type used to track IDs */
-  static $share_id_tracker_type = null;
+class IdentityTrackerContactPeering implements ContactPeeringInterface {
+  /**
+   * @var string the ID Tracker type used to track IDs
+   */
+  public static $share_id_tracker_type = NULL;
 
   /**
    * Constructor will check requirements
    */
-  function __construct() {
+  public function __construct() {
     // make sure ID-Tracker is installed
     $ext_status = \CRM_Extension_System::singleton()->getManager()->getStatuses();
-    if (!isset($ext_status['de.systopia.identitytracker']) || $ext_status['de.systopia.identitytracker'] != 'installed') {
-      throw new \Exception("IdentityTracker extension is not installed, cannot use IdentityTrackerContactPeering.");
+    if (
+      !isset($ext_status['de.systopia.identitytracker'])
+      || $ext_status['de.systopia.identitytracker'] != 'installed'
+    ) {
+      throw new RuntimeException(
+        'IdentityTracker extension is not installed, cannot use IdentityTrackerContactPeering.'
+      );
     }
 
     // make sure we have our CiviShare ID type
     // TODO: This should be a managed entity.
-    \CRM_Identitytracker_Configuration::add_identity_type(CIVISHARE_IDTRACKER_TYPE, E::ts("CiviShare Contact Linking"));
+    \CRM_Identitytracker_Configuration::add_identity_type(CIVISHARE_IDTRACKER_TYPE, E::ts('CiviShare Contact Linking'));
   }
-
 
   /**
    * This method allows you to connect (peer) two contact Ids
@@ -48,8 +55,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
    */
-  public function peer($remote_contact_id, $local_contact_id, $remote_contact_node_id, $local_contact_node_id = null)
-  {
+  public function peer($remote_contact_id, $local_contact_id, $remote_contact_node_id, $local_contact_node_id = NULL) {
     // get the remote node's short name  TODO: cache?
     $remote_node = civicrm_api4('ShareNode', 'get', [
       'select' => ['short_name'],
@@ -66,7 +72,6 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
       'identifier_type' => CIVISHARE_IDTRACKER_TYPE,
     ]);
   }
-
 
   /**
    * This method gives you the local contact ID based on a remote contact ID and the associate node.
@@ -93,7 +98,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
 
     // add store with contact
     $search_result = \civicrm_api3('Contact', 'findbyidentity', [
-      //'contact_id' => $local_contact_id,
+      // 'contact_id' => $local_contact_id,
       'identifier' => $remote_identifier,
       'identifier_type' => CIVISHARE_IDTRACKER_TYPE,
     ]);
@@ -102,7 +107,6 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
       ? (int) $search_result['id']
       : NULL;
   }
-
 
   /**
    * This method gives you the local contact ID based on a remote contact ID and the associate node.
@@ -117,8 +121,12 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface
    * @param ?int $local_contact_node_id
    *    the ID of the local node. Will default to *the* local node
    */
-  public function getOrCreateLocalContactId($remote_contact_id,  $remote_contact_node_id, $local_contact_node_id = null)
-  {
-    throw new \Exception("not implemented");
+  public function getOrCreateLocalContactId(
+    $remote_contact_id,
+    $remote_contact_node_id,
+    $local_contact_node_id = NULL
+  ) {
+    throw new \Exception('not implemented');
   }
+
 }
