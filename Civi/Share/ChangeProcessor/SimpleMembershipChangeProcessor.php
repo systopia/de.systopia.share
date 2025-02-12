@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Civi\Share\ChangeProcessor;
 
+
 use Civi\Share\Change;
 
 /**
@@ -13,6 +14,8 @@ use Civi\Share\Change;
  * the specific membership is needed
  */
 class SimpleMembershipChangeProcessor extends AbstractChangeProcessor {
+
+  public const CHANGE_TYPE_MEMBERSHIP   = 'civishare.change.membership';
 
   /**
    * Processes membership submissions
@@ -30,14 +33,42 @@ class SimpleMembershipChangeProcessor extends AbstractChangeProcessor {
     }
 
     // check if this is the one we're looking for
-    if (!$processing_event->hasChangeType('civishare.change.membership.base')) {
+    if (!$processing_event->hasChangeType(self::CHANGE_TYPE_MEMBERSHIP)) {
       return;
     }
+
+    // get the context to identify the membership
+    $entity_context = $processing_event->getEntityIdentificationContext(['contact', 'membership']);
+
+
+
+
 
     // do the processing!
     $data_before = $processing_event->getChangeDataBefore();
     $data_after = $processing_event->getChangeDataAfter();
     $remote_contact_id = $processing_event->getContactID();
+
+    // read context data
+    $membership = $this->getLocalEntity('membership', $entity_context, $processing_event->getContactID());
+
+    $processing_event->getEntityIdentificationContext()
+
+
+    $contact_id_context = $this->getContextForEntity('contact');
+    $membership_id_context = $this->getContextForEntity('membership');
+    $processing_event->getLocalContactID()
+    $membership_identifier = $this->getEntityContext('membership', ['contact']);
+
+
+    /**
+     * "entity_identification_context": {
+     * "contact.first_name": "Escarlata",
+     * "contact.last_name": "La Pirata",
+     * "contact.email": "escarlata@pirat.as"
+     * },
+     * "attri
+     */
 
     // use peering service to find local_contact_id
     // @todo migrate peering to service
@@ -61,6 +92,7 @@ class SimpleMembershipChangeProcessor extends AbstractChangeProcessor {
       ->addJoin('MembershipStatus AS membership_status', 'LEFT')
       ->addWhere('membership_status.is_active', '=', TRUE)
       ->addWhere('contact_id', '=', $local_contact_id)
+
       ->setLimit(2)
       ->execute();
     switch (count($memberships)) {

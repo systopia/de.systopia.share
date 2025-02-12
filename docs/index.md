@@ -139,10 +139,12 @@ change back-and-forth.
         "timestamp": "2024-10-23 20:08:48 CEST",
         "entity": "Membership",
         "entity_reference": "12455",
-        "entity_identification_context": {
-          "contact.first_name": "Escarlata",
-          "contact.last_name": "La Pirata",
-          "contact.email": "escarlata@pirat.as"
+        "context": {
+          "entity_identification": {
+            "contact.first_name": "Escarlata",
+            "contact.last_name": "La Pirata",
+            "contact.email": "escarlata@pirat.as"
+          }
         },
         "attribute_changes": [
           {

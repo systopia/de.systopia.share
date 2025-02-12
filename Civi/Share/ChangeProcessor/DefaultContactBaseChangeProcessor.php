@@ -57,7 +57,7 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
           $processing_event->getChangeDataAfter()
         );
         $processing_event->logProcessingMessage(
-          'Using attributes ' . json_encode($attribute_set) . ' to identifiy contact...'
+          'Using attributes ' . json_encode($attribute_set) . ' to identify contact...'
         );
         $result = \civicrm_api3('Contact', 'get', $search_parameters);
         if ($result['count'] == 1) {

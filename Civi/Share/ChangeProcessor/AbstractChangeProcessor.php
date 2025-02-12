@@ -140,4 +140,14 @@ abstract class AbstractChangeProcessor {
     return $query;
   }
 
+  /**
+   * Get the given identification context
+   * @param $prefix
+   * @return void
+   */
+  public function getIdentificationContext($prefix) : array
+  {
+
+  }
+
 }

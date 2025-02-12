@@ -15,7 +15,7 @@ use Civi\Share\Message;
  */
 class ShareApi extends \Civi\Share\CiviMRF\ShareApi {
 
-  public function sendMessage(string $shareNodePeeringId, Message $message): array {
+  public function sendMessage(int $shareNodePeeringId, Message $message): array {
     $peering = ShareNodePeering::get(FALSE)
       ->addSelect('id', 'remote_node', 'remote_node.*')
       ->addWhere('id', '=', $shareNodePeeringId)

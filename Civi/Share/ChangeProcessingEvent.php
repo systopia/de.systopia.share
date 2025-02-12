@@ -265,6 +265,8 @@ class ChangeProcessingEvent extends Event {
    * @return ?int
    */
   public function getContactID() {
+    // use
+
     $before_data_contact_id = $this->getChangeDataBefore()['contact_id'] ?? NULL;
     $after_data_contact_id = $this->getChangeDataAfter()['contact_id'] ?? NULL;
     if ($before_data_contact_id && $after_data_contact_id && $before_data_contact_id != $after_data_contact_id) {
@@ -319,6 +321,21 @@ class ChangeProcessingEvent extends Event {
     $data = json_decode($serialised_data, TRUE);
     // todo: error handling
     return $data;
+  }
+
+  /**
+   * Get the entity_identification_context from this change
+   *
+   * @param string $context
+   *   context prefix
+   *
+   * @return array
+   *    the data with the prefix $context
+   */
+  public function getEntityIdentificationContext(array $context) : array
+  {
+    return $this->change_data['entity_identification_context'] ?? [];
+
   }
 
 }
