@@ -113,7 +113,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
     ->addValue('received_date', date('Y-m-d H:i:s'))
     // no processed_date yet
   // not triggered by applying another change
-    ->addValue('triggerd_by', '')
+    ->addValue('triggered_by', '')
     ->execute();
   $change_id = $change->first()['id'];
 

@@ -42,6 +42,12 @@ return [
       'input_type' => 'Text',
       'description' => E::ts('Status: LOCAL, PENDING, BUSY, FORWARD, DONE, PROCESSED, DROPPED, ERROR'),
     ],
+    'status_message' => [
+      'title' => E::ts('Status Message'),
+      'sql_type' => 'text',
+      'input_type' => 'TextArea',
+      'description' => E::ts('Additional information for status'),
+    ],
     'hash' => [
       'title' => E::ts('Name'),
       'sql_type' => 'varchar(64)',
@@ -90,8 +96,8 @@ return [
       'input_type' => 'Select Date',
       'description' => E::ts('Timestamp of the processing of the change'),
     ],
-    'triggerd_by' => [
-      'title' => E::ts('Triggerd By'),
+    'triggered_by' => [
+      'title' => E::ts('Triggered By'),
       'sql_type' => 'text',
       'input_type' => 'TextArea',
       'description' => E::ts('List of change_ids that triggered this change'),
@@ -109,6 +115,13 @@ return [
       'input_type' => 'TextArea',
       'serialize' => CRM_Core_DAO::SERIALIZE_JSON,
       'description' => E::ts('The data after the change'),
+    ],
+    'context' => [
+      'title' => E::ts('Context'),
+      'sql_type' => 'text',
+      'input_type' => 'TextArea',
+      'serialize' => CRM_Core_DAO::SERIALIZE_JSON,
+      'description' => E::ts('Context data for this change'),
     ],
   ],
   'getIndices' => fn() => [

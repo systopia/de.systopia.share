@@ -82,7 +82,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->addValue('received_date', date('Y-m-d H:i:s'))
     // no processed_date yet
   // not triggered by applying another change
-    ->addValue('triggerd_by', '')
+    ->addValue('triggered_by', '')
   // empty as this is a test
     ->addValue('data_before', '')
   // empty as this is a test
