@@ -98,7 +98,7 @@ change back-and-forth.
       {
         "type": "civishare.change.contact.base",
         "timestamp": "2024-10-23 20:08:48 CEST",
-        "entity": "Contact",
+        "entity_type": "Contact",
         "entity_reference": "312",
         "attribute_changes": [
           {
@@ -117,7 +117,7 @@ change back-and-forth.
       {
         "type": "civishare.change.contact.base",
         "timestamp": "2024-10-23 20:08:48 CEST",
-        "entity": "Contact",
+        "entity_type": "Contact",
         "entity_reference": "2312",
         "attribute_changes": [
           {

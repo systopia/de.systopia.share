@@ -57,27 +57,15 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
     /***************************************/
     $create_new_contact = TRUE;
     $update_data = $processing_event->getChangeDataAfter();
+    $update_data = $this->getUpdateDataForEntity(
+      $processing_event->getChangeDataAfter(),
+      $processing_event->getChange()->getEntityIdentificationContext(),
+      $processing_event->getChange()->getEntityType()
+    );
     $update_data['xcm_profile'] = $this->getConfigValue('xcm_profile', 'default');
     $update_data['match_only'] = !$create_new_contact;
     if (NULL !== $local_contact_id) {
       $update_data['id'] = $local_contact_id;
-    }
-
-    // TODO: Now that changes of the type "civishare.change.contact.base" can be of different entity types (Address,
-    //       Email, etc.), prepare $update_data for XCM.
-
-    // TODO: getEntity() not yet implemented.
-    $entity = $processing_event->getChange()->getEntity();
-
-    // TODO: Add attributes for identifying the contact/entity (e. g. location type).
-
-    if ('Website' === $entity) {
-      $update_data['website'] = $update_data['url'];
-    }
-
-    if ('Phone' === $entity) {
-      // TODO: Compare location type for "phone", phone2", "phone3" configured in XCM profile with submitted location
-      //       type.
     }
 
     try {
@@ -145,6 +133,30 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
     }
 
     return $local_contact_id ?? NULL;
+  }
+
+  protected function getUpdateDataForEntity(array $data, array $entityIdentificationContext = [], string $entity = 'Contact'): array {
+    $updateData = [];
+    // TODO: Now that changes of the type "civishare.change.contact.base" can be of different entity types (Address,
+    //       Email, etc.), prepare $update_data for XCM.
+
+    // TODO: Add attributes for identifying the contact/entity (e. g. location type).
+
+    if ('Website' === $entityType) {
+      $updateData['website'] = $data['url'];
+    }
+
+    if ('Phone' === $entityType) {
+      // TODO: Compare location type for "phone", phone2", "phone3" configured in XCM profile with submitted location
+      //       type.
+    }
+
+    if ('Address' === $entityType) {
+      $updateData += $data;
+      // TODO: Add location type from context.
+    }
+
+    return $updateData;
   }
 
 }

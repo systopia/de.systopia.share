@@ -149,6 +149,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
             ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
             ->addValue('local_contact_id', $contactId)
             ->addValue('source_node_id', $localNodeId)
+            ->addValue('entity_type', $entity)
             ->addValue('data_before', $dataBefore)
             ->addValue('data_after', $dataAfter)
             ->execute();

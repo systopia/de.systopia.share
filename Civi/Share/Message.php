@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Civi\Share;
 
+use Civi;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 use Civi\Api4\ShareNodePeering;
@@ -64,6 +65,12 @@ class Message {
    */
   protected $eventDispatcher;
 
+  public function __construct() {
+    $this->civiMRFClient = Civi::service('civi.share.civimrf_client');
+    $this->shareApi = Civi::service('civi.share.api');
+    $this->eventDispatcher = Civi::service('dispatcher');
+  }
+
   public function getEventDispatcher(): \Civi\Core\CiviEventDispatcherInterface {
     return $this->eventDispatcher;
   }
@@ -103,6 +110,7 @@ class Message {
         'change_date',
         'received_date',
         'status',
+        'entity_type',
         'data_before',
         'data_after'
       )

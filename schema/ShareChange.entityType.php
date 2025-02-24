@@ -102,6 +102,12 @@ return [
       'input_type' => 'TextArea',
       'description' => E::ts('List of change_ids that triggered this change'),
     ],
+    'entity_type' => [
+      'title' => E::ts('Entity Type'),
+      'sql_type' => 'varchar(255)',
+      'input_type' => 'Text',
+      'description' => E::ts('The entity type of the change'),
+    ],
     'data_before' => [
       'title' => E::ts('Data before'),
       'sql_type' => 'text',

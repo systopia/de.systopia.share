@@ -98,28 +98,36 @@ class Change {
 
   protected int $localContactId;
 
+  protected string $entityType;
+
   protected array $attributeChanges;
 
   protected int $sourceNodeId;
 
+  protected array $context = [];
+
   public function __construct(
     string $type,
-    string $localContactId,
+    int $localContactId,
     int $sourceNodeId,
+    string $entityType,
     array $attributeChanges = [],
     ?\DateTime $changedDate = NULL,
     ?\DateTime $receivedDate = NULL,
     string $status = self::STATUS_LOCAL,
+    ?array $context = [],
     ?int $id = NULL
   ) {
     $this->type = $type;
     $this->localContactId = $localContactId;
     $this->sourceNodeId = $sourceNodeId;
+    $this->entityType = $entityType;
     $this->attributeChanges = $attributeChanges;
     $this->changedDate = $changedDate ?? new \DateTime();
     $this->receivedDate = $receivedDate ?? new \DateTime();
     $this->status = $status;
     $this->id = $id;
+    $this->context = $context;
   }
 
   public static function createFromSerialized(
@@ -131,6 +139,7 @@ class Change {
         [
           'type',
           'local_contact_id',
+          'entity_type',
           'attribute_changes',
           'timestamp',
         ],
@@ -138,14 +147,19 @@ class Change {
       ) !== []) {
       throw new \RuntimeException('Could not parse change.');
     }
+    if (isset($serializedChange['entity_reference'])) {
+      $context = ['entity_reference' => $serializedChange['entity_reference']];
+    }
     return new self(
       $serializedChange['type'],
       $serializedChange['local_contact_id'],
       $sourceNodeId,
+      $serializedChange['entity_type'],
       $serializedChange['attribute_changes'],
       \DateTime::createFromFormat(Utils::DATE_FORMAT, $serializedChange['timestamp']),
       $receivedDate ?? new \DateTime(),
-      Change::STATUS_PENDING
+      Change::STATUS_PENDING,
+      $context,
     );
   }
 
@@ -159,6 +173,7 @@ class Change {
         'change_date',
         'status',
         'received_date',
+        'entity_type',
         'data_before',
         'data_after'
       )
@@ -173,12 +188,14 @@ class Change {
       $shareChange['change_type'],
       $shareChange['local_contact_id'],
       $shareChange['source_node_id'],
+      $shareChange['entity_type'],
       self::parseAttributeChanges($shareChange['data_before'] ?? [], $shareChange['data_after'] ?? []),
       \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['change_date']),
       isset($shareChange['received_date'])
         ? \DateTime::createFromFormat(Utils::CIVICRM_DATE_FORMAT, $shareChange['received_date'])
         : NULL,
       $shareChange['status'],
+      $shareChange['context'] ?? [],
       $shareChange['id']
     );
   }
@@ -214,9 +231,21 @@ class Change {
     return $this->sourceNodeId;
   }
 
+  public function getContext(): array {
+    return $this->context;
+  }
+
+  public function getEntityIdentificationContext(): array {
+    return $this->context['entity_identification'] ?? [];
+  }
+
   public function setStatus(string $status): void {
     // TODO Validate.
     $this->status = $status;
+  }
+
+  public function getEntityType(): ?string {
+    return $this->entityType;
   }
 
   public function process(int $localNodeId): void {
@@ -295,12 +324,17 @@ class Change {
   }
 
   public function serialize(): array {
-    return [
+    $serialized = [
       'type' => $this->type,
       'timestamp' => $this->changedDate->format(Utils::DATE_FORMAT),
+      'entity_type' => $this->getEntityType(),
       'local_contact_id' => $this->localContactId,
       'attribute_changes' => $this->attributeChanges,
     ];
+    if (isset($this->context['entity_reference'])) {
+      $serialized['entity_reference'] = $this->context['entity_reference'];
+    }
+    return $serialized;
   }
 
 }
