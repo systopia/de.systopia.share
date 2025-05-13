@@ -93,6 +93,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
 
       case 'create':
         // Load created/updated contact.
+        $changedFields ??= [];
         $selectFields = [] !== $changedFields ? $changedFields : ['*'];
         if ('Contact' !== $entity && !in_array('contact_id', $selectFields)) {
           $selectFields[] = 'contact_id';
