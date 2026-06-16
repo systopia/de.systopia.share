@@ -186,6 +186,7 @@ class Change {
   public function getId(): ?int {
     return $this->id;
   }
+
   public function getLocalContactId(): ?int {
     return $this->localContactId;
   }

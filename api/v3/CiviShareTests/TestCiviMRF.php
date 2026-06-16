@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
+  // phpcs:disable
   //  // Delete existing peerings and nodes.
   //  \Civi\Api4\ShareNodePeering::delete(TRUE)
   //    ->addWhere('id', 'IS NOT NULL')
@@ -13,6 +14,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
   //  \Civi\Api4\ShareChange::delete(TRUE)
   //    ->addWhere('id', 'IS NOT NULL')
   //    ->execute();
+  // phpcs:enable
 
   // Create a local node.
   $local_node = \Civi\Api4\ShareNode::create(FALSE)
@@ -48,6 +50,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->execute()
     ->single();
 
+  // phpcs:disable
   //  $testMessage = [
   //    'id' => 'some-unique-id',
   //    'payload_signature' => '/HbL/n2GaZWex15bmNquRUYWUriGEPpncqcIUQkqgwoltCzQU+x2IjMZZNgSFJ2oMJBk24AzHn/WZw8eOn5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZBjmwdmtlJ4e/f5SNWRi2kNQ=',
@@ -103,6 +106,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
   //      ],
   //    ],
   //  ];
+  // phpcs:enable
 
   // Create changes.
   \Civi\Api4\ShareChange::create(FALSE)

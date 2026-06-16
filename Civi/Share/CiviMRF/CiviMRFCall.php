@@ -137,6 +137,7 @@ class CiviMRFCall extends AbstractCall {
     $this->reply_date = new \DateTime();
 
     $this->factory->update($this);
+    // phpcs:ignore
     // TODO: Revisit after POC phase.
     //    $this->checkAndTriggerFailure();
     //    $this->checkAndTriggerDone();
@@ -167,6 +168,7 @@ class CiviMRFCall extends AbstractCall {
     $this->reply_date = new \DateTime();
     $this->status = $newstatus;
     $this->factory->update($this);
+    // phpcs:ignore
     // TODO: Revisit after POC phase.
     //    $this->checkAndTriggerFailure();
     //    $this->checkAndTriggerDone();

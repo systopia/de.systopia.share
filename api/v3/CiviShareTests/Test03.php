@@ -181,6 +181,7 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
       ->execute()
       ->first();
 
+    // phpcs:disable
     // create a peering
     // $local_contact_id = $peering->getLocalContactId(
     //   $remote_contact_id,
@@ -189,6 +190,7 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
     // );
     //
     // $peering->peer($remote_contact['id'], $local_contact['id'], $remote_node['id'], $local_node['id']);
+    // phpcs:enable
 
     // basically: process the data by applying to the given local contact:
     \civicrm_api3('Contact', 'create', $change_data);

@@ -98,7 +98,6 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface {
 
     // add store with contact
     $search_result = \civicrm_api3('Contact', 'findbyidentity', [
-      // 'contact_id' => $local_contact_id,
       'identifier' => $remote_identifier,
       'identifier_type' => CIVISHARE_IDTRACKER_TYPE,
     ]);

@@ -37,12 +37,13 @@ class CiviShareTest extends TestCase implements HeadlessInterface, HookInterface
    * @throws \CRM_Extension_Exception_ParseException
    */
   public function setUpHeadless() {
-
-    // drop tables - @todo remove
-    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node");
-    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node_peering");
-    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
-    //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_handler");
+//    phpcs:disable
+//    // drop tables - @todo remove
+//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node");
+//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node_peering");
+//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
+//    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_handler");
+// phpcs:enable
 
     return \Civi\Test::headless()
       ->installMe(__DIR__)

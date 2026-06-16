@@ -19,6 +19,7 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
    *
    * @return void
    */
+// phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   public function process_change($processing_event, $event_type, $dispatcher) {
     // nothing to do here
     if ($processing_event->isProcessed()) {

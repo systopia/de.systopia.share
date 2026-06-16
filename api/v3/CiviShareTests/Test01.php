@@ -41,9 +41,11 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->addValue('short_name', 'test_01_local')
     ->addValue('is_local', TRUE)
     ->addValue('description', 'automated test node')
+  // phpcs:disable
   //    ->addValue('rest_url', 'TODO')
   //    ->addValue('api_key', 'TODO')
   //    ->addValue('auth_key', 'TODO')
+  // phpcs:enable
     ->addValue('is_enabled', TRUE)
     ->addValue('receive_identifiers', CRM_Utils_Array::implodePadded([]))
     ->addValue('send_identifiers', CRM_Utils_Array::implodePadded([]))
