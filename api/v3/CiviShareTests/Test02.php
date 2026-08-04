@@ -15,7 +15,13 @@
 
 declare(strict_types = 1);
 
+use Civi\Api4\Contact;
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
+use Civi\Share\Change;
 use Civi\Share\ChangeProcessingEvent;
+use Civi\Share\IdentityTrackerContactPeering;
 use Civi\Share\Message;
 
 /**
@@ -36,7 +42,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   CRM_Share_TestTools::clearCiviShareConfig();
 
   // generate a local node
-  $local_node = \Civi\Api4\ShareNode::create(FALSE)
+  $local_node = ShareNode::create(FALSE)
     ->addValue('name', 'Local Node 1')
     ->addValue('short_name', 'LOCAL1')
     ->addValue('is_local', TRUE)
@@ -48,7 +54,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
     ->first();
 
   // create a "remote" node
-  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
+  $remote_node = ShareNode::create(FALSE)
     ->addValue('name', 'test_03_local')
     ->addValue('short_name', 'FAKE-REMOTE')
     ->addValue('is_local', FALSE)
@@ -58,7 +64,7 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
 
   // create a peering (cheekily on two local nodes)
   $shared_key = base64_encode(random_bytes(32));
-  $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
+  $node_peering = ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
     ->addValue('is_enabled', TRUE)
@@ -67,15 +73,15 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
 
   // create and pair two contacts
   // @todo migrate peering to service
-  $peering = new \Civi\Share\IdentityTrackerContactPeering();
-  $local_contact = \Civi\Api4\Contact::create(TRUE)
+  $peering = new IdentityTrackerContactPeering();
+  $local_contact = Contact::create(TRUE)
     ->addValue('first_name', base64_encode(random_bytes(8)))
     ->addValue('last_name', base64_encode(random_bytes(8)))
     ->addValue('contact_type', 'Individual')
     ->execute()
     ->first();
 
-  $remote_contact = \Civi\Api4\Contact::create(TRUE)
+  $remote_contact = Contact::create(TRUE)
     ->addValue('first_name', base64_encode(random_bytes(8)))
     ->addValue('last_name', base64_encode(random_bytes(8)))
     ->addValue('contact_type', 'Individual')
@@ -98,10 +104,10 @@ function civicrm_api3_civi_share_tests_test02(&$params) {
   ];
 
   // register a 'civishare.change.contact.base' change
-  $change = \Civi\Api4\ShareChange::create(TRUE)
+  $change = ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', NULL)
-    ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
+    ->addValue('status', Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('status', 'PENDING')
     ->addValue('data_before', json_encode($change_data_before, TRUE))
@@ -165,7 +171,7 @@ function civicrm_civi_share_test_register_test2_hander($processing_event, $event
 
     // use peering service to find local_contact_id
     // @todo migrate peering to service
-    $peering = new \Civi\Share\IdentityTrackerContactPeering();
+    $peering = new IdentityTrackerContactPeering();
     $change = $processing_event->getChangeData();
     $change_data = $processing_event->getChangeDataAfter();
     $local_contact_id = $peering->getLocalContactId(

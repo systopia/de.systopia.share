@@ -19,6 +19,9 @@ declare(strict_types = 1);
 require_once 'share.civix.php';
 // phpcs:enable
 
+use Civi\Share\ChangeProcessor\AbstractChangeProcessor;
+use Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor;
+use Civi\Share\Permissions;
 use CRM_Share_ExtensionUtil as E;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -57,13 +60,13 @@ function share_civicrm_searchTasks($objectType, &$tasks) {
 function share_civicrm_config(&$config) {
   _share_composer_autoload();
   _share_civix_civicrm_config($config);
-  $defaultContactBaseChangeProcessor = new \Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor();
+  $defaultContactBaseChangeProcessor = new DefaultContactBaseChangeProcessor();
   $defaultContactBaseChangeProcessor
-    ->register([\Civi\Share\ChangeProcessor\AbstractChangeProcessor::CHANGE_TYPE_CONTACT_BASE]);
+    ->register([AbstractChangeProcessor::CHANGE_TYPE_CONTACT_BASE]);
 }
 
 /**
- * Implements hook_civicrm_container()
+ * Implements hook_civicrm_container().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_container/
  */
@@ -90,5 +93,5 @@ function share_civicrm_enable() {
 }
 
 function share_civicrm_permission(array &$permissions): void {
-  $permissions += \Civi\Share\Permissions::getPermissions();
+  $permissions += Permissions::getPermissions();
 }

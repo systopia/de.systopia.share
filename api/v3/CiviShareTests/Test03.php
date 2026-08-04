@@ -15,6 +15,12 @@
 
 declare(strict_types = 1);
 
+use Civi\Api4\Contact;
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
+use Civi\Share\Change;
+use Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor;
 use Civi\Share\Message;
 
 /**
@@ -36,7 +42,7 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
   CRM_Share_TestTools::clearCiviShareConfig();
 
   // generate a local node
-  $local_node = \Civi\Api4\ShareNode::create(FALSE)
+  $local_node = ShareNode::create(FALSE)
     ->addValue('name', 'Local Node 1')
     ->addValue('short_name', 'LOCAL1')
     ->addValue('is_local', TRUE)
@@ -48,7 +54,7 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
     ->first();
 
   // create a "remote" node
-  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
+  $remote_node = ShareNode::create(FALSE)
     ->addValue('name', 'test_03_local')
     ->addValue('short_name', 'FAKE-REMOTE')
     ->addValue('is_local', FALSE)
@@ -58,7 +64,7 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
 
   // create a node peering (cheekily on two local nodes)
   $shared_key = base64_encode(random_bytes(32));
-  $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
+  $node_peering = ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
     ->addValue('is_enabled', TRUE)
@@ -79,10 +85,10 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
   $virtual_contact_after['last_name'] = base64_encode(random_bytes(8));
 
   // register a 'civishare.change.contact.base' change
-  $change = \Civi\Api4\ShareChange::create(TRUE)
+  $change = ShareChange::create(TRUE)
     ->addValue('change_id', 'TEST-' . $virtual_contact_after['last_name'])
     ->addValue('change_group_id', NULL)
-    ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
+    ->addValue('status', Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('data_before', $virtual_contact_before)
     ->addValue('data_after', $virtual_contact_after)
@@ -98,7 +104,7 @@ function civicrm_api3_civi_share_tests_test03(&$params) {
   $change_id = $change->first()['id'];
 
   // manually register a 'civishare.change.contact.base' change processor
-  $change_processor = new \Civi\Share\ChangeProcessor\DefaultContactBaseChangeProcessor();
+  $change_processor = new DefaultContactBaseChangeProcessor();
   $change_processor->register(['civishare.change.contact.base']);
 
   // create and send a change message
@@ -174,7 +180,7 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
 
     $change_data = $processing_event->getChangeDataAfter();
 
-    $remote_contact = \Civi\Api4\Contact::create(TRUE)
+    $remote_contact = Contact::create(TRUE)
       ->addValue('first_name', base64_encode(random_bytes(8)))
       ->addValue('last_name', base64_encode(random_bytes(8)))
       ->addValue('contact_type', 'Individual')

@@ -15,8 +15,12 @@
 
 declare(strict_types = 1);
 
-use Civi\Share\Message;
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
+use Civi\Share\Change;
 use Civi\Share\ChangeProcessingEvent;
+use Civi\Share\Message;
 
 /**
  * Test01 for CiviShare
@@ -36,7 +40,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
   CRM_Share_TestTools::clearCiviShareConfig();
 
   // generate a local node
-  $local_node = \Civi\Api4\ShareNode::create(FALSE)
+  $local_node = ShareNode::create(FALSE)
     ->addValue('name', 'Local Node 1')
     ->addValue('short_name', 'test_01_local')
     ->addValue('is_local', TRUE)
@@ -51,7 +55,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->first();
 
   // create a "remote" node
-  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
+  $remote_node = ShareNode::create(FALSE)
     ->addValue('name', 'test_03_local')
     ->addValue('short_name', 'Fake "Remote" Node')
     ->addValue('is_local', FALSE)
@@ -61,7 +65,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
 
   // create a peering (cheekily on two local nodes)
   $shared_key = base64_encode(random_bytes(32));
-  $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
+  $node_peering = ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
     ->addValue('is_enabled', TRUE)
@@ -69,10 +73,10 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->execute();
 
   // create test change
-  $change = \Civi\Api4\ShareChange::create(TRUE)
+  $change = ShareChange::create(TRUE)
     ->addValue('change_id', 'TODO')
     ->addValue('change_group_id', NULL)
-    ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
+    ->addValue('status', Change::STATUS_LOCAL)
     ->addValue('change_type', 'civishare.change.test')
     ->addValue('status', 'PENDING')
     ->addValue('local_contact_id', \CRM_Core_Session::getLoggedInContactID())

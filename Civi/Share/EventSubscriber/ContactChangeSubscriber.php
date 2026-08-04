@@ -7,8 +7,10 @@ namespace Civi\Share\EventSubscriber;
 use Civi\Api4\Contact;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
+use Civi\Api4\Utils\CoreUtil;
 use Civi\Core\Event\GenericHookEvent;
 use Civi\Core\Service\AutoSubscriber;
+use Civi\Share\Change;
 use Civi\Share\Utils;
 
 class ContactChangeSubscriber extends AutoSubscriber {
@@ -32,7 +34,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
      */
     [$op, $objectName, $id, $params] = $event->getHookValues();
     // TODO: Handle other operations.
-    if ('edit' === $op && \Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
+    if ('edit' === $op && CoreUtil::isContact($event->entity)) {
       // TODO: This does not include "custom_" fields FK entities (like "email") submitted in $params - and is generally
       //       not comparing compatible data structures. Which keys can $params contain in the first place?
       $fields = Contact::getFields(FALSE)
@@ -62,7 +64,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
      */
     [$op, $objectName, $objectId, $objectRef] = $event->getHookValues();
     // TODO: Handle other operations.
-    if (\Civi\Api4\Utils\CoreUtil::isContact($event->entity)) {
+    if (CoreUtil::isContact($event->entity)) {
       switch ($op) {
         case 'edit':
           $dataBefore = \Civi::$statics[__CLASS__]['changes'][$objectId]['before'] ?? [];
@@ -114,7 +116,7 @@ class ContactChangeSubscriber extends AutoSubscriber {
             $change = ShareChange::create()
               ->addValue('change_type', 'civishare.change.contact.base')
               ->addValue('change_date', (new \DateTime())->format(Utils::CIVICRM_DATE_FORMAT))
-              ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
+              ->addValue('status', Change::STATUS_LOCAL)
               ->addValue('local_contact_id', $objectId)
               ->addValue('source_node_id', $localNodeId)
               ->addValue('data_before', $dataBefore)

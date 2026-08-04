@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace Civi\Share\ChangeProcessor;
 
+use Civi\Api4\Membership;
 use Civi\Share\Change;
+use Civi\Share\IdentityTrackerContactPeering;
 
 /**
  *  This simple processor will process membership data, i.e. update an existing
@@ -41,7 +43,7 @@ class SimpleMembershipChangeProcessor extends AbstractChangeProcessor {
 
     // use peering service to find local_contact_id
     // @todo migrate peering to service
-    $peering = new \Civi\Share\IdentityTrackerContactPeering();
+    $peering = new IdentityTrackerContactPeering();
     $change = $processing_event->getChangeData();
     $changeObject = $processing_event->getChange();
     $change_data = $processing_event->getChangeDataAfter();
@@ -57,7 +59,7 @@ class SimpleMembershipChangeProcessor extends AbstractChangeProcessor {
     }
 
     // find membership(s)
-    $memberships = \Civi\Api4\Membership::get(TRUE)
+    $memberships = Membership::get(TRUE)
       ->addJoin('MembershipStatus AS membership_status', 'LEFT')
       ->addWhere('membership_status.is_active', '=', TRUE)
       ->addWhere('contact_id', '=', $local_contact_id)

@@ -2,12 +2,15 @@
 
 declare(strict_types = 1);
 
-use PHPUnit\Framework\TestCase;
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
+use Civi\Test;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
-
 use CRM_Share_ExtensionUtil as E;
+use PHPUnit\Framework\TestCase;
 
 /**
  * FIXME - Add test description.
@@ -45,7 +48,7 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node_peering");
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_node");
 
-    $result = \Civi\Test::headless()
+    $result = Test::headless()
       ->installMe(__DIR__)
       ->apply();
     return $result;
@@ -54,8 +57,6 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
   public function setUp(): void {
     // clean tables
     parent::setUp();
-    // todo: remove?
-    require_once '/var/www/civicrm/awo/sites/default/civicrm.settings.php';
     \CRM_Core_DAO_AllCoreTables::flush();
 
     parent::setUp();
@@ -63,12 +64,14 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
 
   /**
    * This will manually set up a peering ON THE SAME SYSTEM
+   *
+   * @coversNothing
    */
   public function testBasicSetup():void {
 
     \CRM_Core_DAO_AllCoreTables::flush();
     // create a local node
-    $local_node = \Civi\Api4\ShareNode::create(FALSE)
+    $local_node = ShareNode::create(FALSE)
       ->addValue('name', 'Local Node 1')
       ->addValue('short_name', 'basic_01')
       ->addValue('is_local', TRUE)
@@ -83,7 +86,7 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
       ->first();
 
     // create a "remote" node
-    $remote_node = \Civi\Api4\ShareNode::create(FALSE)
+    $remote_node = ShareNode::create(FALSE)
       ->addValue('name', 'basic_02_remote')
       ->addValue('short_name', 'Basic "Remote" Node')
       ->addValue('is_local', FALSE)
@@ -92,7 +95,7 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
 
     // create a peering (cheekily)
     $shared_key = base64_encode(random_bytes(64));
-    $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
+    $node_peering = ShareNodePeering::create(TRUE)
       ->addValue('local_node', $local_node['id'])
       ->addValue('remote_node', $remote_node['id'])
       ->addValue('is_enabled', TRUE)
@@ -100,11 +103,11 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
       ->execute();
 
     // create a change
-    $node_peering = \Civi\Api4\ShareChange::create(TRUE)
-      ->addValue('local_node', $local_node['id'])
-      ->addValue('remote_node', $remote_node['id'])
-      ->addValue('is_enabled', TRUE)
-      ->addValue('shared_secret', $shared_key)
+    $change = ShareChange::create(TRUE)
+      ->addValue('change_type', 'civishare.change.contact.base')
+      ->addValue('source_node_id', $remote_node['id'])
+      ->addValue('change_date', date('Y-m-d H:i:s'))
+      ->addValue('status', 'LOCAL')
       ->execute();
 
     $this->assertTrue(TRUE);
@@ -113,6 +116,8 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
 
   /**
    * This will manually set up a peering ON THE SAME SYSTEM
+   *
+   * @coversNothing
    */
   public function testPeeringSetup():void {
     // create a local node

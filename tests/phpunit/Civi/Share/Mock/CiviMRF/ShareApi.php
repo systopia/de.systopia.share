@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace tests\phpunit\Civi\Share\Mock\CiviMRF;
 
 use Civi\Api4\ShareNodePeering;
+use Civi\Share\CiviMRF\ShareApi as BaseShareApi;
 use Civi\Share\Message;
 
 /**
@@ -13,9 +14,9 @@ use Civi\Share\Message;
  * Mock service for the CiviShare CiviMRF API which uses a local-to-local shortcut if the node peering does not include
  * remote information.
  */
-class ShareApi extends \Civi\Share\CiviMRF\ShareApi {
+class ShareApi extends BaseShareApi {
 
-  public function sendMessage(string $shareNodePeeringId, Message $message): array {
+  public function sendMessage(int $shareNodePeeringId, Message $message): array {
     $peering = ShareNodePeering::get(FALSE)
       ->addSelect('id', 'remote_node', 'remote_node.*')
       ->addWhere('id', '=', $shareNodePeeringId)
@@ -28,6 +29,8 @@ class ShareApi extends \Civi\Share\CiviMRF\ShareApi {
     else {
       return parent::sendMessage($shareNodePeeringId, $message);
     }
+
+    return [];
   }
 
 }

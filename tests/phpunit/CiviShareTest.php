@@ -2,12 +2,12 @@
 
 declare(strict_types = 1);
 
-use PHPUnit\Framework\TestCase;
+use Civi\Test;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
-
 use CRM_Share_ExtensionUtil as E;
+use PHPUnit\Framework\TestCase;
 
 /**
  * FIXME - Add test description.
@@ -44,14 +44,17 @@ class CiviShareTest extends TestCase implements HeadlessInterface, HookInterface
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_handler");
 
-    return \Civi\Test::headless()
+    return Test::headless()
       ->installMe(__DIR__)
       ->apply();
   }
 
+  /**
+   * @covers \CRM_Share_DAO_ShareNode
+   */
   public function testMe() {
     \CRM_Contribute_BAO_Contribution::fields();
-    $this->assertTrue(CRM_Share_DAO_ShareNode::fields());
+    $this->assertNotEmpty(CRM_Share_DAO_ShareNode::fields());
   }
 
 }

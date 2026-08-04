@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace Civi\Share;
 
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareHandler;
+use Civi\Api4\ShareNode;
 use Civi\Core\Event\GenericHookEvent as Event;
 
 /**
@@ -119,7 +122,7 @@ class ChangeProcessingEvent extends Event {
 
     // load node data if not given
     if (empty($this->change_data)) {
-      $this->change_data = \Civi\Api4\ShareChange::get(TRUE)
+      $this->change_data = ShareChange::get(TRUE)
         ->addWhere('id', '=', $change_id)
         ->setLimit(1)
         ->execute()
@@ -128,7 +131,7 @@ class ChangeProcessingEvent extends Event {
 
     // load node data if not given
     if (empty($this->node_data)) {
-      $this->node_data = \Civi\Api4\ShareNode::get(TRUE)
+      $this->node_data = ShareNode::get(TRUE)
         ->addWhere('id', '=', $node_id)
         ->setLimit(1)
         ->execute()
@@ -137,7 +140,7 @@ class ChangeProcessingEvent extends Event {
 
     // register change handlers as defined in the database (ONCE)
     if (!self::$configured_change_handlers_registered) {
-      $shareHandlers = \Civi\Api4\ShareHandler::get(TRUE)
+      $shareHandlers = ShareHandler::get(TRUE)
         ->addSelect('id', 'name', 'class', 'weight', 'configuration')
         ->addWhere('is_enabled', '=', 1)
         ->addOrderBy('weight', 'ASC')
@@ -225,7 +228,7 @@ class ChangeProcessingEvent extends Event {
 
     // use peering to look up local contact
     // @todo migrate peering to service
-    $peering = new \Civi\Share\IdentityTrackerContactPeering();
+    $peering = new IdentityTrackerContactPeering();
     $local_contact_id = $peering->getLocalContactId($submitted_contact_id, $this->change->getSourceNodeId());
 
     if (empty($local_contact_id)) {

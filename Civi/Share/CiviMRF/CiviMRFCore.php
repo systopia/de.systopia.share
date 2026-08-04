@@ -8,26 +8,28 @@ use Civi\Api4\ShareNode;
 use Civi\Api4\ShareNodePeering;
 use Civi\Core\Service\AutoServiceInterface;
 use Civi\Core\Service\AutoServiceTrait;
+use CMRF\Connection\CurlAuthX;
 use CMRF\Core\Connection;
+use CMRF\Core\Core;
 use CMRF\PersistenceLayer\CallFactory;
 
 /**
  * @service civi.share.civimrf_core
  * @internal
  */
-class CiviMRFCore extends \CMRF\Core\Core implements AutoServiceInterface {
+class CiviMRFCore extends Core implements AutoServiceInterface {
 
   use AutoServiceTrait;
 
   public function __construct() {
     parent::__construct(new CallFactory(
-      ['\Civi\Share\CiviMRF\CiviMRFCall', 'createNew'],
-      ['\Civi\Share\CiviMRF\CiviMRFCall', 'createWithRecord']
+      [CiviMRFCall::class, 'createNew'],
+      [CiviMRFCall::class, 'createWithRecord']
     ));
   }
 
   protected function getConnection($connector_id): Connection {
-    return new \CMRF\Connection\CurlAuthX($this, $connector_id);
+    return new CurlAuthX($this, $connector_id);
   }
 
   public function getConnectionProfiles() {

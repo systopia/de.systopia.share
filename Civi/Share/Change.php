@@ -186,6 +186,7 @@ class Change {
   public function getId(): ?int {
     return $this->id;
   }
+
   public function getLocalContactId(): ?int {
     return $this->localContactId;
   }
@@ -231,12 +232,12 @@ class Change {
       throw new \RuntimeException('CiviShare: cannot process unpersisted changes.');
     }
     // TODO: Replace $change with instance of $this in ChangeProcessingEvent.
-    $change = \Civi\Api4\ShareChange::get(TRUE)
+    $change = ShareChange::get(TRUE)
       ->addWhere('id', '=', $this->id)
       ->setLimit(1)
       ->execute()
       ->first();
-    $changeProcessingEvent = new \Civi\Share\ChangeProcessingEvent($this->id, $localNodeId, $change);
+    $changeProcessingEvent = new ChangeProcessingEvent($this->id, $localNodeId, $change);
     try {
       \Civi::dispatcher()
         ->dispatch(ChangeProcessingEvent::NAME, $changeProcessingEvent);
