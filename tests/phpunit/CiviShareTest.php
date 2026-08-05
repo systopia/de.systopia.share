@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
+use Civi\Core\HookInterface;
 use Civi\Test;
 use Civi\Test\HeadlessInterface;
-use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
 use CRM_Share_ExtensionUtil as E;
 use PHPUnit\Framework\TestCase;
