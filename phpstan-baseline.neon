@@ -1,0 +1,1789 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method CRM_Share_DAO_ShareNode\:\:getSupportedFields\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Class HTML_QuickForm_element referenced with incorrect case\: HTML_QuickForm_Element\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:cancelAction\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:getDefaultContext\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:getDefaultEntity\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:getRedirectUrl\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:getRenderableElementNames\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:preProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNode\:\:setDefaultValues\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Parameter \#3 \$label of method CRM_Core_Form\:\:add\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Share/Form/ShareNode.php
+
+		-
+			message: '#^Call to an undefined static method CRM_Share_DAO_ShareNodePeering\:\:buildOptions\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Call to an undefined static method CRM_Share_DAO_ShareNodePeering\:\:getSupportedFields\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Class HTML_QuickForm_element referenced with incorrect case\: HTML_QuickForm_Element\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:cancelAction\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:getDefaultContext\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:getDefaultEntity\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:getRedirectUrl\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:getRenderableElementNames\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:preProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Method CRM_Share_Form_ShareNodePeering\:\:setDefaultValues\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Parameter \#3 \$label of method CRM_Core_Form\:\:add\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: CRM/Share/Form/ShareNodePeering.php
+
+		-
+			message: '#^Call to method activePeer\(\) on an unknown class CRM_Share_Peering\.$#'
+			identifier: class.notFound
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Call to static method getNodeByID\(\) on an unknown class CRM_Share_Node\.$#'
+			identifier: class.notFound
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Call to static method getNodeList\(\) on an unknown class CRM_Share_Node\.$#'
+			identifier: class.notFound
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 5
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Instantiated class CRM_Share_Peering not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Method CRM_Share_Form_Task_PeerTask\:\:buildQuickForm\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Method CRM_Share_Form_Task_PeerTask\:\:postProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Method CRM_Share_Form_Task_PeerTask\:\:preProcess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/Form/Task/PeerTask.php
+
+		-
+			message: '#^Method CRM_Share_TestTools\:\:clearCiviShareConfig\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: CRM/Share/TestTools.php
+
+		-
+			message: '#^Method Civi\\Api4\\ShareChange\:\:permissions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Api4/ShareChange.php
+
+		-
+			message: '#^Method Civi\\Api4\\ShareChangeMessage\:\:permissions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Api4/ShareChangeMessage.php
+
+		-
+			message: '#^Method Civi\\Api4\\ShareNode\:\:permissions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Api4/ShareNode.php
+
+		-
+			message: '#^Method Civi\\Api4\\ShareNodePeering\:\:permissions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Api4/ShareNodePeering.php
+
+		-
+			message: '#^Parameter \#1 \$localNodeId of method Civi\\Share\\Change\:\:process\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChange/ProcessAction.php
+
+		-
+			message: '#^Parameter \#1 \$shareChange of static method Civi\\Share\\Change\:\:createFromApiResultArray\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChange/ProcessAction.php
+
+		-
+			message: '#^Civi\\Share\\Api4\\Action\\ShareChangeMessage\\GetFieldsAction\:\:__construct\(\) does not call parent constructor from Civi\\Api4\\Generic\\BasicGetAction\.$#'
+			identifier: constructor.missingParentCall
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/GetFieldsAction.php
+
+		-
+			message: '#^Method Civi\\Share\\Api4\\Action\\ShareChangeMessage\\GetFieldsAction\:\:__construct\(\) with return type void returns null but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/GetFieldsAction.php
+
+		-
+			message: '#^Result of method Civi\\Api4\\Generic\\BasicGetAction\:\:__construct\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/GetFieldsAction.php
+
+		-
+			message: '#^Class Civi\\Share\\Api4\\Action\\ShareChangeMessage\\ReceiveAction has PHPDoc tag @method for method getMessage\(\) return type with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/ReceiveAction.php
+
+		-
+			message: '#^Class Civi\\Share\\Api4\\Action\\ShareChangeMessage\\ReceiveAction has PHPDoc tag @method for method setMessage\(\) parameter \#1 \$message with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/ReceiveAction.php
+
+		-
+			message: '#^Method Civi\\Share\\Api4\\Action\\ShareChangeMessage\\ReceiveAction\:\:_run\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/ReceiveAction.php
+
+		-
+			message: '#^Property Civi\\Share\\Api4\\Action\\ShareChangeMessage\\ReceiveAction\:\:\$message type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/ReceiveAction.php
+
+		-
+			message: '#^Parameter \#1 \$senderNodeId of method Civi\\Share\\Message\:\:setSenderNodeId\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/SendAction.php
+
+		-
+			message: '#^Parameter \#1 \$sourceNodeId of static method Civi\\Share\\Message\:\:generateForSourceNode\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Api4/Action/ShareChangeMessage/SendAction.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^In method "Civi\\Share\\Change\:\:process", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:__construct\(\) has parameter \$attributeChanges with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:createFromApiResultArray\(\) has parameter \$shareChange with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:createFromSerialized\(\) has parameter \$serializedChange with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:getDataAfter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:getDataBefore\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:parseAttributeChanges\(\) has parameter \$dataAfter with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:parseAttributeChanges\(\) has parameter \$dataBefore with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:parseAttributeChanges\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Method Civi\\Share\\Change\:\:serialize\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Parameter \#5 \$changedDate of class Civi\\Share\\Change constructor expects DateTime\|null, DateTime\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Parameter \#6 \$receivedDate of class Civi\\Share\\Change constructor expects DateTime\|null, DateTimeInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Parameter \#6 \$receivedDate of class Civi\\Share\\Change constructor expects DateTime\|null, DateTime\|false\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Property Civi\\Share\\Change\:\:\$attributeChanges type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Property Civi\\Share\\Change\:\:\$id \(int\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Property Civi\\Share\\Change\:\:\$localContactId \(int\) does not accept string\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Civi/Share/Change.php
+
+		-
+			message: '#^Cannot access offset ''class'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Cannot access offset ''weight'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Casting to int something that''s already int\<min, \-1\>\|int\<1, max\>\.$#'
+			identifier: cast.useless
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:__construct\(\) has parameter \$change_data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:__construct\(\) has parameter \$change_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:__construct\(\) has parameter \$node_data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:getChangeData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:getChangeData\(\) should return array but returns array\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:getChangeDataAfter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:getChangeDataBefore\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:getJsonData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:getJsonData\(\) should return array but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) has parameter \$change_type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) with return type void returns bool but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:setProcessed\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessingEvent\:\:setProcessed\(\) has parameter \$is_processed with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Offset ''change_type'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Offset ''data_after'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Offset ''data_before'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Parameter \#2 \$listener of method Civi\\Core\\CiviEventDispatcherInterface\:\:addListener\(\) expects callable\(\)\: mixed, array\{object, ''process_change''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Parameter \#3 \$priority of method Civi\\Core\\CiviEventDispatcherInterface\:\:addListener\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Property Civi\\Share\\ChangeProcessingEvent\:\:\$change_data type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Property Civi\\Share\\ChangeProcessingEvent\:\:\$node_data type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Undefined variable\: \$new_change_status$#'
+			identifier: variable.undefined
+			count: 2
+			path: Civi/Share/ChangeProcessingEvent.php
+
+		-
+			message: '#^Access to an undefined property Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:\$event_types\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^In method "Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:process_change_event", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:buildSearchParameters\(\) has parameter \$attribute_set with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:buildSearchParameters\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:buildSearchParameters\(\) has parameter \$fallbackData with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:buildSearchParameters\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:log\(\) has parameter \$change_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:log\(\) has parameter \$message with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:log\(\) has parameter \$node_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:process_change\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:process_change\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:process_change_event\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:process_change_event\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:register\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:register\(\) has parameter \$change_types with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/ChangeProcessor/AbstractChangeProcessor.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Cannot access offset ''count'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Cannot access offset ''id'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Cannot access offset ''was_created'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^In method "Civi\\Share\\ChangeProcessor\\DefaultContactBaseChangeProcessor\:\:process_change", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 3
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\DefaultContactBaseChangeProcessor\:\:process_change\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, null given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Parameter \#1 \$attribute_set of method Civi\\Share\\ChangeProcessor\\AbstractChangeProcessor\:\:buildSearchParameters\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Parameter \#1 \$entity of function civicrm_api3 expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Parameter \#2 \$action of function civicrm_api3 expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Result of method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Variable \$create_action in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Variable \$create_new_contact in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Variable \$update_action in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Variable \$update_entity in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Variable \$xcmProfile might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: Civi/Share/ChangeProcessor/DefaultContactBaseChangeProcessor.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^In method "Civi\\Share\\ChangeProcessor\\SimpleMembershipChangeProcessor\:\:process_change", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 2
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Method Civi\\Share\\ChangeProcessor\\SimpleMembershipChangeProcessor\:\:process_change\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, int\|null given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, null given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Parameter \#1 \$remote_contact_id of method Civi\\Share\\IdentityTrackerContactPeering\:\:getLocalContactId\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Part \$membership\[''id''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 2
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Result of method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: Civi/Share/ChangeProcessor/SimpleMembershipChangeProcessor.php
+
+		-
+			message: '#^Class Civi\\Share\\CiviMRF\\CiviMRFCall has an uninitialized property \$request\. Give it default value or assign it in the constructor\.$#'
+			identifier: property.uninitialized
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Class Civi\\Share\\CiviMRF\\CiviMRFCall has an uninitialized property \$requestAction\. Give it default value or assign it in the constructor\.$#'
+			identifier: property.uninitialized
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Class Civi\\Share\\CiviMRF\\CiviMRFCall has an uninitialized property \$requestEntity\. Give it default value or assign it in the constructor\.$#'
+			identifier: property.uninitialized
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Identical\: Insane comparison between null and null\.$#'
+			identifier: voku.Identical
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:create\(\) has parameter \$callbacks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:create\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:create\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createNew\(\) has parameter \$callbacks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createNew\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createNew\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createWithRecord\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createWithRecord\(\) has parameter \$connector_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createWithRecord\(\) has parameter \$core with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createWithRecord\(\) has parameter \$factory with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:createWithRecord\(\) has parameter \$record with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:getMetadata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:getOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:getParameters\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:getReply\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:getRequest\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:setReply\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:triggerCallback\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Parameter \#1 \$data \(array\) of method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:setReply\(\) should be contravariant with parameter \$data \(mixed\) of method CMRF\\Core\\Call\:\:setReply\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Parameter \#1 \$status \(string\) of method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:setStatus\(\) should be contravariant with parameter \$status \(mixed\) of method CMRF\\Core\\Call\:\:setStatus\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Parameter \#2 \$error_message \(string\) of method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:setStatus\(\) should be contravariant with parameter \$error_message \(mixed\) of method CMRF\\Core\\Call\:\:setStatus\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Parameter \#2 \$newstatus \(string\) of method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:setReply\(\) should be contravariant with parameter \$newstatus \(mixed\) of method CMRF\\Core\\Call\:\:setReply\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Parameter \#3 \$error_code \(string\|null\) of method Civi\\Share\\CiviMRF\\CiviMRFCall\:\:setStatus\(\) should be contravariant with parameter \$error_code \(mixed\) of method CMRF\\Core\\Call\:\:setStatus\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Property CMRF\\Core\\AbstractCall\:\:\$callbacks \(array\) does not accept array\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Property Civi\\Share\\CiviMRF\\CiviMRFCall\:\:\$metadata type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Property Civi\\Share\\CiviMRF\\CiviMRFCall\:\:\$reply type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Property Civi\\Share\\CiviMRF\\CiviMRFCall\:\:\$request type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between null and null will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCall.php
+
+		-
+			message: '#^Class Civi\\Share\\CiviMRF\\CiviMRFClient has an uninitialized property \$connectorId\. Give it default value or assign it in the constructor\.$#'
+			identifier: property.uninitialized
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFClient.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFClient\:\:executeV3\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFClient.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFClient\:\:executeV3\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFClient.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFClient\:\:executeV3\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFClient.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFClient\:\:executeV4\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFClient.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFClient\:\:executeV4\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFClient.php
+
+		-
+			message: '#^Cannot access offset ''api_key'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Cannot access offset ''auth_key'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Cannot access offset ''rest_url'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:getConnectionProfiles\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:getDefaultProfile\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:getRegisteredConnectors\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:getSettings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:registerConnector\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:registerConnector\(\) has parameter \$connector_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:registerConnector\(\) has parameter \$profile with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:storeRegisteredConnectors\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:storeRegisteredConnectors\(\) has parameter \$connectors with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:storeSettings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\CiviMRF\\CiviMRFCore\:\:storeSettings\(\) has parameter \$settings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Undefined variable\: \$shareNodeIds$#'
+			identifier: variable.undefined
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Undefined variable\: \$shareNodePeeringIds$#'
+			identifier: variable.undefined
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Variable \$shareNodeIds in isset\(\) is never defined\.$#'
+			identifier: isset.variable
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Variable \$shareNodePeeringIds in isset\(\) is never defined\.$#'
+			identifier: isset.variable
+			count: 1
+			path: Civi/Share/CiviMRF/CiviMRFCore.php
+
+		-
+			message: '#^Method Civi\\Share\\ContactPeeringInterface\:\:getLocalContactId\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ContactPeeringInterface.php
+
+		-
+			message: '#^Method Civi\\Share\\ContactPeeringInterface\:\:getOrCreateLocalContactId\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ContactPeeringInterface.php
+
+		-
+			message: '#^Method Civi\\Share\\ContactPeeringInterface\:\:peer\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/ContactPeeringInterface.php
+
+		-
+			message: '#^Method Civi\\Share\\Event\\MessageGenerateEvent\:\:getEligibleTargetNodePeeringIds\(\) should return list\<int\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: Civi/Share/Event/MessageGenerateEvent.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Civi/Share/EventSubscriber/ContactChangeSubscriber.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$params has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/EventSubscriber/ContactChangeSubscriber.php
+
+		-
+			message: '#^Parameter \#1 \.\.\.\$fieldNames of method Civi\\Api4\\Generic\\AbstractGetAction\:\:addSelect\(\) expects string, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/EventSubscriber/ContactChangeSubscriber.php
+
+		-
+			message: '#^Do not throw the \\Exception base class\.$#'
+			count: 1
+			path: Civi/Share/IdentityTrackerContactPeering.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: Civi/Share/IdentityTrackerContactPeering.php
+
+		-
+			message: '#^Method Civi\\Share\\IdentityTrackerContactPeering\:\:getOrCreateLocalContactId\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/IdentityTrackerContactPeering.php
+
+		-
+			message: '#^Method Civi\\Share\\IdentityTrackerContactPeering\:\:peer\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Civi/Share/IdentityTrackerContactPeering.php
+
+		-
+			message: '#^Offset ''short_name'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: Civi/Share/IdentityTrackerContactPeering.php
+
+		-
+			message: '#^Call to function array_filter\(\) requires parameter \#2 to be passed to avoid loose comparison semantics\.$#'
+			identifier: arrayFilter.strict
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Dead catch \- RuntimeException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 2
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Do not throw the \\Exception base class\.$#'
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^In method "Civi\\Share\\Message\:\:processChanges", caught "RuntimeException" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:applyChange\(\) has parameter \$change with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:createFromSerializedMessage\(\) has parameter \$serializedMessage with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:getChangeIds\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:getPersistedChangeIds\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:sendToAll\(\) has parameter \$localNodeId with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:sendToAll\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:serialize\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Message\:\:serializeChanges\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Parameter \#1 \$change of method Civi\\Share\\Message\:\:applyChange\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Parameter \#1 \$change_id of method Civi\\Share\\Message\:\:setChangeStatus\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Parameter \#1 \$serializedChange of static method Civi\\Share\\Change\:\:createFromSerialized\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Parameter \#1 \$shareChange of static method Civi\\Share\\Change\:\:createFromApiResultArray\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Parameter \#3 \$change_data of class Civi\\Share\\ChangeProcessingEvent constructor expects array\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Part \$change\[''id''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Property Civi\\Share\\Message\:\:\$targetNodePeeringIds \(list\<int\>\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Thrown exceptions in a catch block must bundle the previous exception \(see throw statement line 173\)\.$#'
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: Civi/Share/Message.php
+
+		-
+			message: '#^Method Civi\\Share\\Permissions\:\:getPermissions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Civi/Share/Permissions.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: api/v3/CiviShareDemos/Demo01.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_demos_demo01\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: api/v3/CiviShareDemos/Demo01.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_demos_demo01\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareDemos/Demo01.php
+
+		-
+			message: '#^Function civicrm_civi_share_test_register_test_hander\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareDemos/Demo01.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: api/v3/CiviShareDemos/Demo01.php
+
+		-
+			message: '#^Result of method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: api/v3/CiviShareDemos/Demo01.php
+
+		-
+			message: '#^Do not throw the \\Exception base class\.$#'
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test01\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test01\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Function civicrm_civi_share_test_register_test_hander\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 5
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Parameter \#1 \$shareApi of method Civi\\Share\\Message\:\:setShareApi\(\) expects Civi\\Share\\CiviMRF\\ShareApi, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Result of method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: api/v3/CiviShareTests/Test01.php
+
+		-
+			message: '#^Do not throw the \\Exception base class\.$#'
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test02\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test02\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Function civicrm_civi_share_test_register_test2_hander\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Offset ''first_name'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 12
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Offset ''last_name'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Parameter \#1 \$remote_contact_id of method Civi\\Share\\IdentityTrackerContactPeering\:\:getLocalContactId\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Parameter \#1 \$shareApi of method Civi\\Share\\Message\:\:setShareApi\(\) expects Civi\\Share\\CiviMRF\\ShareApi, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Parameter \#2 \$flags of function json_encode expects int, true given\.$#'
+			identifier: argument.type
+			count: 2
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Result of method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: api/v3/CiviShareTests/Test02.php
+
+		-
+			message: '#^Cannot access offset ''contact_type'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Cannot access offset ''id'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Cannot access offset ''values'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Do not throw the \\Exception base class\.$#'
+			count: 2
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test03\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test03\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Function civicrm_civi_share_test_register_test3_hander\(\) has parameter \$dispatcher with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 5
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, null given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Parameter \#1 \$shareApi of method Civi\\Share\\Message\:\:setShareApi\(\) expects Civi\\Share\\CiviMRF\\ShareApi, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Result of method Civi\\Share\\ChangeProcessingEvent\:\:hasChangeType\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: api/v3/CiviShareTests/Test03.php
+
+		-
+			message: '#^Cannot access offset ''membership_type_id'' on array\|int\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Do not throw the \\Exception base class\.$#'
+			count: 3
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test04\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test04\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Offset ''first_name'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 16
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Offset ''last_name'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Offset ''membership_type_id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Parameter \#1 \$shareApi of method Civi\\Share\\Message\:\:setShareApi\(\) expects Civi\\Share\\CiviMRF\\ShareApi, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Undefined variable\: \$local_contact$#'
+			identifier: variable.undefined
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Undefined variable\: \$virtual_contact_after$#'
+			identifier: variable.undefined
+			count: 1
+			path: api/v3/CiviShareTests/Test04.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test_civi_m_r_f\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: api/v3/CiviShareTests/TestCiviMRF.php
+
+		-
+			message: '#^Function civicrm_api3_civi_share_tests_test_civi_m_r_f\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: api/v3/CiviShareTests/TestCiviMRF.php
+
+		-
+			message: '#^Parameter \#1 \$values of function civicrm_api3_create_success expects array\|int, Civi\\Api4\\Generic\\Result given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/v3/CiviShareTests/TestCiviMRF.php
+
+		-
+			message: '#^Function share_civicrm_config\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Function share_civicrm_config\(\) has parameter \$config with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Function share_civicrm_enable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Function share_civicrm_install\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Function share_civicrm_permission\(\) has parameter \$permissions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Function share_civicrm_searchTasks\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Function share_civicrm_searchTasks\(\) has parameter \$tasks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: share.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: tests/phpunit/Civi/Share/Mock/CiviMRF/ShareApi.php
+
+		-
+			message: '#^Parameter \#1 \$local_node_id of method Civi\\Share\\Message\:\:processOnNode\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/phpunit/Civi/Share/Mock/CiviMRF/ShareApi.php
+
+		-
+			message: '#^Call to an undefined static method CRM_Share_DAO_ShareNode\:\:fields\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/phpunit/CiviShareTest.php
+
+		-
+			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertNotEmpty\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: tests/phpunit/CiviShareTest.php
+
+		-
+			message: '#^Method CiviShareTest\:\:testMe\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/phpunit/CiviShareTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 2
+			path: tests/phpunit/NodePeeringTest.php
+
+		-
+			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 2
+			path: tests/phpunit/NodePeeringTest.php
+
+		-
+			message: '#^Offset ''id'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: tests/phpunit/NodePeeringTest.php

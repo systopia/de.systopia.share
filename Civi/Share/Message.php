@@ -7,6 +7,7 @@ namespace Civi\Share;
 use Civi\Api4\ShareChange;
 use Civi\Api4\ShareNode;
 use Civi\Api4\ShareNodePeering;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Share\CiviMRF\ShareApi;
 use Civi\Share\Event\MessageGenerateEvent;
 
@@ -64,7 +65,7 @@ class Message {
    */
   protected $eventDispatcher;
 
-  public function getEventDispatcher(): \Civi\Core\CiviEventDispatcherInterface {
+  public function getEventDispatcher(): CiviEventDispatcherInterface {
     return $this->eventDispatcher;
   }
 
@@ -224,7 +225,7 @@ class Message {
     if (!isset($localNodeId)) {
       // first: get the source node, and then find nodes to send these changes to
       // TODO: What if there's multiple ones?
-      $localNode = \Civi\Api4\ShareNode::get(TRUE)
+      $localNode = ShareNode::get(TRUE)
         ->addSelect('is_local')
         ->addWhere('is_local', '=', TRUE)
         ->setLimit(1)
@@ -247,7 +248,7 @@ class Message {
       ->execute()
       ->column('id');
 
-    $this->send();
+    return $this->send();
   }
 
   /**
@@ -307,7 +308,7 @@ class Message {
 
     // hand them over to the ChangeProcessor system
     foreach ($changes as $change) {
-      $change_processor = new \Civi\Share\ChangeProcessingEvent($change['id'], $local_node_id, $change);
+      $change_processor = new ChangeProcessingEvent($change['id'], $local_node_id, $change);
       try {
         \Civi::dispatcher()->dispatch(ChangeProcessingEvent::NAME, $change_processor);
         if ($change_processor->isProcessed()) {
@@ -343,7 +344,7 @@ class Message {
     // update change status
     // @todo check if necessary?
     // @todo check if one of the expected ones?
-    \Civi\Api4\ShareChange::update(TRUE)
+    ShareChange::update(TRUE)
       ->addValue('status', $status)
       ->addWhere('id', '=', $change_id)
       ->execute();

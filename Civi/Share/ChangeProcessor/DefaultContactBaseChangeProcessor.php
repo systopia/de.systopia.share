@@ -19,6 +19,7 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
    *
    * @return void
    */
+  // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   public function process_change($processing_event, $event_type, $dispatcher) {
     // nothing to do here
     if ($processing_event->isProcessed()) {
@@ -65,7 +66,7 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
           // Store this information as a new peering.
           if (NULL !== $remote_contact_id) {
             // refactor as service
-            $peering = new \Civi\Share\IdentityTrackerContactPeering();
+            $peering = new IdentityTrackerContactPeering();
             $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
           }
           $processing_event->logProcessingMessage("Local contact {$local_contact_id} identified.");
@@ -183,7 +184,7 @@ class DefaultContactBaseChangeProcessor extends AbstractChangeProcessor {
             if (NULL !== $remote_contact_id) {
               $change = $processing_event->getChange();
               // refactor as service
-              $peering = new \Civi\Share\IdentityTrackerContactPeering();
+              $peering = new IdentityTrackerContactPeering();
               $peering->peer($remote_contact_id, $local_contact_id, $change->getSourceNodeId());
             }
             // that's it

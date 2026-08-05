@@ -2,6 +2,12 @@
 
 declare(strict_types = 1);
 
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareChangeMessage;
+use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
+use Civi\Share\Change;
+
 function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
   //  // Delete existing peerings and nodes.
   //  \Civi\Api4\ShareNodePeering::delete(TRUE)
@@ -15,7 +21,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
   //    ->execute();
 
   // Create a local node.
-  $local_node = \Civi\Api4\ShareNode::create(FALSE)
+  $local_node = ShareNode::create(FALSE)
     ->addValue('name', 'local_node_01')
     ->addValue('short_name', 'local_node_01')
     ->addValue('is_local', TRUE)
@@ -27,7 +33,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->single();
 
   // Create a remote node.
-  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
+  $remote_node = ShareNode::create(FALSE)
     ->addValue('name', 'remote_node_01')
     ->addValue('short_name', 'remote_node_01')
     ->addValue('is_local', FALSE)
@@ -40,7 +46,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
 
   // Create a peering.
   $shared_key = base64_encode(random_bytes(32));
-  $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
+  $node_peering = ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
     ->addValue('is_enabled', TRUE)
@@ -105,10 +111,10 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
   //  ];
 
   // Create changes.
-  \Civi\Api4\ShareChange::create(FALSE)
+  ShareChange::create(FALSE)
     ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('change_date', '2024-12-09T13:13:29+01:00')
-    ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
+    ->addValue('status', Change::STATUS_LOCAL)
     ->addValue('local_contact_id', 312)
     ->addValue('source_node_id', $local_node['id'])
     ->addValue('data_before', [
@@ -120,10 +126,10 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ])
     ->execute();
 
-  \Civi\Api4\ShareChange::create(FALSE)
+  ShareChange::create(FALSE)
     ->addValue('change_type', 'civishare.change.contact.base')
     ->addValue('change_date', '2024-12-09T13:13:29+01:00')
-    ->addValue('status', \Civi\Share\Change::STATUS_LOCAL)
+    ->addValue('status', Change::STATUS_LOCAL)
     ->addValue('local_contact_id', 2312)
     ->addValue('source_node_id', $local_node['id'])
     ->addValue('data_before', [
@@ -136,7 +142,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->execute();
 
   // Send changes.
-  $result = \Civi\Api4\ShareChangeMessage::send()
+  $result = ShareChangeMessage::send()
     ->setSourceNodeId($local_node['id'])
     ->execute();
 

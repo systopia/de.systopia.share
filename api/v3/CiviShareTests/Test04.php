@@ -15,6 +15,15 @@
 
 declare(strict_types = 1);
 
+use Civi\Api4\Contact;
+use Civi\Api4\Membership;
+use Civi\Api4\MembershipType;
+use Civi\Api4\ShareChange;
+use Civi\Api4\ShareHandler;
+use Civi\Api4\ShareNode;
+use Civi\Api4\ShareNodePeering;
+use Civi\Share\Change;
+use Civi\Share\IdentityTrackerContactPeering;
 use Civi\Share\Message;
 
 /**
@@ -41,8 +50,8 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
 
   // create and pair two contacts
   // @todo migrate peering to service
-  $peering = new \Civi\Share\IdentityTrackerContactPeering();
-  $local_contact = \Civi\Api4\Contact::create(TRUE)
+  $peering = new IdentityTrackerContactPeering();
+  $local_contact = Contact::create(TRUE)
     ->addValue('first_name', base64_encode(random_bytes(8)))
     ->addValue('last_name', base64_encode(random_bytes(8)))
     ->addValue('contact_id', $local_contact['id'])
@@ -50,7 +59,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->execute()
     ->first();
 
-  $remote_contact = \Civi\Api4\Contact::create(TRUE)
+  $remote_contact = Contact::create(TRUE)
     ->addValue('first_name', base64_encode(random_bytes(8)))
     ->addValue('last_name', base64_encode(random_bytes(8)))
     ->addValue('contact_id', $local_contact['id'])
@@ -74,7 +83,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   // create NODES
 
   // generate a local node
-  $local_node = \Civi\Api4\ShareNode::create(FALSE)
+  $local_node = ShareNode::create(FALSE)
     ->addValue('name', 'Local Node 1')
     ->addValue('short_name', 'LOCAL1')
     ->addValue('is_local', TRUE)
@@ -86,7 +95,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->first();
 
   // create a "remote" node
-  $remote_node = \Civi\Api4\ShareNode::create(FALSE)
+  $remote_node = ShareNode::create(FALSE)
     ->addValue('name', 'test_04_local')
     ->addValue('short_name', 'FAKE-REMOTE')
     ->addValue('is_local', FALSE)
@@ -96,7 +105,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
 
   // create a node peering (cheekily on two local nodes)
   $shared_key = base64_encode(random_bytes(32));
-  $node_peering = \Civi\Api4\ShareNodePeering::create(TRUE)
+  $node_peering = ShareNodePeering::create(TRUE)
     ->addValue('local_node', $local_node['id'])
     ->addValue('remote_node', $remote_node['id'])
     ->addValue('is_enabled', TRUE)
@@ -107,11 +116,11 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   $peering->peer($remote_contact['id'], $local_contact['id'], $remote_node['id'], $local_node['id']);
 
   // with a membership
-  $membershipType = \Civi\Api4\MembershipType::get(TRUE)
+  $membershipType = MembershipType::get(TRUE)
     ->addSelect('id')
     ->addWhere('is_active', '=', TRUE)
     ->setLimit(1)->execute()->first();
-  $membership = \Civi\Api4\Membership::create(TRUE)
+  $membership = Membership::create(TRUE)
     ->addValue('contact_id', $local_contact['id'])
     ->addValue('membership_type_id', $membershipType['id'])
     ->execute()
@@ -127,7 +136,7 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
   ];
 
   // insert a share handler
-  \Civi\Api4\ShareHandler::create(TRUE)
+  ShareHandler::create(TRUE)
     ->addValue('name', 'Default')
     ->addValue('class', 'Civi\Share\ChangeProcessor\SimpleMembershipChangeProcessor')
     ->addValue('weight', 100)
@@ -135,10 +144,10 @@ function civicrm_api3_civi_share_tests_test04(&$params) {
     ->execute();
 
   // register a 'civishare.change.membership.base' change
-  $change = \Civi\Api4\ShareChange::create(TRUE)
+  $change = ShareChange::create(TRUE)
     ->addValue('change_id', 'TEST-' . $virtual_contact_after['last_name'])
     ->addValue('change_group_id', NULL)
-    ->addValue('status', \Civi\Share\Change::STATUS_PENDING)
+    ->addValue('status', Change::STATUS_PENDING)
     ->addValue('change_type', 'civishare.change.membership.base')
     ->addValue('data_before', '')
     ->addValue('data_after', $data_after)
