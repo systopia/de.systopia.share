@@ -2,18 +2,18 @@ includes:
 	- phpstan.neon.dist
 
 parameters:
-	scanDirectories:
-		- vendor/civicrm/civicrm-core/CRM
-		- vendor/civicrm/civicrm-core/Civi
-		- vendor/civicrm/civicrm-core/api
-		- vendor/civicrm/civicrm-core/ext
-		- vendor/civicrm/civicrm-packages/HTML
 	bootstrapFiles:
 		- vendor/autoload.php
 	# Because we test with different versions in CI we may have unmatched errors.
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
 		# Errors we get when using "prefer-lowest"
+
+		# Wrong return type hint since CiviCRM 6.16
+		# PR to fix: https://github.com/civicrm/civicrm-core/pull/37603
+		-
+			message: '#^Call to method addValue\(\) on an unknown class Civi\\Api4\\Action\\Contribution\\Create.$#'
+			path: api/v3/CiviShareTests/Test04.php
 
 		# Required with symfony/event-dispatcher <4.4.27
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'

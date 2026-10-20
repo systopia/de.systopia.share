@@ -40,8 +40,7 @@ class NodePeeringTest extends TestCase implements HeadlessInterface, HookInterfa
    * @throws \CRM_Extension_Exception_ParseException
    */
   public function setUpHeadless() {
-    //
-    //
+    // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
     //    // delete tables
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_change");
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS  civicrm_share_handler");
