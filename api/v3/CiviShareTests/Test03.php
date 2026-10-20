@@ -187,6 +187,7 @@ function civicrm_civi_share_test_register_test3_hander($processing_event, $event
       ->execute()
       ->first();
 
+    // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
     // create a peering
     // $local_contact_id = $peering->getLocalContactId(
     //   $remote_contact_id,

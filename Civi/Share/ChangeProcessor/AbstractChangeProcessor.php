@@ -67,7 +67,7 @@ abstract class AbstractChangeProcessor {
    * @return mixed
    */
   public function getConfigValue($path, $defalt_value): mixed {
-    // @todo implement!
+    // @todo implement
     \Civi::log()
       ->debug('ChangeProcessor::getConfigValue needs to be implmented.');
     return $defalt_value;

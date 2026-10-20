@@ -9,6 +9,7 @@ use Civi\Api4\ShareNodePeering;
 use Civi\Share\Change;
 
 function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
+  // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
   //  // Delete existing peerings and nodes.
   //  \Civi\Api4\ShareNodePeering::delete(TRUE)
   //    ->addWhere('id', 'IS NOT NULL')
@@ -54,6 +55,7 @@ function civicrm_api3_civi_share_tests_test_civi_m_r_f(&$params) {
     ->execute()
     ->single();
 
+  // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
   //  $testMessage = [
   //    'id' => 'some-unique-id',
   //    'payload_signature' => '/HbL/n2GaZWex15bmNquRUYWUriGEPpncqcIUQkqgwoltCzQU+x2IjMZZNgSFJ2oMJBk24AzHn/WZw8eOn5RPX2frgjtPtR1FO24H7YqD8X59rZMBHgRN+4TYl+hJjo8pEpgTQvp0WMmV8DZNEVZBjmwdmtlJ4e/f5SNWRi2kNQ=',

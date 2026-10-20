@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Civi\Share;
 
-use CRM_Identitytracker_ExtensionUtil as E;
+use CRM_Share_ExtensionUtil as E;
 
 use Civi\Api4\ShareNode;
 use http\Exception\RuntimeException;
@@ -98,6 +98,7 @@ class IdentityTrackerContactPeering implements ContactPeeringInterface {
 
     // add store with contact
     $search_result = \civicrm_api3('Contact', 'findbyidentity', [
+      // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
       // 'contact_id' => $local_contact_id,
       'identifier' => $remote_identifier,
       'identifier_type' => CIVISHARE_IDTRACKER_TYPE,

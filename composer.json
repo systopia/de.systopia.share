@@ -23,7 +23,8 @@
         "ext-curl": "*",
         "civicrm/civicrm-core": ">=5.76",
         "civicrm/civicrm-packages": ">=5.76",
-        "civimrf/cmrf_abstract_core": "^0.10.4"
+        "civimrf/cmrf_abstract_core": "^0.10.4",
+        "systopia/de.systopia.identitytracker": "^1.6"
     },
     "autoload": {
         "classmap": ["ComposerHelper.php"]

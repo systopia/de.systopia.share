@@ -54,9 +54,7 @@
     <rule ref="PSR1.Files.SideEffects"/>
     <rule ref="PSR12.Classes.ClassInstantiation"/>
     <rule ref="PSR12.Properties.ConstantVisibility"/>
-    <rule ref="Squiz.PHP.CommentedOutCode">
-        <exclude name="Squiz.PHP.CommentedOutCode.Found"/>
-    </rule>
+    <rule ref="Squiz.PHP.CommentedOutCode"/>
     <rule ref="Squiz.PHP.GlobalKeyword"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage">
         <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>

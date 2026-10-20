@@ -37,7 +37,7 @@ class CiviShareTest extends TestCase implements HeadlessInterface, HookInterface
    * @throws \CRM_Extension_Exception_ParseException
    */
   public function setUpHeadless() {
-
+    // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
     // drop tables - @todo remove
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node");
     //    CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS civicrm_share_node_peering");

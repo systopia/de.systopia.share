@@ -45,6 +45,7 @@ function civicrm_api3_civi_share_tests_test01(&$params) {
     ->addValue('short_name', 'test_01_local')
     ->addValue('is_local', TRUE)
     ->addValue('description', 'automated test node')
+    // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
   //    ->addValue('rest_url', 'TODO')
   //    ->addValue('api_key', 'TODO')
   //    ->addValue('auth_key', 'TODO')
